@@ -1,6 +1,7 @@
 name: mixins_weebi
 description: A new Flutter package project.
 version: 0.0.1
+publish_to: 'none'
 homepage:
 
 environment:
@@ -13,8 +14,10 @@ dependencies:
   provider: ^6.0.3
   flutter_mobx: ^2.0.6+1
   mobx: ^2.0.1
+  closing:
+    path: ../closing
   models_weebi:
-    path: models_weebi
+    path: ../models_weebi
 
 
 dev_dependencies:
