@@ -1,13 +1,21 @@
 import 'package:closing/closing.dart' show ClosingStockShop;
+import 'package:closing/closing_abstraction.dart';
 import 'package:closing/closing_extensions.dart' show StockItUpTillYaGetEnough;
 import 'package:flutter/material.dart';
+import 'package:models_weebi/abstractions.dart';
 import 'package:models_weebi/utils.dart' show DateRange;
 import 'package:models_weebi/weebi_models.dart';
 import 'package:models_weebi/extensions.dart';
 
-abstract class LineArticleStockAbstract extends StatelessWidget {
+abstract class LineArticleStockAbstract<ClosingsStore, TicketsStore>
+    extends StatelessWidget {
   final LineOfArticles line;
-  const LineArticleStockAbstract(this.line, {super.key});
+  // store is used on purpose here, I do not want / know yet how to trim it to iterable
+  final MobxTicketsStoreCreator mobxTicketsStoreCreator;
+  final MobxClosingStoreCreator mobxClosingStoreCreator;
+  const LineArticleStockAbstract(
+      this.line, this.mobxTicketsStoreCreator, this.mobxClosingStoreCreator,
+      {super.key});
 
   bool get isSingleArticle => line.articles.length <= 1;
 
@@ -44,16 +52,16 @@ abstract class LineArticleStockAbstract extends StatelessWidget {
 
   double lineTkQtIn(
       Iterable<TicketWeebi> tickets, DateTime start, DateTime end) {
-    final _quantityIn =
+    final quantityIn =
         tickets.stockLineInput(line, range: DateRange(start, end));
-    return _quantityIn;
+    return quantityIn;
   }
 
   double lineTkQtOut(
       Iterable<TicketWeebi> tickets, DateTime start, DateTime end) {
     //print('in lineTkQtOut');
-    final _quantityOut =
+    final quantityOut =
         tickets.stockLineOutput(line, range: DateRange(start, end));
-    return _quantityOut;
+    return quantityOut;
   }
 }

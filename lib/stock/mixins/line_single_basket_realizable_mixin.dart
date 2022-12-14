@@ -4,7 +4,7 @@ import 'package:models_weebi/utils.dart';
 
 import 'package:models_weebi/weebi_models.dart';
 import 'package:models_weebi/extensions.dart';
-import 'package:views_weebi/stock.dart';
+import 'package:mixins_weebi/stock/abstracts/line_stock_abstract.dart';
 
 mixin LineSingleArticleBasketRealizableNow on LineArticleStockAbstract {
   int basketsRealizableNow(Iterable<BasketWrapper> thoseGoddamWrappers) {

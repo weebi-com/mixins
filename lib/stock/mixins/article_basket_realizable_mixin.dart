@@ -3,7 +3,7 @@ import 'package:closing/extensions/closing_stock_shops.dart';
 import 'package:models_weebi/extensions.dart';
 import 'package:models_weebi/utils.dart' show DateRange;
 import 'package:models_weebi/weebi_models.dart';
-import 'package:views_weebi/src/stock/abstracts/article_stock_abstract.dart';
+import 'package:mixins_weebi/stock/abstracts/article_stock_abstract.dart';
 
 mixin ArticleBasketRealizableNow on ArticleStockStatelessAbstract {
   // computes the number of articles basket available
