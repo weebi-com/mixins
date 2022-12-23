@@ -18,6 +18,8 @@ dependencies:
     path: ../closing
   models_weebi:
     path: ../models_weebi
+  services_weebi:
+    path: ../services_weebi
 
 
 dev_dependencies:

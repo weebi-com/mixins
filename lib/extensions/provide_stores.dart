@@ -1,8 +1,7 @@
+import 'package:closing/closing_store.dart';
 import 'package:flutter/material.dart';
-import 'package:mixins_weebi/stock/mixins/line_stock_now_mixin.dart';
+import 'package:mixins_weebi/mobx_stores/tickets.dart';
 import 'package:provider/provider.dart';
-
-class AbstractStore {}
 
 extension ProvideStores on BuildContext {
   TicketsStore get ticketsStore =>

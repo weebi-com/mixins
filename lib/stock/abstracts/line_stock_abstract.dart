@@ -1,4 +1,5 @@
-import 'package:closing/closing.dart' show ClosingStockShop;
+import 'package:closing/closing.dart'
+    show ClosingStockProduct, ClosingStockShop, ClosingStockShopProduct;
 import 'package:closing/closing_abstraction.dart';
 import 'package:closing/closing_extensions.dart' show StockItUpTillYaGetEnough;
 import 'package:flutter/material.dart';
@@ -7,14 +8,21 @@ import 'package:models_weebi/utils.dart' show DateRange;
 import 'package:models_weebi/weebi_models.dart';
 import 'package:models_weebi/extensions.dart';
 
+typedef TicketsInvoker = Iterable<TicketWeebi> Function();
+typedef ClosingStockShopsInvoker
+    = Iterable<ClosingStockShop<ClosingStockShopProduct>> Function();
+
 abstract class LineArticleStockAbstract<ClosingsStore, TicketsStore>
     extends StatelessWidget {
   final LineOfArticles line;
-  // store is used on purpose here, I do not want / know yet how to trim it to iterable
-  final MobxTicketsStoreCreator mobxTicketsStoreCreator;
-  final MobxClosingStoreCreator mobxClosingStoreCreator;
+
+  final TicketsInvoker ticketsInvoker;
+  final ClosingStockShopsInvoker closingStockShopsInvoker;
+  // * this is not needed keeping it here as a reminder for future inspiration where stores need to be passed
+  // final MobxTicketsStoreCreator mobxTicketsStoreCreator;
+  // final MobxClosingStoreCreator mobxClosingStoreCreator;
   const LineArticleStockAbstract(
-      this.line, this.mobxTicketsStoreCreator, this.mobxClosingStoreCreator,
+      this.line, this.ticketsInvoker, this.closingStockShopsInvoker,
       {super.key});
 
   bool get isSingleArticle => line.articles.length <= 1;

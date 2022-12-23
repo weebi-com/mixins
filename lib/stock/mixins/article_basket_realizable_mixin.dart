@@ -53,7 +53,7 @@ mixin ArticleBasketRealizableNow on ArticleStockStatelessAbstract {
   @override // wrappedArticle != ArticleBasket !!
   double articleStockRemaining(Iterable<ClosingStockShop> cStockShops,
       Iterable<TicketWeebi> tickets, DateTime start, DateTime end,
-      {ArticleWeebi? wrappedArticle}) {
+      {Article? wrappedArticle}) {
     return _articleClosingFinalQt(cStockShops, wrappedArticle!, end: end) +
         _articleTkQtIn(wrappedArticle, tickets, start, end) -
         _articleTkQtOut(wrappedArticle, tickets, start, end);
@@ -61,7 +61,7 @@ mixin ArticleBasketRealizableNow on ArticleStockStatelessAbstract {
 
   double _articleClosingFinalQt(
     Iterable<ClosingStockShop> cStockShops,
-    ArticleWeebi wrappedArticle, {
+    Article wrappedArticle, {
     DateTime? end,
   }) {
     return cStockShops.stockShopArticleFinalQuantityAbsoluteForWeebi(
@@ -70,7 +70,7 @@ mixin ArticleBasketRealizableNow on ArticleStockStatelessAbstract {
   }
 
   double _articleTkQtIn(
-    ArticleWeebi wrappedArticle,
+    Article wrappedArticle,
     Iterable<TicketWeebi> tickets,
     DateTime start,
     DateTime end,
@@ -81,7 +81,7 @@ mixin ArticleBasketRealizableNow on ArticleStockStatelessAbstract {
   }
 
   double _articleTkQtOut(
-    ArticleWeebi wrappedArticle,
+    Article wrappedArticle,
     Iterable<TicketWeebi> tickets,
     DateTime start,
     DateTime end,

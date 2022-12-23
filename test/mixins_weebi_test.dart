@@ -7,8 +7,6 @@ import 'package:models_weebi/abstractions.dart';
 
 import 'package:mixins_weebi/extensions/provide_stores.dart';
 
-
-
 typedef MobxTicketsStoreCreator<T extends AbstractStore> = T Function(
     BuildContext context);
 
@@ -20,7 +18,7 @@ class MobxTest {
 
 void main() {
   test('adds one to input values', () {
-    final BuildContext context = BuildContext.;
-    final mm = MobxTest((c) => c.ticketsStore, context);
+    //final BuildContext context = BuildContext;
+    //final mm = MobxTest((c) => c.ticketsStore, context);
   });
 }
