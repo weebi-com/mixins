@@ -46,7 +46,6 @@ abstract class ArticlesStoreBase with Store {
   @observable
   bool _isFilterPrivate = false;
 
-  @observable
   bool get isFilter => _isFilterPrivate;
 
   @action
@@ -55,7 +54,6 @@ abstract class ArticlesStoreBase with Store {
   @observable
   FilteredBy _filteredByPrivate = FilteredBy.title;
 
-  @observable
   FilteredBy get filteredBy => _filteredByPrivate;
 
   @action
@@ -64,7 +62,6 @@ abstract class ArticlesStoreBase with Store {
   @observable
   String _queryStringPrivate = '';
 
-  @observable
   String get queryString => _queryStringPrivate;
 
   @action

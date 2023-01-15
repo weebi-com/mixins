@@ -6,43 +6,47 @@ part of 'articles.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$ArticlesStore on ArticlesStoreBase, Store {
-  late Computed<ObservableList<LineOfArticles>> _$productsInSellComputed;
+  Computed<ObservableList<LineOfArticles<ArticleAbstract>>>?
+      _$linesPalpableNoBasketComputed;
 
   @override
-  ObservableList<LineOfArticles> get linesInSell =>
-      (_$productsInSellComputed ??= Computed<ObservableList<LineOfArticles>>(
-              () => super.linesInSell,
-              name: 'ArticlesStoreBase.linesInSell'))
+  ObservableList<LineOfArticles<ArticleAbstract>> get linesPalpableNoBasket =>
+      (_$linesPalpableNoBasketComputed ??=
+              Computed<ObservableList<LineOfArticles<ArticleAbstract>>>(
+                  () => super.linesPalpableNoBasket,
+                  name: 'ArticlesStoreBase.linesPalpableNoBasket'))
           .value;
-
-  late Computed<ObservableList<LineOfArticles>> _$linesPalpableNoBasket;
-
-  @override
-  ObservableList<LineOfArticles> get linesPalpableNoBasket =>
-      (_$linesPalpableNoBasket ??= Computed<ObservableList<LineOfArticles>>(
-              () => super.linesPalpableNoBasket,
-              name: 'ArticlesStoreBase.linesPalpableNoBasket'))
-          .value;
-
-  late Computed<ObservableList<Article>> _$articlesWeebiList;
+  Computed<ObservableList<Article>>? _$articlesWeebiListComputed;
 
   @override
-  ObservableList<Article> get articlesWeebiList => (_$articlesWeebiList ??=
-          Computed<ObservableList<Article>>(() => super.articlesWeebiList,
+  ObservableList<Article> get articlesWeebiList =>
+      (_$articlesWeebiListComputed ??= Computed<ObservableList<Article>>(
+              () => super.articlesWeebiList,
               name: 'ArticlesStoreBase.articlesWeebiList'))
-      .value;
-  late Computed<ObservableList<String>> _$getSuggestions;
+          .value;
+  Computed<ObservableList<String>>? _$getSuggestionsComputed;
 
   @override
-  ObservableList<String> get getSuggestions => (_$getSuggestions ??=
+  ObservableList<String> get getSuggestions => (_$getSuggestionsComputed ??=
           Computed<ObservableList<String>>(() => super.getSuggestions,
               name: 'ArticlesStoreBase.getSuggestions'))
       .value;
+  Computed<ObservableList<LineOfArticles<ArticleAbstract>>>?
+      _$linesInSellComputed;
 
-  final _$initialLoadingAtom = Atom(name: 'ArticlesStoreBase.initialLoading');
+  @override
+  ObservableList<LineOfArticles<ArticleAbstract>> get linesInSell =>
+      (_$linesInSellComputed ??=
+              Computed<ObservableList<LineOfArticles<ArticleAbstract>>>(
+                  () => super.linesInSell,
+                  name: 'ArticlesStoreBase.linesInSell'))
+          .value;
+
+  late final _$initialLoadingAtom =
+      Atom(name: 'ArticlesStoreBase.initialLoading', context: context);
 
   @override
   bool get initialLoading {
@@ -57,28 +61,236 @@ mixin _$ArticlesStore on ArticlesStoreBase, Store {
     });
   }
 
-  final _$isFilterAtom = Atom(name: 'ArticlesStoreBase.isFilter');
-  final _$isFilterPrivateAtom =
-      Atom(name: 'ArticlesStoreBase._isFilterPrivate');
-
-  @override
-  bool get isFilter {
-    _$isFilterAtom.reportRead();
-    return super.isFilter;
-  }
+  late final _$_isFilterPrivateAtom =
+      Atom(name: 'ArticlesStoreBase._isFilterPrivate', context: context);
 
   @override
   bool get _isFilterPrivate {
-    _$isFilterPrivateAtom.reportRead();
+    _$_isFilterPrivateAtom.reportRead();
     return super._isFilterPrivate;
   }
 
   @override
   set _isFilterPrivate(bool value) {
-    _$isFilterPrivateAtom.reportWrite(value, super._isFilterPrivate, () {
+    _$_isFilterPrivateAtom.reportWrite(value, super._isFilterPrivate, () {
       super._isFilterPrivate = value;
     });
   }
+
+  late final _$_filteredByPrivateAtom =
+      Atom(name: 'ArticlesStoreBase._filteredByPrivate', context: context);
+
+  @override
+  FilteredBy get _filteredByPrivate {
+    _$_filteredByPrivateAtom.reportRead();
+    return super._filteredByPrivate;
+  }
+
+  @override
+  set _filteredByPrivate(FilteredBy value) {
+    _$_filteredByPrivateAtom.reportWrite(value, super._filteredByPrivate, () {
+      super._filteredByPrivate = value;
+    });
+  }
+
+  late final _$_queryStringPrivateAtom =
+      Atom(name: 'ArticlesStoreBase._queryStringPrivate', context: context);
+
+  @override
+  String get _queryStringPrivate {
+    _$_queryStringPrivateAtom.reportRead();
+    return super._queryStringPrivate;
+  }
+
+  @override
+  set _queryStringPrivate(String value) {
+    _$_queryStringPrivateAtom.reportWrite(value, super._queryStringPrivate, () {
+      super._queryStringPrivate = value;
+    });
+  }
+
+  late final _$sortedByAtom =
+      Atom(name: 'ArticlesStoreBase.sortedBy', context: context);
+
+  @override
+  SortedBy get sortedBy {
+    _$sortedByAtom.reportRead();
+    return super.sortedBy;
+  }
+
+  @override
+  set sortedBy(SortedBy value) {
+    _$sortedByAtom.reportWrite(value, super.sortedBy, () {
+      super.sortedBy = value;
+    });
+  }
+
+  late final _$linesAtom =
+      Atom(name: 'ArticlesStoreBase.lines', context: context);
+
+  @override
+  ObservableList<LineOfArticles<ArticleAbstract>> get lines {
+    _$linesAtom.reportRead();
+    return super.lines;
+  }
+
+  @override
+  set lines(ObservableList<LineOfArticles<ArticleAbstract>> value) {
+    _$linesAtom.reportWrite(value, super.lines, () {
+      super.lines = value;
+    });
+  }
+
+  late final _$articlesSelectedForBasketMinQtAtom = Atom(
+      name: 'ArticlesStoreBase.articlesSelectedForBasketMinQt',
+      context: context);
+
+  @override
+  ObservableList<ArticleWMinQt> get articlesSelectedForBasketMinQt {
+    _$articlesSelectedForBasketMinQtAtom.reportRead();
+    return super.articlesSelectedForBasketMinQt;
+  }
+
+  @override
+  set articlesSelectedForBasketMinQt(ObservableList<ArticleWMinQt> value) {
+    _$articlesSelectedForBasketMinQtAtom
+        .reportWrite(value, super.articlesSelectedForBasketMinQt, () {
+      super.articlesSelectedForBasketMinQt = value;
+    });
+  }
+
+  late final _$initAsyncAction =
+      AsyncAction('ArticlesStoreBase.init', context: context);
+
+  @override
+  Future<void> init() {
+    return _$initAsyncAction.run(() => super.init());
+  }
+
+  late final _$addAllLinesAsyncAction =
+      AsyncAction('ArticlesStoreBase.addAllLines', context: context);
+
+  @override
+  Future<int> addAllLines(
+      List<LineOfArticles<ArticleAbstract>> _lineArticlesToSave) {
+    return _$addAllLinesAsyncAction
+        .run(() => super.addAllLines(_lineArticlesToSave));
+  }
+
+  late final _$updateAllLinesThatMatchAsyncAction = AsyncAction(
+      'ArticlesStoreBase.updateAllLinesThatMatch',
+      context: context);
+
+  @override
+  Future<int> updateAllLinesThatMatch(
+      List<LineOfArticles<ArticleAbstract>> _lineArticlesToUpdate) {
+    return _$updateAllLinesThatMatchAsyncAction
+        .run(() => super.updateAllLinesThatMatch(_lineArticlesToUpdate));
+  }
+
+  late final _$updateLineArticleAsyncAction =
+      AsyncAction('ArticlesStoreBase.updateLineArticle', context: context);
+
+  @override
+  Future<LineOfArticles<ArticleAbstract>> updateLineArticle(
+      LineOfArticles<ArticleAbstract> line) {
+    return _$updateLineArticleAsyncAction
+        .run(() => super.updateLineArticle(line));
+  }
+
+  late final _$importCatalogueFromJsonAsyncAction = AsyncAction(
+      'ArticlesStoreBase.importCatalogueFromJson',
+      context: context);
+
+  @override
+  Future<ObservableList<LineOfArticles<ArticleAbstract>>>
+      importCatalogueFromJson(String json) {
+    return _$importCatalogueFromJsonAsyncAction
+        .run(() => super.importCatalogueFromJson(json));
+  }
+
+  late final _$deleteAllArticlesAndLinesAsyncAction = AsyncAction(
+      'ArticlesStoreBase.deleteAllArticlesAndLines',
+      context: context);
+
+  @override
+  Future<void> deleteAllArticlesAndLines() {
+    return _$deleteAllArticlesAndLinesAsyncAction
+        .run(() => super.deleteAllArticlesAndLines());
+  }
+
+  late final _$createLineArticleAsyncAction =
+      AsyncAction('ArticlesStoreBase.createLineArticle', context: context);
+
+  @override
+  Future<LineOfArticles<ArticleAbstract>>
+      createLineArticle<A extends ArticleAbstract>(LineOfArticles<A> lineData) {
+    return _$createLineArticleAsyncAction
+        .run(() => super.createLineArticle<A>(lineData));
+  }
+
+  late final _$stockLowWarningAsyncAction =
+      AsyncAction('ArticlesStoreBase.stockLowWarning', context: context);
+
+  @override
+  Future<LineOfArticles<ArticleAbstract>> stockLowWarning(
+      LineOfArticles<ArticleAbstract> productFalse) {
+    return _$stockLowWarningAsyncAction
+        .run(() => super.stockLowWarning(productFalse));
+  }
+
+  late final _$restoreLineArticleAsyncAction =
+      AsyncAction('ArticlesStoreBase.restoreLineArticle', context: context);
+
+  @override
+  Future<LineOfArticles<ArticleAbstract>> restoreLineArticle(
+      LineOfArticles<ArticleAbstract> _line) {
+    return _$restoreLineArticleAsyncAction
+        .run(() => super.restoreLineArticle(_line));
+  }
+
+  late final _$deleteForeverLineArticleAsyncAction = AsyncAction(
+      'ArticlesStoreBase.deleteForeverLineArticle',
+      context: context);
+
+  @override
+  Future<ObservableList<LineOfArticles<ArticleAbstract>>>
+      deleteForeverLineArticle(LineOfArticles<ArticleAbstract> productData) {
+    return _$deleteForeverLineArticleAsyncAction
+        .run(() => super.deleteForeverLineArticle(productData));
+  }
+
+  late final _$deleteForeverArticleAsyncAction =
+      AsyncAction('ArticlesStoreBase.deleteForeverArticle', context: context);
+
+  @override
+  Future<ObservableList<LineOfArticles<ArticleAbstract>>>
+      deleteForeverArticle<A extends ArticleAbstract>(A articleData) {
+    return _$deleteForeverArticleAsyncAction
+        .run(() => super.deleteForeverArticle<A>(articleData));
+  }
+
+  late final _$createArticleAsyncAction =
+      AsyncAction('ArticlesStoreBase.createArticle', context: context);
+
+  @override
+  Future<A> createArticle<A extends ArticleAbstract>(A articleData,
+      {bool isTest = false}) {
+    return _$createArticleAsyncAction
+        .run(() => super.createArticle<A>(articleData, isTest: isTest));
+  }
+
+  late final _$updateArticleAsyncAction =
+      AsyncAction('ArticlesStoreBase.updateArticle', context: context);
+
+  @override
+  Future<A> updateArticle<A extends ArticleAbstract>(A articleData) {
+    return _$updateArticleAsyncAction
+        .run(() => super.updateArticle<A>(articleData));
+  }
+
+  late final _$ArticlesStoreBaseActionController =
+      ActionController(name: 'ArticlesStoreBase', context: context);
 
   @override
   void setIsFilter(bool val) {
@@ -91,27 +303,15 @@ mixin _$ArticlesStore on ArticlesStoreBase, Store {
     }
   }
 
-  final _$queryStringAtom = Atom(name: 'ArticlesStoreBase.queryString');
-  final _$queryStringPrivateAtom =
-      Atom(name: 'ArticlesStoreBase._queryStringPrivate');
-
   @override
-  String get queryString {
-    _$queryStringAtom.reportRead();
-    return super.queryString;
-  }
-
-  @override
-  String get _queryStringPrivate {
-    _$queryStringPrivateAtom.reportRead();
-    return super._queryStringPrivate;
-  }
-
-  @override
-  set _queryStringPrivate(String value) {
-    _$queryStringPrivateAtom.reportWrite(value, super._queryStringPrivate, () {
-      super._queryStringPrivate = value;
-    });
+  void setFilteredBy(FilteredBy val) {
+    final _$actionInfo = _$ArticlesStoreBaseActionController.startAction(
+        name: 'ArticlesStoreBase.setFilteredBy');
+    try {
+      return super.setFilteredBy(val);
+    } finally {
+      _$ArticlesStoreBaseActionController.endAction(_$actionInfo);
+    }
   }
 
   @override
@@ -126,33 +326,33 @@ mixin _$ArticlesStore on ArticlesStoreBase, Store {
   }
 
   @override
-  void addArticleWInSelected(ArticleWMinQt val) {
-    final _$actionInfo = _$ArticlesStoreBaseActionController.startAction(
-        name: 'ArticlesStoreBase.addArticleWInSelected');
-    try {
-      return super.addArticleWInSelected(val);
-    } finally {
-      _$ArticlesStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  ArticleWMinQt findSingleArticleBasedOnFullName(String val) {
+  ArticleWMinQt findSingleArticleBasedOnFullName(String fullName) {
     final _$actionInfo = _$ArticlesStoreBaseActionController.startAction(
         name: 'ArticlesStoreBase.findSingleArticleBasedOnFullName');
     try {
-      return super.findSingleArticleBasedOnFullName(val);
+      return super.findSingleArticleBasedOnFullName(fullName);
     } finally {
       _$ArticlesStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  void removeArticleMinQtInSelected(ArticleWMinQt val) {
+  void addArticleWInSelected(ArticleWMinQt articleMinQt) {
     final _$actionInfo = _$ArticlesStoreBaseActionController.startAction(
-        name: 'ArticlesStoreBase.removeArticleWInSelected');
+        name: 'ArticlesStoreBase.addArticleWInSelected');
     try {
-      return super.removeArticleMinQtInSelected(val);
+      return super.addArticleWInSelected(articleMinQt);
+    } finally {
+      _$ArticlesStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void removeArticleMinQtInSelected(ArticleWMinQt article) {
+    final _$actionInfo = _$ArticlesStoreBaseActionController.startAction(
+        name: 'ArticlesStoreBase.removeArticleMinQtInSelected');
+    try {
+      return super.removeArticleMinQtInSelected(article);
     } finally {
       _$ArticlesStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -161,7 +361,7 @@ mixin _$ArticlesStore on ArticlesStoreBase, Store {
   @override
   void updateArticleMinQtInSelected(ArticleWMinQt article, double minQt) {
     final _$actionInfo = _$ArticlesStoreBaseActionController.startAction(
-        name: 'ArticlesStoreBase.updateMinQtArticleWInSelected');
+        name: 'ArticlesStoreBase.updateArticleMinQtInSelected');
     try {
       return super.updateArticleMinQtInSelected(article, minQt);
     } finally {
@@ -180,222 +380,28 @@ mixin _$ArticlesStore on ArticlesStoreBase, Store {
     }
   }
 
-  final _$filteredByAtom = Atom(name: 'ArticlesStoreBase.filteredBy');
-  final _$filteredByPrivateAtom =
-      Atom(name: 'ArticlesStoreBase._filteredByPrivate');
-
   @override
-  FilteredBy get filteredBy {
-    _$filteredByAtom.reportRead();
-    return super.filteredBy;
-  }
-
-  @override
-  FilteredBy get _filteredByPrivate {
-    _$filteredByPrivateAtom.reportRead();
-    return super._filteredByPrivate;
-  }
-
-  @override
-  set _filteredByPrivate(FilteredBy value) {
-    _$filteredByPrivateAtom.reportWrite(value, super._filteredByPrivate, () {
-      super._filteredByPrivate = value;
-    });
-  }
-
-  @override
-  void setFilteredBy(FilteredBy val) {
-    final _$actionInfo = _$ArticlesStoreBaseActionController.startAction(
-        name: 'ArticlesStoreBase.setFilteredBy');
-    try {
-      return super.setFilteredBy(val);
-    } finally {
-      _$ArticlesStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  final _$sortedByAtom = Atom(name: 'ArticlesStoreBase.sortedBy');
-
-  @override
-  SortedBy get sortedBy {
-    _$sortedByAtom.reportRead();
-    return super.sortedBy;
-  }
-
-  @override
-  set sortedBy(SortedBy value) {
-    _$sortedByAtom.reportWrite(value, super.sortedBy, () {
-      super.sortedBy = value;
-    });
-  }
-
-  final _$linesAtom = Atom(name: 'ArticlesStoreBase.lines');
-
-  @override
-  ObservableList<LineOfArticles> get lines {
-    _$linesAtom.reportRead();
-    return super.lines;
-  }
-
-  @override
-  set lines(ObservableList<LineOfArticles> value) {
-    _$linesAtom.reportWrite(value, super.lines, () {
-      super.lines = value;
-    });
-  }
-
-  final _$articlesSelectedAtom =
-      Atom(name: 'ArticlesStoreBase.articlesSelected');
-
-  @override
-  ObservableList<ArticleWMinQt> get articlesSelectedForBasketMinQt {
-    _$articlesSelectedAtom.reportRead();
-    return super.articlesSelectedForBasketMinQt;
-  }
-
-  @override
-  set articlesSelectedForBasketMinQt(ObservableList<ArticleWMinQt> value) {
-    _$articlesSelectedAtom
-        .reportWrite(value, super.articlesSelectedForBasketMinQt, () {
-      super.articlesSelectedForBasketMinQt = value;
-    });
-  }
-
-  final _$ArticlesStoreBaseActionController =
-      ActionController(name: 'ArticlesStoreBase');
-
-  @override
-  ObservableList<LineOfArticles> sortBy(SortedBy sortedBy) {
+  ObservableList<LineOfArticles<ArticleAbstract>> sortBy(SortedBy sortBy) {
     final _$actionInfo = _$ArticlesStoreBaseActionController.startAction(
         name: 'ArticlesStoreBase.sortBy');
     try {
-      return super.sortBy(sortedBy);
+      return super.sortBy(sortBy);
     } finally {
       _$ArticlesStoreBaseActionController.endAction(_$actionInfo);
     }
-  }
-
-  final _$initAsyncAction = AsyncAction('ArticlesStoreBase.init');
-  @override
-  Future<void> init() {
-    return _$initAsyncAction.run(() => super.init());
-  }
-
-  final _$addAllLinesAsyncAction = AsyncAction('ArticlesStoreBase.addAllLines');
-
-  @override
-  Future<int> addAllLines(List<LineOfArticles> _linesToSave) {
-    return _$addAllLinesAsyncAction.run(() => super.addAllLines(_linesToSave));
-  }
-
-  final _$updateAllLinesThatMatchAsyncAction =
-      AsyncAction('ArticlesStoreBase.updateAllLinesThatMatch');
-
-  @override
-  Future<int> updateAllLinesThatMatch(List<LineOfArticles> _linesToUpdate) {
-    return _$updateAllLinesThatMatchAsyncAction
-        .run(() => super.updateAllLinesThatMatch(_linesToUpdate));
-  }
-
-  final _$importCatalogueAsyncAction =
-      AsyncAction('ArticlesStoreBase.importCatalogue');
-
-  @override
-  Future<ObservableList<LineOfArticles>> importCatalogueFromJson(String json) {
-    return _$importCatalogueAsyncAction
-        .run(() => super.importCatalogueFromJson(json));
-  }
-
-  final _$deleteAllProductsAsyncAction =
-      AsyncAction('ArticlesStoreBase.deleteAllProducts');
-
-  @override
-  Future<void> deleteAllArticlesAndLines() {
-    return _$deleteAllProductsAsyncAction
-        .run(() => super.deleteAllArticlesAndLines());
-  }
-
-  final _$createProductAsyncAction =
-      AsyncAction('ArticlesStoreBase.createProduct');
-
-  @override
-  Future<LineOfArticles> createLineArticle<A extends ArticleAbstract>(
-      LineOfArticles<A> lineData) {
-    return _$createProductAsyncAction
-        .run(() => super.createLineArticle(lineData));
-  }
-
-  final _$updateLineAsyncAction = AsyncAction('ArticlesStoreBase.updateLine');
-
-  @override
-  Future<LineOfArticles> updateLineArticle(LineOfArticles line) {
-    return _$updateLineAsyncAction.run(() => super.updateLineArticle(line));
-  }
-
-  final _$stockLowProductAsyncAction =
-      AsyncAction('ArticlesStoreBase.stockLowProduct');
-
-  @override
-  Future<LineOfArticles> stockLowWarning(LineOfArticles productFalse) {
-    return _$stockLowProductAsyncAction
-        .run(() => super.stockLowWarning(productFalse));
-  }
-
-  final _$restoreProductAsyncAction =
-      AsyncAction('ArticlesStoreBase.restoreProduct');
-
-  @override
-  Future<LineOfArticles> restoreLineArticle(LineOfArticles productTrue) {
-    return _$restoreProductAsyncAction
-        .run(() => super.restoreLineArticle(productTrue));
-  }
-
-  final _$deleteForeverProductAsyncAction =
-      AsyncAction('ArticlesStoreBase.deleteForeverProduct');
-
-  @override
-  Future<ObservableList<LineOfArticles>> deleteForeverLineArticle(
-      LineOfArticles productData) {
-    return _$deleteForeverProductAsyncAction
-        .run(() => super.deleteForeverLineArticle(productData));
-  }
-
-  final _$deleteForeverArticleAsyncAction =
-      AsyncAction('ArticlesStoreBase.deleteForeverArticle');
-
-  @override
-  Future<ObservableList<LineOfArticles>>
-      deleteForeverArticle<A extends ArticleAbstract>(A articleData) {
-    return _$deleteForeverArticleAsyncAction
-        .run(() => super.deleteForeverArticle(articleData));
-  }
-
-  final _$createArticleAsyncAction =
-      AsyncAction('ArticlesStoreBase.createArticle');
-
-  @override
-  Future<A> createArticle<A extends ArticleAbstract>(A articleData,
-      {bool isTest = false}) {
-    return _$createArticleAsyncAction
-        .run(() => super.createArticle(articleData, isTest: isTest));
-  }
-
-  final _$updateArticleAsyncAction =
-      AsyncAction('ArticlesStoreBase.updateArticle');
-
-  @override
-  Future<A> updateArticle<A extends ArticleAbstract>(A articleData) {
-    return _$updateArticleAsyncAction
-        .run(() => super.updateArticle(articleData));
   }
 
   @override
   String toString() {
     return '''
 initialLoading: ${initialLoading},
-isFilter: ${isFilter},
-products: ${lines},
-stuff: ${articlesSelectedForBasketMinQt}
+sortedBy: ${sortedBy},
+lines: ${lines},
+articlesSelectedForBasketMinQt: ${articlesSelectedForBasketMinQt},
+linesPalpableNoBasket: ${linesPalpableNoBasket},
+articlesWeebiList: ${articlesWeebiList},
+getSuggestions: ${getSuggestions},
+linesInSell: ${linesInSell}
     ''';
   }
 }
