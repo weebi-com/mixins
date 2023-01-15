@@ -5,15 +5,15 @@ import 'dart:convert' as convert;
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
-import 'package:models_base/common.dart' show PaiementType, TicketType;
+
 import 'package:models_weebi/abstractions.dart';
+import 'package:models_weebi/common.dart' show PaiementType, TicketType;
 import 'package:models_weebi/utils.dart' show WeebiDates;
 
 // Project imports:
 import 'package:models_weebi/weebi_models.dart' show HerderWeebi, TicketWeebi;
 
 import 'package:models_weebi/extensions.dart';
-import 'package:models_weebi/abstractions.dart';
 
 import 'package:services_weebi/services_weebi.dart';
 
@@ -106,11 +106,11 @@ abstract class TicketsStoreBase extends AbstractStore with Store {
   }
 
   @action
-  Observable<DateTimeRange> setRange(DateTimeRange _range) =>
-      range = Observable(_range);
+  Observable<DateTimeRange> setRange(DateTimeRange rangeParam) =>
+      range = Observable(rangeParam);
 
   @computed
-  TimeFrame get timeFrame => range.value.duration < Duration(hours: 24)
+  TimeFrame get timeFrame => range.value.duration < const Duration(hours: 24)
       ? TimeFrame.day
       : range.value.duration < const Duration(days: 7)
           ? TimeFrame.week
@@ -118,8 +118,8 @@ abstract class TicketsStoreBase extends AbstractStore with Store {
 
   @action
   Future<void> init() async {
-    final _tickets = await _ticketsService.getAllTicketsRpc.request(null);
-    tickets = _tickets.asObservable();
+    final ticketsFromRpc = await _ticketsService.getAllTicketsRpc.request(null);
+    tickets = ticketsFromRpc.asObservable();
     initialLoading = false;
   }
 
@@ -211,14 +211,13 @@ abstract class TicketsStoreBase extends AbstractStore with Store {
       .asObservable();
 
   @action
-  int todayTicketCount(DateTime date) =>
-      tickets
-          .where((t) =>
-              t.date.year == date.year &&
-              t.date.month == date.month &&
-              t.date.day == date.day)
-          .length ??
-      0;
+  int todayTicketCount(DateTime date) => tickets
+      .where((t) =>
+          t.date.year == date.year &&
+          t.date.month == date.month &&
+          t.date.day == date.day)
+      .length;
+
   @action
   Observable<double> lineQuantityInDash(int productId, DateTimeRange range) {
     final double stockCount = tickets
@@ -610,58 +609,50 @@ abstract class TicketsStoreBase extends AbstractStore with Store {
   int supplierCredit(int herderId, DateTime date) => tickets.isEmpty
       ? 0
       : tickets
-          .where((t) => t?.contactInfo == herderId.toString())
-          .where((t) => t?.status == true)
+          .where((t) => t.contactInfo == herderId.toString())
+          .where((t) => t.status == true)
           .where((t) => t.date.isBefore(date))
           .where((t) =>
-              t?.ticketType == TicketType.spendCovered ||
-              t?.ticketType == TicketType.wage)
+              t.ticketType == TicketType.spendCovered ||
+              t.ticketType == TicketType.wage)
           .fold(0, (prev, e) => prev + e.received);
 
   @action
   double supplierDebit(int herderId, DateTime date) => tickets.isEmpty
       ? 0
       : tickets
-          .where((t) => t?.contactInfo == herderId.toString())
-          .where((t) => t?.status == true)
+          .where((t) => t.contactInfo == herderId.toString())
+          .where((t) => t.status == true)
           .where((t) => t.date.isBefore(date))
-          .where((t) => t?.ticketType == TicketType?.spendDeferred)
-          .fold(
-              0,
-              (prev, e) =>
-                  prev + e.totalCostTaxAndPromoIncluded ??
-                  0); // adding this to prevent total crash
+          .where((t) => t.ticketType == TicketType.spendDeferred)
+          .fold(0, (prev, e) => prev + e.totalCostTaxAndPromoIncluded);
 
   @action
   int clientCredit(int herderId, DateTime date) => tickets.isEmpty
       ? 0
       : tickets
-          .where((t) => t?.contactInfo == herderId.toString())
-          .where((t) => t?.status == true)
+          .where((t) => t.contactInfo == herderId.toString())
+          .where((t) => t.status == true)
           .where((t) => t.date.isBefore(date))
-          .where((t) => t?.ticketType == TicketType?.sellCovered)
+          .where((t) => t.ticketType == TicketType.sellCovered)
           .fold(0, (prev, e) => prev + e.received);
 
   @action
   double clientDebit(int herderId, DateTime date) => tickets.isEmpty
       ? 0
       : tickets
-          .where((t) => t?.contactInfo == herderId.toString())
-          .where((t) => t?.status == true)
+          .where((t) => t.contactInfo == herderId.toString())
+          .where((t) => t.status == true)
           .where((t) => t.date.isBefore(date))
-          .where((t) => t?.ticketType == TicketType?.sellDeferred)
-          .fold(
-              0,
-              (prev, e) =>
-                  prev + e.totalPriceTaxAndPromoIncluded ??
-                  0); // adding this to prevent total crash
+          .where((t) => t.ticketType == TicketType.sellDeferred)
+          .fold(0, (prev, e) => prev + e.totalPriceTaxAndPromoIncluded);
 
   /// clients
   ///
   @action
   Map<String, HerderWeebi> monthTopClientsSellCashOnly(
       DateTime date, List<HerderWeebi> herdersList) {
-    Map<String, HerderWeebi> map = new Map();
+    final map = <String, HerderWeebi>{};
     for (var herder in herdersList) {
       var soldPerClient = tickets
           .where((t) => t.status == true)
@@ -681,9 +672,9 @@ abstract class TicketsStoreBase extends AbstractStore with Store {
   @action
   Map<String, HerderWeebi> monthTopClientsSellAndSellDeferred(
       DateTime date, List<HerderWeebi> herdersList) {
-    Map<String, HerderWeebi> map = new Map();
-    for (var herder in herdersList) {
-      var soldPerClient = tickets
+    final map = <String, HerderWeebi>{};
+    for (final herder in herdersList) {
+      final soldPerClient = tickets
           .where((t) => t.status == true)
           .where((t) => t.date.year == date.year)
           .where((t) => t.date.month == date.month)
@@ -702,9 +693,9 @@ abstract class TicketsStoreBase extends AbstractStore with Store {
   @action
   Map<String, HerderWeebi> dayAllClientsSellCashOnly(
       DateTime date, List<HerderWeebi> herdersList) {
-    Map<String, HerderWeebi> map = new Map();
-    for (var herder in herdersList) {
-      var soldPerClient = tickets
+    final map = <String, HerderWeebi>{};
+    for (final herder in herdersList) {
+      final soldPerClient = tickets
           .where((t) => t.status == true)
           .where((t) =>
               t.date.year == date.year &&
@@ -724,9 +715,9 @@ abstract class TicketsStoreBase extends AbstractStore with Store {
   @action
   Map<String, HerderWeebi> dayAllClientsSellDeferred(
       DateTime date, List<HerderWeebi> herdersList) {
-    Map<String, HerderWeebi> map = new Map();
-    for (var herder in herdersList) {
-      var soldPerClient = tickets
+    final map = <String, HerderWeebi>{};
+    for (final herder in herdersList) {
+      final soldPerClient = tickets
           .where((t) => t.status == true)
           .where((t) =>
               t.date.year == date.year &&
@@ -745,9 +736,9 @@ abstract class TicketsStoreBase extends AbstractStore with Store {
   @action
   Map<String, HerderWeebi> dayAllClientsSellAndSellDeferred(
       DateTime date, List<HerderWeebi> herdersList) {
-    Map<String, HerderWeebi> map = new Map();
-    for (var herder in herdersList) {
-      var soldPerClient = tickets
+    final map = <String, HerderWeebi>{};
+    for (final herder in herdersList) {
+      final soldPerClient = tickets
           .where((t) => t.status == true)
           .where((t) =>
               t.date.year == date.year &&

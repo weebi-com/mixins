@@ -71,7 +71,7 @@ abstract class ArticlesStoreBase with Store {
   SortedBy sortedBy = SortedBy.title;
 
   @observable
-  ObservableList<LineOfArticles> lines = ObservableList<LineOfArticles>();
+  ObservableList<LineOfArticles> lines = ObservableList.of(<LineOfArticles>[]);
 
   @computed
   ObservableList<LineOfArticles> get linesPalpableNoBasket =>
@@ -207,7 +207,7 @@ abstract class ArticlesStoreBase with Store {
       : isFilter && filteredBy == FilteredBy.title && queryString.isNotEmpty
           ? ObservableList<LineOfArticles>.of(lines
               .where((p) => p.status)
-              .where((p) => (p.isPalpable ?? true))
+              .where((p) => p.isPalpable ?? true)
               .where((p) => p.title != '*')
               .where((p) => p.title
                   .toLowerCase()
@@ -219,7 +219,7 @@ abstract class ArticlesStoreBase with Store {
                   queryString.isNotEmpty
               ? ObservableList<LineOfArticles>.of(lines
                   .where((p) => p.status)
-                  .where((p) => (p.isPalpable ?? true))
+                  .where((p) => p.isPalpable ?? true)
                   .where((p) => p.title != '*')
                   .where((p) =>
                       p.barcode.toString().trim() ==
@@ -227,22 +227,22 @@ abstract class ArticlesStoreBase with Store {
                   .toList())
               : ObservableList<LineOfArticles>.of(lines
                   .where((p) => p.status)
-                  .where((p) => (p.isPalpable ?? true))
+                  .where((p) => p.isPalpable ?? true)
                   .where((p) => p.title != '*')
                   .toList());
 
   @action
   Future<void> init() async {
-    final _lines = await _articlesService.getLinesRpc.request(null);
-    lines = ObservableList.of(_lines);
+    final linesFromRpc = await _articlesService.getLinesRpc.request(null);
+    lines = ObservableList.of(linesFromRpc);
     initialLoading = false;
   }
 
   @action
-  Future<int> addAllLines(List<LineOfArticles> _lineArticlesToSave) async {
-    await _articlesService.addAllLinesRpc.request(_lineArticlesToSave);
-    lines.addAll(_lineArticlesToSave);
-    return _lineArticlesToSave.length;
+  Future<int> addAllLines(List<LineOfArticles> lineArticlesToSave) async {
+    await _articlesService.addAllLinesRpc.request(lineArticlesToSave);
+    lines.addAll(lineArticlesToSave);
+    return lineArticlesToSave.length;
   }
 
   @action
