@@ -77,7 +77,8 @@ abstract class ArticleStockStatelessAbstract<A extends ArticleAbstract>
 
   double articleClosingFinalQt(Iterable<ClosingStockShop> closingStockShops,
       {DateTime? end}) {
-    return closingStockShops
-        .stockShopArticleFinalQuantityAbsoluteForWeebi(article, end: end);
+    return closingStockShops.stockShopArticleFinalQuantityAbsoluteForWeebi(
+        article,
+        end: end ?? DateTime.now());
   }
 }

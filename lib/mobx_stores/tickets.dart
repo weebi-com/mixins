@@ -132,12 +132,12 @@ abstract class TicketsStoreBase extends AbstractStore with Store {
 
   @action
   Future<ObservableSet<TicketWeebi>> importPastTickets(String json) async {
-    final _tickets = (convert.json.decode(json) as List)
+    final ticketsDecoded = (convert.json.decode(json) as List)
         .cast<Map>()
         .cast<Map<String, dynamic>>()
         .map((ticket) => TicketWeebi.fromMap(ticket))
         .toList();
-    tickets = ObservableSet.of(_tickets);
+    tickets = ObservableSet.of(ticketsDecoded);
     await _ticketsService.addAllTicketsRpc.request(tickets);
     return tickets;
   }

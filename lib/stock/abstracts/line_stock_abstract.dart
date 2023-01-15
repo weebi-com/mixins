@@ -1,9 +1,7 @@
 import 'package:closing/closing.dart'
-    show ClosingStockProduct, ClosingStockShop, ClosingStockShopProduct;
-import 'package:closing/closing_abstraction.dart';
+    show ClosingStockShop, ClosingStockShopProduct;
 import 'package:closing/closing_extensions.dart' show StockItUpTillYaGetEnough;
 import 'package:flutter/material.dart';
-import 'package:models_weebi/abstractions.dart';
 import 'package:models_weebi/utils.dart' show DateRange;
 import 'package:models_weebi/weebi_models.dart';
 import 'package:models_weebi/extensions.dart';
@@ -47,7 +45,7 @@ abstract class LineArticleStockAbstract<ClosingsStore, TicketsStore>
   double lineClosingFinalQt(Iterable<ClosingStockShop> closingStockShops,
       {DateTime? end}) {
     return closingStockShops.stockShopLineFinalQuantityAbsoluteForWeebi(line,
-        end: end);
+        end: end ?? DateTime.now());
   }
 
   double lineClosingDiffOverTimeRange(

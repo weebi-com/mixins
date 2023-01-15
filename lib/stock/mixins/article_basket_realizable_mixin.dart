@@ -31,12 +31,12 @@ mixin ArticleBasketRealizableNow on ArticleStockStatelessAbstract {
     DateTime end,
   ) {
     if (article is ArticleBasket) {
-      final _articlesAndMinimQt =
+      final articlesAndMinimQt =
           lines.articleBasketWrapThemExt(article as ArticleBasket, start, end);
       // find the level of article stock remaining
       // divide it by the minimum qt in basket
       final articlesAndRemainingStock = <BasketWrapper>[];
-      for (final wrapper in _articlesAndMinimQt) {
+      for (final wrapper in articlesAndMinimQt) {
         final stockRemaining = articleStockRemaining(
             cStockShops, tickets, start, end,
             wrappedArticle: wrapper.article);
@@ -66,7 +66,7 @@ mixin ArticleBasketRealizableNow on ArticleStockStatelessAbstract {
   }) {
     return cStockShops.stockShopArticleFinalQuantityAbsoluteForWeebi(
         wrappedArticle,
-        end: end);
+        end: end ?? DateTime.now());
   }
 
   double _articleTkQtIn(

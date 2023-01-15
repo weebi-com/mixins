@@ -62,7 +62,7 @@ mixin LineSingleArticleBasketRealizableNow on LineArticleStockAbstract {
 // stockShopArticleQtOutTimeRangeForWeebi
     return closingStockShops.stockShopArticleFinalQuantityAbsoluteForWeebi(
         wrappedArticle,
-        end: end);
+        end: end ?? DateTime.now());
   }
 
   double _articleTkQtIn(

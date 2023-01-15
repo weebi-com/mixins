@@ -247,32 +247,32 @@ abstract class ArticlesStoreBase with Store {
 
   @action
   Future<int> updateAllLinesThatMatch(
-      List<LineOfArticles> _lineArticlesToUpdate) async {
+      List<LineOfArticles> lineArticlesToUpdate) async {
     final listToUpdate = <LineOfArticles>[];
-    // print(_lineArticlesToUpdate.length);
-    for (var i = 0; i < _lineArticlesToUpdate.length; i++) {
-      if (lines.any((e) => e.title == _lineArticlesToUpdate[i].title)) {
+    // print(lineArticlesToUpdate.length);
+    for (var i = 0; i < lineArticlesToUpdate.length; i++) {
+      if (lines.any((e) => e.title == lineArticlesToUpdate[i].title)) {
         final match =
-            lines.where((e) => e.title == _lineArticlesToUpdate[i].title);
+            lines.where((e) => e.title == lineArticlesToUpdate[i].title);
         // print('match.length ${match.length}');
         if (match.length > 1) {
           //print(
-          //    'dups found x${match.length} times : ${_lineArticlesToUpdate[i].toString()}');
+          //    'dups found x${match.length} times : ${lineArticlesToUpdate[i].toString()}');
           throw 'x${match.length} articles ont le titre ${lines[i].title}, veuillez les renommer pour éviter les erreurs d\'import';
         } else {
           // print('try copy');
-          final _u = match.first.copyWith(articles: [
+          final tempToupdate = match.first.copyWith(articles: [
             (match.first.articles.first as Article).copyWith(
-              price: (_lineArticlesToUpdate[i].articles.first as Article).price,
-              cost: (_lineArticlesToUpdate[i].articles.first as Article).cost,
-              articleCode: _lineArticlesToUpdate[i]
+              price: (lineArticlesToUpdate[i].articles.first as Article).price,
+              cost: (lineArticlesToUpdate[i].articles.first as Article).cost,
+              articleCode: lineArticlesToUpdate[i]
                   .articles
                   .first
                   .articleCode, //TODO ask Sidy if this is better than title
             )
           ]);
           print('try add');
-          listToUpdate.add(_u);
+          listToUpdate.add(tempToupdate);
         }
       } else {
         print('no match in any');
@@ -362,15 +362,14 @@ abstract class ArticlesStoreBase with Store {
         if ((article as ArticleBasket)
             .proxies
             .any((element) => element.proxyLineId == productData.id)) {
-          if ((article as ArticleBasket).proxies.length > 1) {
-            final index = (article as ArticleBasket)
-                .proxies
+          if (article.proxies.length > 1) {
+            final index = article.proxies
                 .indexWhere((element) => element.proxyLineId == productData.id);
-            (article as ArticleBasket).proxies.removeAt(index);
+            article.proxies.removeAt(index);
             await _articlesService.updateArticleRpc.request(article);
-            final _lineIndex = lines.indexOf(line);
-            final _articleIndex = lines[_lineIndex].articles.indexOf(article);
-            lines[_lineIndex].articles[_articleIndex] = article;
+            final lineIndex = lines.indexOf(line);
+            final articleIndex = lines[lineIndex].articles.indexOf(article);
+            lines[lineIndex].articles[articleIndex] = article;
           } else {
             isBasketToBeDeleted = true;
             if (line.articles.length > 1) {
@@ -419,16 +418,15 @@ abstract class ArticlesStoreBase with Store {
         if ((articleB as ArticleBasket).proxies.any((proxy) =>
             proxy.proxyLineId == articleData.lineId &&
             proxy.proxyArticleId == articleData.id)) {
-          if ((articleB as ArticleBasket).proxies.length > 1) {
-            final _proxy = (articleB as ArticleBasket).proxies.firstWhereOrNull(
-                (proxy) =>
-                    proxy.proxyLineId == articleData.lineId &&
-                    proxy.proxyArticleId == articleData.id);
-            (articleB as ArticleBasket).proxies.remove(_proxy);
+          if (articleB.proxies.length > 1) {
+            final proxyParam = articleB.proxies.firstWhereOrNull((proxy) =>
+                proxy.proxyLineId == articleData.lineId &&
+                proxy.proxyArticleId == articleData.id);
+            articleB.proxies.remove(proxyParam);
             final a = await _articlesService.updateArticleRpc.request(articleB);
-            final _lineIndex = lines.indexOf(line);
-            final _articleIndex = lines[_lineIndex].articles.indexOf(a);
-            lines[_lineIndex].articles[_articleIndex] = a;
+            final lineIndex = lines.indexOf(line);
+            final articleIndex = lines[lineIndex].articles.indexOf(a);
+            lines[lineIndex].articles[articleIndex] = a;
           } else {
             isBasketToBeDeleted = true;
             if (line.articles.length > 1) {
@@ -459,11 +457,11 @@ abstract class ArticlesStoreBase with Store {
       }
     }
     await _articlesService.deleteForeverArticleRpc.request(articleData);
-    final _lineArticle =
+    final lineArticle =
         lines.firstWhereOrNull((p) => p.id == articleData.productId);
-    final _article =
-        _lineArticle!.articles.firstWhereOrNull((a) => a.id == articleData.id);
-    _lineArticle.articles.remove(_article);
+    final articleCool =
+        lineArticle!.articles.firstWhereOrNull((a) => a.id == articleData.id);
+    lineArticle.articles.remove(articleCool);
     return lines;
   }
 
@@ -482,19 +480,19 @@ abstract class ArticlesStoreBase with Store {
   Future<A> updateArticle<A extends ArticleAbstract>(A articleData) async {
     final updatedArticle =
         await _articlesService.updateArticleRpc.request(articleData);
-    final _lineArticle = lines
+    final lineArticle = lines
         .firstWhereOrNull((product) => product.id == updatedArticle.productId);
-    final _lineArticleIndex = lines.indexOf(_lineArticle);
-    final _article = _lineArticle!.articles
+    final lineArticleIndex = lines.indexOf(lineArticle);
+    final article = lineArticle!.articles
         .firstWhereOrNull((a) => a.id == updatedArticle.id);
-    if (_article != null) {
-      final articleIndex = _lineArticle.articles.indexOf(_article);
-      lines[_lineArticleIndex].articles[articleIndex] = updatedArticle;
+    if (article != null) {
+      final articleIndex = lineArticle.articles.indexOf(article);
+      lines[lineArticleIndex].articles[articleIndex] = updatedArticle;
 
       // make sur that the function sparks an update in mobx => View
-      final _line = lines[_lineArticleIndex];
-      lines.removeAt(_lineArticleIndex);
-      lines.add(_line);
+      final lineCool = lines[lineArticleIndex];
+      lines.removeAt(lineArticleIndex);
+      lines.add(lineCool);
       return updatedArticle as A;
     } else {
       throw 'error in updateArticle';
