@@ -171,10 +171,10 @@ mixin _$ArticlesStore on ArticlesStoreBase, Store {
       AsyncAction('ArticlesStoreBase.addAllLines', context: context);
 
   @override
-  Future<int> addAllLines(
+  Future<int> addAllArticleLines(
       List<LineOfArticles<ArticleAbstract>> _lineArticlesToSave) {
     return _$addAllLinesAsyncAction
-        .run(() => super.addAllLines(_lineArticlesToSave));
+        .run(() => super.addAllArticleLines(_lineArticlesToSave));
   }
 
   late final _$updateAllLinesThatMatchAsyncAction = AsyncAction(
