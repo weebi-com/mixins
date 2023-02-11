@@ -1,16 +1,6 @@
-import 'package:closing/closing.dart';
-import 'package:flutter/material.dart';
-import 'package:mixins_weebi/mobx_stores/tickets.dart';
-import 'package:mobx/mobx.dart';
 import 'package:models_base/utils.dart';
-import 'package:models_weebi/weebi_models.dart';
+
 import 'package:mixins_weebi/stock/abstracts/line_stock_abstract.dart';
-
-import 'package:models_weebi/abstractions.dart';
-import 'package:closing/closing_abstraction.dart';
-import 'package:closing/closing_store.dart';
-
-import 'package:mixins_weebi/mixins_weebi.dart';
 
 // Faking it
 

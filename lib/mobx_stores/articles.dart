@@ -239,7 +239,9 @@ abstract class ArticlesStoreBase with Store {
   }
 
   @action
-  Future<int> addAllLines(List<LineOfArticles> lineArticlesToSave) async {
+  Future<int> addAllArticleLines(
+      List<LineOfArticles> lineArticlesToSave) async {
+    //TODO get a count to check this ok
     await _articlesService.addAllLinesRpc.request(lineArticlesToSave);
     lines.addAll(lineArticlesToSave);
     return lineArticlesToSave.length;
@@ -301,12 +303,12 @@ abstract class ArticlesStoreBase with Store {
   @action
   Future<ObservableList<LineOfArticles>> importCatalogueFromJson(
       String json) async {
-    final _lineArticles = (convert.json.decode(json) as List)
+    final lineArticles = (convert.json.decode(json) as List)
         .cast<Map>() // ?
         .cast<Map<String, dynamic>>()
         .map((line) => LineOfArticles.fromMap(line))
         .toList();
-    lines = ObservableList.of(_lineArticles);
+    lines = ObservableList.of(lineArticles);
     await _articlesService.addAllLinesRpc.request(lines);
     return lines;
   }
@@ -322,7 +324,7 @@ abstract class ArticlesStoreBase with Store {
   @action
   Future<LineOfArticles> createLineArticle<A extends ArticleAbstract>(
       LineOfArticles<A> lineData) async {
-    final _lineArticle =
+    final lineArticle =
         await _articlesService.createLineArticleRpc.request(lineData);
     lines.add(lineData);
     return lineData is LineOfArticles<Article>
@@ -341,8 +343,8 @@ abstract class ArticlesStoreBase with Store {
   }
 
   @action // not used at the moment
-  Future<LineOfArticles> restoreLineArticle(LineOfArticles _line) async {
-    final restoredLine = await _articlesService.updateLineRpc.request(_line);
+  Future<LineOfArticles> restoreLineArticle(LineOfArticles line) async {
+    final restoredLine = await _articlesService.updateLineRpc.request(line);
     final productIndex = restoredLine.id;
     lines[productIndex] = restoredLine;
     return restoredLine;
@@ -354,7 +356,7 @@ abstract class ArticlesStoreBase with Store {
     // first remove it from any basket
     bool isBasketToBeDeleted = false;
     bool isBasketSingle = true;
-    var lineToDelete;
+    late LineOfArticles<ArticleAbstract> lineToDelete;
     final listOfArticleBasketToDelete = [];
 
     for (final line in lines.where((l) => (l.isBasket ?? false))) {
@@ -411,7 +413,7 @@ abstract class ArticlesStoreBase with Store {
     // first remove it from any basket
     bool isBasketToBeDeleted = false;
     bool isBasketSingle = true;
-    var lineToDelete;
+    late LineOfArticles<ArticleAbstract> lineToDelete;
     final listOfArticleBasketToDelete = [];
     for (final line in lines.where((l) => (l.isBasket ?? false))) {
       for (final articleB in line.articles) {
@@ -470,9 +472,9 @@ abstract class ArticlesStoreBase with Store {
       {bool isTest = false}) async {
     final createdArticle =
         await _articlesService.createArticleRpc.request(articleData);
-    final _lineArticle =
+    final lineArticle =
         lines.firstWhereOrNull((line) => line.id == createdArticle.lineId);
-    _lineArticle!.articles.add(createdArticle);
+    lineArticle!.articles.add(createdArticle);
     return createdArticle as A;
   }
 
