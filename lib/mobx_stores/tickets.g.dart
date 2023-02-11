@@ -672,8 +672,8 @@ mixin _$TicketsStore on TicketsStoreBase, Store {
   }
 
   @override
-  Map<String, HerderWeebi> monthTopClientsSellCashOnly(
-      DateTime date, List<HerderWeebi> herdersList) {
+  Map<String, Herder> monthTopClientsSellCashOnly(
+      DateTime date, List<Herder> herdersList) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.monthTopClientsSellCashOnly');
     try {
@@ -684,8 +684,8 @@ mixin _$TicketsStore on TicketsStoreBase, Store {
   }
 
   @override
-  Map<String, HerderWeebi> monthTopClientsSellAndSellDeferred(
-      DateTime date, List<HerderWeebi> herdersList) {
+  Map<String, Herder> monthTopClientsSellAndSellDeferred(
+      DateTime date, List<Herder> herdersList) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.monthTopClientsSellAndSellDeferred');
     try {
@@ -696,8 +696,8 @@ mixin _$TicketsStore on TicketsStoreBase, Store {
   }
 
   @override
-  Map<String, HerderWeebi> dayAllClientsSellCashOnly(
-      DateTime date, List<HerderWeebi> herdersList) {
+  Map<String, Herder> dayAllClientsSellCashOnly(
+      DateTime date, List<Herder> herdersList) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.dayAllClientsSellCashOnly');
     try {
@@ -708,8 +708,8 @@ mixin _$TicketsStore on TicketsStoreBase, Store {
   }
 
   @override
-  Map<String, HerderWeebi> dayAllClientsSellDeferred(
-      DateTime date, List<HerderWeebi> herdersList) {
+  Map<String, Herder> dayAllClientsSellDeferred(
+      DateTime date, List<Herder> herdersList) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.dayAllClientsSellDeferred');
     try {
@@ -720,8 +720,8 @@ mixin _$TicketsStore on TicketsStoreBase, Store {
   }
 
   @override
-  Map<String, HerderWeebi> dayAllClientsSellAndSellDeferred(
-      DateTime date, List<HerderWeebi> herdersList) {
+  Map<String, Herder> dayAllClientsSellAndSellDeferred(
+      DateTime date, List<Herder> herdersList) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.dayAllClientsSellAndSellDeferred');
     try {

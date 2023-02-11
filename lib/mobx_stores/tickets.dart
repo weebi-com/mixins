@@ -11,7 +11,7 @@ import 'package:models_weebi/common.dart' show PaiementType, TicketType;
 import 'package:models_weebi/utils.dart' show WeebiDates;
 
 // Project imports:
-import 'package:models_weebi/weebi_models.dart' show HerderWeebi, TicketWeebi;
+import 'package:models_weebi/weebi_models.dart' show Herder, TicketWeebi;
 
 import 'package:models_weebi/extensions.dart';
 
@@ -650,9 +650,9 @@ abstract class TicketsStoreBase extends AbstractStore with Store {
   /// clients
   ///
   @action
-  Map<String, HerderWeebi> monthTopClientsSellCashOnly(
-      DateTime date, List<HerderWeebi> herdersList) {
-    final map = <String, HerderWeebi>{};
+  Map<String, Herder> monthTopClientsSellCashOnly(
+      DateTime date, List<Herder> herdersList) {
+    final map = <String, Herder>{};
     for (var herder in herdersList) {
       var soldPerClient = tickets
           .where((t) => t.status == true)
@@ -670,9 +670,9 @@ abstract class TicketsStoreBase extends AbstractStore with Store {
   }
 
   @action
-  Map<String, HerderWeebi> monthTopClientsSellAndSellDeferred(
-      DateTime date, List<HerderWeebi> herdersList) {
-    final map = <String, HerderWeebi>{};
+  Map<String, Herder> monthTopClientsSellAndSellDeferred(
+      DateTime date, List<Herder> herdersList) {
+    final map = <String, Herder>{};
     for (final herder in herdersList) {
       final soldPerClient = tickets
           .where((t) => t.status == true)
@@ -691,9 +691,9 @@ abstract class TicketsStoreBase extends AbstractStore with Store {
   }
 
   @action
-  Map<String, HerderWeebi> dayAllClientsSellCashOnly(
-      DateTime date, List<HerderWeebi> herdersList) {
-    final map = <String, HerderWeebi>{};
+  Map<String, Herder> dayAllClientsSellCashOnly(
+      DateTime date, List<Herder> herdersList) {
+    final map = <String, Herder>{};
     for (final herder in herdersList) {
       final soldPerClient = tickets
           .where((t) => t.status == true)
@@ -713,9 +713,9 @@ abstract class TicketsStoreBase extends AbstractStore with Store {
   }
 
   @action
-  Map<String, HerderWeebi> dayAllClientsSellDeferred(
-      DateTime date, List<HerderWeebi> herdersList) {
-    final map = <String, HerderWeebi>{};
+  Map<String, Herder> dayAllClientsSellDeferred(
+      DateTime date, List<Herder> herdersList) {
+    final map = <String, Herder>{};
     for (final herder in herdersList) {
       final soldPerClient = tickets
           .where((t) => t.status == true)
@@ -734,9 +734,9 @@ abstract class TicketsStoreBase extends AbstractStore with Store {
   }
 
   @action
-  Map<String, HerderWeebi> dayAllClientsSellAndSellDeferred(
-      DateTime date, List<HerderWeebi> herdersList) {
-    final map = <String, HerderWeebi>{};
+  Map<String, Herder> dayAllClientsSellAndSellDeferred(
+      DateTime date, List<Herder> herdersList) {
+    final map = <String, Herder>{};
     for (final herder in herdersList) {
       final soldPerClient = tickets
           .where((t) => t.status == true)
