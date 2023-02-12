@@ -28,8 +28,8 @@ enum FilteredBy { title, barcode }
 
 class ArticlesStore = ArticlesStoreBase with _$ArticlesStore;
 
-abstract class ArticlesStoreBase with Store {
-  final ArticlesService _articlesService;
+abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
+  final S _articlesService;
 
   ArticlesStoreBase(this._articlesService) {
     initialLoading = true;
@@ -232,9 +232,14 @@ abstract class ArticlesStoreBase with Store {
                   .toList());
 
   @action
-  Future<void> init() async {
-    final linesFromRpc = await _articlesService.getLinesRpc.request(null);
-    lines = ObservableList.of(linesFromRpc);
+  Future<void> init({List<LineOfArticles>? data}) async {
+    if (data != null && data.isNotEmpty && S is ArticlesServiceNoSembast) {
+      lines = ObservableList.of(data);
+    } else {
+      final linesFromRpc =
+          await _articlesService.getArticlesLinesRpc.request(null);
+      lines = ObservableList.of(linesFromRpc);
+    }
     initialLoading = false;
   }
 
@@ -242,7 +247,7 @@ abstract class ArticlesStoreBase with Store {
   Future<int> addAllArticleLines(
       List<LineOfArticles> lineArticlesToSave) async {
     //TODO get a count to check this ok
-    await _articlesService.addAllLinesRpc.request(lineArticlesToSave);
+    await _articlesService.addAllArticleLinesRpc.request(lineArticlesToSave);
     lines.addAll(lineArticlesToSave);
     return lineArticlesToSave.length;
   }
@@ -293,7 +298,8 @@ abstract class ArticlesStoreBase with Store {
 
   @action
   Future<LineOfArticles> updateLineArticle(LineOfArticles line) async {
-    final updatedLine = await _articlesService.updateLineRpc.request(line);
+    final updatedLine =
+        await _articlesService.updateArticleLineRpc.request(line);
     final index = lines.indexWhere((element) => element.id == updatedLine.id);
     lines.removeAt(index);
     lines.add(updatedLine);
@@ -309,7 +315,7 @@ abstract class ArticlesStoreBase with Store {
         .map((line) => LineOfArticles.fromMap(line))
         .toList();
     lines = ObservableList.of(lineArticles);
-    await _articlesService.addAllLinesRpc.request(lines);
+    await _articlesService.addAllArticleLinesRpc.request(lines);
     return lines;
   }
 
@@ -336,7 +342,7 @@ abstract class ArticlesStoreBase with Store {
   @action
   Future<LineOfArticles> stockLowWarning(LineOfArticles productFalse) async {
     final stockLowProduct =
-        await _articlesService.updateLineRpc.request(productFalse);
+        await _articlesService.updateArticleLineRpc.request(productFalse);
     var productIndex = stockLowProduct.id;
     lines[productIndex] = stockLowProduct;
     return stockLowProduct;
@@ -344,7 +350,8 @@ abstract class ArticlesStoreBase with Store {
 
   @action // not used at the moment
   Future<LineOfArticles> restoreLineArticle(LineOfArticles line) async {
-    final restoredLine = await _articlesService.updateLineRpc.request(line);
+    final restoredLine =
+        await _articlesService.updateArticleLineRpc.request(line);
     final productIndex = restoredLine.id;
     lines[productIndex] = restoredLine;
     return restoredLine;
