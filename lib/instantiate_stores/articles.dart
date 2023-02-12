@@ -4,7 +4,13 @@ import 'package:services_weebi/rpc_articles.dart';
 import 'package:services_weebi/services_weebi.dart';
 
 class ArticlesStoreInstantiater {
-  static ArticlesStore instArticlesStoreTest(DbArticles dbArticles) {
+  static ArticlesStore get instArticlesStoreNoPersistenceTest {
+    const articlesServiceNoSembast = ArticlesServiceNoSembast();
+
+    return ArticlesStore(articlesServiceNoSembast);
+  }
+
+  static ArticlesStore instArticlesStoreSembastTest(DbArticles dbArticles) {
     final getLinesRpc = GetLinesRpc(dbArticles);
     final saveAllProductsRpc = AddAllLineArticlesRpc(dbArticles);
     final updateProductRpc = UpdateLineArticleRpc(dbArticles);

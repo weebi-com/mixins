@@ -163,8 +163,8 @@ mixin _$ArticlesStore on ArticlesStoreBase, Store {
       AsyncAction('ArticlesStoreBase.init', context: context);
 
   @override
-  Future<void> init({List<LineOfArticles>? data}) {
-    return _$initAsyncAction.run(() => super.init());
+  Future<bool> init({List<LineOfArticles>? data}) {
+    return _$initAsyncAction.run(() => super.init(data: data));
   }
 
   late final _$addAllLinesAsyncAction =

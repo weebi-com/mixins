@@ -232,15 +232,17 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
                   .toList());
 
   @action
-  Future<void> init({List<LineOfArticles>? data}) async {
-    if (data != null && data.isNotEmpty && S is ArticlesServiceNoSembast) {
+  Future<bool> init({List<LineOfArticles>? data}) async {
+    if (data != null && data.isNotEmpty) {
       lines = ObservableList.of(data);
+      print('lines ${lines.first}');
     } else {
       final linesFromRpc =
           await _articlesService.getArticlesLinesRpc.request(null);
       lines = ObservableList.of(linesFromRpc);
     }
     initialLoading = false;
+    return initialLoading;
   }
 
   @action
