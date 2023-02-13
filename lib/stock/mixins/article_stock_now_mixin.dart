@@ -1,4 +1,4 @@
-import 'package:closing/closing.dart' show ClosingStockShop;
+import 'package:models_weebi/closings.dart' show ClosingStockShop;
 
 import 'package:models_weebi/base.dart';
 import 'package:models_weebi/utils.dart';

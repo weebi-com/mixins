@@ -1,4 +1,4 @@
-import 'package:closing/closing.dart'
+import 'package:models_weebi/closings.dart'
     show ClosingStockShop, ClosingStockShopProduct;
 import 'package:closing/closing_extensions.dart' show StockItUpTillYaGetEnough;
 import 'package:flutter/material.dart';

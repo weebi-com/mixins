@@ -8,7 +8,8 @@ part of 'tickets.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$TicketsStore on TicketsStoreBase, Store {
+mixin _$TicketsStore<T extends TicketsServiceAbstract>
+    on TicketsStoreBase<T>, Store {
   Computed<ObservableList<TicketWeebi>>? _$selectedComputed;
 
   @override
@@ -221,11 +222,11 @@ mixin _$TicketsStore on TicketsStoreBase, Store {
   }
 
   @override
-  Observable<DateTimeRange> setRange(DateTimeRange _range) {
+  Observable<DateTimeRange> setRange(DateTimeRange rangeParam) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.setRange');
     try {
-      return super.setRange(_range);
+      return super.setRange(rangeParam);
     } finally {
       _$TicketsStoreBaseActionController.endAction(_$actionInfo);
     }

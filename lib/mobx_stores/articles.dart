@@ -235,7 +235,6 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   Future<bool> init({List<LineOfArticles>? data}) async {
     if (data != null && data.isNotEmpty) {
       lines = ObservableList.of(data);
-      print('lines ${lines.first}');
     } else {
       final linesFromRpc =
           await _articlesService.getArticlesLinesRpc.request(null);

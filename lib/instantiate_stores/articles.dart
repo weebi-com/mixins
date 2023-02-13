@@ -6,7 +6,6 @@ import 'package:services_weebi/services_weebi.dart';
 class ArticlesStoreInstantiater {
   static ArticlesStore get instArticlesStoreNoPersistenceTest {
     const articlesServiceNoSembast = ArticlesServiceNoSembast();
-
     return ArticlesStore(articlesServiceNoSembast);
   }
 

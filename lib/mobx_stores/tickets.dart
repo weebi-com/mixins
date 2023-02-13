@@ -21,8 +21,9 @@ part 'tickets.g.dart';
 
 class TicketsStore = TicketsStoreBase with _$TicketsStore;
 
-abstract class TicketsStoreBase extends AbstractStore with Store {
-  final TicketsService _ticketsService;
+abstract class TicketsStoreBase<T extends TicketsServiceAbstract>
+    extends AbstractStore with Store {
+  final T _ticketsService;
 
   @observable
   ObservableSet<TicketWeebi> tickets = ObservableSet<TicketWeebi>();

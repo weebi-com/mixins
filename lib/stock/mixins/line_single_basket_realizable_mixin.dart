@@ -1,4 +1,4 @@
-import 'package:closing/closing.dart';
+import 'package:models_weebi/closings.dart';
 import 'package:closing/extensions/closing_stock_shops.dart';
 import 'package:models_weebi/utils.dart';
 

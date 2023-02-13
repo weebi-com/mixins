@@ -8,7 +8,8 @@ part of 'articles.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$ArticlesStore on ArticlesStoreBase, Store {
+mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
+    on ArticlesStoreBase<S>, Store {
   Computed<ObservableList<LineOfArticles<ArticleAbstract>>>?
       _$linesPalpableNoBasketComputed;
 
@@ -163,18 +164,18 @@ mixin _$ArticlesStore on ArticlesStoreBase, Store {
       AsyncAction('ArticlesStoreBase.init', context: context);
 
   @override
-  Future<bool> init({List<LineOfArticles>? data}) {
+  Future<bool> init({List<LineOfArticles<ArticleAbstract>>? data}) {
     return _$initAsyncAction.run(() => super.init(data: data));
   }
 
-  late final _$addAllLinesAsyncAction =
-      AsyncAction('ArticlesStoreBase.addAllLines', context: context);
+  late final _$addAllArticleLinesAsyncAction =
+      AsyncAction('ArticlesStoreBase.addAllArticleLines', context: context);
 
   @override
   Future<int> addAllArticleLines(
-      List<LineOfArticles<ArticleAbstract>> _lineArticlesToSave) {
-    return _$addAllLinesAsyncAction
-        .run(() => super.addAllArticleLines(_lineArticlesToSave));
+      List<LineOfArticles<ArticleAbstract>> lineArticlesToSave) {
+    return _$addAllArticleLinesAsyncAction
+        .run(() => super.addAllArticleLines(lineArticlesToSave));
   }
 
   late final _$updateAllLinesThatMatchAsyncAction = AsyncAction(
@@ -183,9 +184,9 @@ mixin _$ArticlesStore on ArticlesStoreBase, Store {
 
   @override
   Future<int> updateAllLinesThatMatch(
-      List<LineOfArticles<ArticleAbstract>> _lineArticlesToUpdate) {
+      List<LineOfArticles<ArticleAbstract>> lineArticlesToUpdate) {
     return _$updateAllLinesThatMatchAsyncAction
-        .run(() => super.updateAllLinesThatMatch(_lineArticlesToUpdate));
+        .run(() => super.updateAllLinesThatMatch(lineArticlesToUpdate));
   }
 
   late final _$updateLineArticleAsyncAction =
@@ -244,9 +245,9 @@ mixin _$ArticlesStore on ArticlesStoreBase, Store {
 
   @override
   Future<LineOfArticles<ArticleAbstract>> restoreLineArticle(
-      LineOfArticles<ArticleAbstract> _line) {
+      LineOfArticles<ArticleAbstract> line) {
     return _$restoreLineArticleAsyncAction
-        .run(() => super.restoreLineArticle(_line));
+        .run(() => super.restoreLineArticle(line));
   }
 
   late final _$deleteForeverLineArticleAsyncAction = AsyncAction(
