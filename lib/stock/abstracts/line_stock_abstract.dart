@@ -6,6 +6,10 @@ import 'package:models_weebi/utils.dart' show DateRange;
 import 'package:models_weebi/weebi_models.dart';
 import 'package:models_weebi/extensions.dart';
 
+// * this makes an easy future evolution easier
+// if need to use another type of ticket, only change it here
+// no need to use generics all over the place
+
 typedef TicketsInvoker = Iterable<TicketWeebi> Function();
 typedef ClosingStockShopsInvoker
     = Iterable<ClosingStockShop<ClosingStockShopProduct>> Function();
