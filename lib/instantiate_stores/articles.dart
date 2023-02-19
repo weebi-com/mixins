@@ -4,7 +4,7 @@ import 'package:services_weebi/rpc_articles.dart';
 import 'package:services_weebi/services_weebi.dart';
 
 class ArticlesStoreInstantiater {
-  static ArticlesStore get instArticlesStoreNoPersistenceTest {
+  static ArticlesStore get noPersistence {
     const articlesServiceNoSembast = ArticlesServiceNoSembast();
     return ArticlesStore(articlesServiceNoSembast);
   }

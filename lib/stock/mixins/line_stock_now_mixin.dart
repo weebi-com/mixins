@@ -1,6 +1,5 @@
-import 'package:models_base/utils.dart';
-
 import 'package:mixins_weebi/stock/abstracts/line_stock_abstract.dart';
+import 'package:models_weebi/utils.dart';
 
 // Faking it
 
