@@ -3,6 +3,7 @@ import 'dart:convert' as convert;
 
 // Package imports:
 import 'package:collection/collection.dart';
+import 'package:mixins_weebi/extensions/articles.dart';
 import 'package:mobx/mobx.dart';
 import 'package:models_weebi/base.dart';
 import 'package:models_weebi/extensions.dart';
@@ -24,7 +25,7 @@ enum SortedBy {
   idReversed,
 }
 
-enum FilteredBy { title, barcode }
+enum FilteredBy { title, barcode, none }
 
 class ArticlesStore = ArticlesStoreBase with _$ArticlesStore;
 
@@ -33,8 +34,8 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
 
   ArticlesStoreBase(this._articlesService) {
     initialLoading = true;
-    _isFilterPrivate = false;
     lines = ObservableList<LineOfArticles>();
+    linesPalpableFiltered = ObservableList<LineOfArticles>();
     sortBy(SortedBy.title);
     sortedBy = Observable(SortedBy.title);
     articlesSelectedForBasketMinQt = ObservableList<ArticleWMinQt>();
@@ -44,15 +45,10 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   bool initialLoading = false;
 
   @observable
-  bool _isFilterPrivate = false;
-
-  bool get isFilter => _isFilterPrivate;
-
-  @action
-  void setIsFilter(bool val) => _isFilterPrivate = val;
+  bool isSearch = false;
 
   @observable
-  FilteredBy _filteredByPrivate = FilteredBy.title;
+  FilteredBy _filteredByPrivate = FilteredBy.none;
 
   FilteredBy get filteredBy => _filteredByPrivate;
 
@@ -65,7 +61,9 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   String get queryString => _queryStringPrivate;
 
   @action
-  void setQueryString(String val) => _queryStringPrivate = val;
+  void setQueryString(String val) {
+    _queryStringPrivate = val;
+  }
 
   @observable
   Observable<SortedBy> sortedBy = Observable(SortedBy.title);
@@ -73,15 +71,14 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   @observable
   ObservableList<LineOfArticles> lines = ObservableList.of(<LineOfArticles>[]);
 
-  @computed
-  ObservableList<LineOfArticles> get linesPalpable =>
-      ObservableList<LineOfArticles>.of(
-          lines.where((element) => element.isPalpable ?? true));
+  @observable
+  ObservableList<LineOfArticles> linesPalpableFiltered =
+      ObservableList.of(<LineOfArticles>[]);
 
   @computed
   ObservableList<LineOfArticles> get linesPalpableNoBasket =>
       ObservableList<LineOfArticles>.of(
-          linesPalpable.where((l) => l.isBasket == false));
+          lines.isPalpable.where((l) => l.isBasket == false));
 
   // used for creating and handling article basket
   @observable
@@ -186,19 +183,19 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   ObservableList<LineOfArticles> sortBy(SortedBy sortBy) {
     switch (sortBy) {
       case SortedBy.id:
-        lines = lines.sortedById();
+        linesPalpableFiltered = lines.sortedById().isPalpable;
         sortedBy = Observable(SortedBy.id);
         break;
       case SortedBy.idReversed:
-        lines = lines.sortedByIdReversed();
+        linesPalpableFiltered = lines.sortedByIdReversed().isPalpable;
         sortedBy = Observable(SortedBy.idReversed);
         break;
       case SortedBy.title:
-        lines = lines.sortedByTitle();
+        linesPalpableFiltered = lines.sortedByTitle().isPalpable;
         sortedBy = Observable(SortedBy.title);
         break;
       case SortedBy.titleReversed:
-        lines = lines.sortedByTitleReversed();
+        linesPalpableFiltered = lines.sortedByTitleReversed().isPalpable;
         sortedBy = Observable(SortedBy.titleReversed);
         break;
       default:
@@ -206,22 +203,26 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
     return lines;
   }
 
+  @action
+  void filterByTitle() {
+    if (lines.isNotEmpty) {
+      if (filteredBy == FilteredBy.title) {
+        if (queryString.isNotEmpty) {
+          linesPalpableFiltered = lines.filterByTitle(queryString).isPalpable;
+        } else {
+          linesPalpableFiltered = lines.isPalpable;
+        }
+      }
+    }
+  }
+
   @computed
   ObservableList<LineOfArticles> get linesInSell => lines.isEmpty
       ? ObservableList<LineOfArticles>.of([])
-      : isFilter && filteredBy == FilteredBy.title && queryString.isNotEmpty
-          ? ObservableList<LineOfArticles>.of(lines
-              .where((p) => p.status)
-              .where((p) => p.isPalpable ?? true)
-              .where((p) => p.title != '*')
-              .where((p) => p.title
-                  .toLowerCase()
-                  .withoutAccents
-                  .contains(queryString.withoutAccents.toLowerCase()))
-              .toList())
-          : isFilter &&
-                  filteredBy == FilteredBy.barcode &&
-                  queryString.isNotEmpty
+      : filteredBy == FilteredBy.title && queryString.isNotEmpty
+          ? ObservableList<LineOfArticles>.of(
+              lines.filterByTitle(queryString).where((p) => p.status).toList())
+          : filteredBy == FilteredBy.barcode && queryString.isNotEmpty
               ? ObservableList<LineOfArticles>.of(lines
                   .where((p) => p.status)
                   .where((p) => p.isPalpable ?? true)
@@ -240,13 +241,32 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   Future<bool> init({List<LineOfArticles>? data}) async {
     if (data != null && data.isNotEmpty) {
       lines = ObservableList.of(data);
+      linesPalpableFiltered = data.isPalpable;
     } else {
       final linesFromRpc =
           await _articlesService.getArticlesLinesRpc.request(null);
       lines = ObservableList.of(linesFromRpc);
+      linesPalpableFiltered = linesFromRpc.isPalpable;
     }
     initialLoading = false;
+
     return initialLoading;
+  }
+
+  @action
+  Future<void> clearFilter({List<LineOfArticles>? data}) async {
+    setFilteredBy(FilteredBy.none);
+    setQueryString('');
+    // only way dart can clone a list
+    linesPalpableFiltered = lines
+        .map((e) => LineOfArticles(
+            id: e.id,
+            articles: e.articles,
+            title: e.title,
+            status: e.status,
+            creationDate: e.creationDate,
+            updateDate: e.updateDate))
+        .isPalpable;
   }
 
   @action
@@ -270,7 +290,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
         // print('match.length ${match.length}');
         if (match.length > 1) {
           //print(
-          //    'dups found x${match.length} times : ${lineArticlesToUpdate[i].toString()}');
+          //    'dups found x${match.length} times : e.${lineArticlesToUpdate[i].toString()}');
           throw 'x${match.length} articles ont le titre ${lines[i].title}, veuillez les renommer pour éviter les erreurs d\'import';
         } else {
           // print('try copy');

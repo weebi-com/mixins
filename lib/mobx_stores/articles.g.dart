@@ -11,16 +11,6 @@ part of 'articles.dart';
 mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
     on ArticlesStoreBase<S>, Store {
   Computed<ObservableList<LineOfArticles<ArticleAbstract>>>?
-      _$linesPalpableComputed;
-
-  @override
-  ObservableList<LineOfArticles<ArticleAbstract>> get linesPalpable =>
-      (_$linesPalpableComputed ??=
-              Computed<ObservableList<LineOfArticles<ArticleAbstract>>>(
-                  () => super.linesPalpable,
-                  name: 'ArticlesStoreBase.linesPalpable'))
-          .value;
-  Computed<ObservableList<LineOfArticles<ArticleAbstract>>>?
       _$linesPalpableNoBasketComputed;
 
   @override
@@ -72,19 +62,19 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
     });
   }
 
-  late final _$_isFilterPrivateAtom =
-      Atom(name: 'ArticlesStoreBase._isFilterPrivate', context: context);
+  late final _$isSearchAtom =
+      Atom(name: 'ArticlesStoreBase.isSearch', context: context);
 
   @override
-  bool get _isFilterPrivate {
-    _$_isFilterPrivateAtom.reportRead();
-    return super._isFilterPrivate;
+  bool get isSearch {
+    _$isSearchAtom.reportRead();
+    return super.isSearch;
   }
 
   @override
-  set _isFilterPrivate(bool value) {
-    _$_isFilterPrivateAtom.reportWrite(value, super._isFilterPrivate, () {
-      super._isFilterPrivate = value;
+  set isSearch(bool value) {
+    _$isSearchAtom.reportWrite(value, super.isSearch, () {
+      super.isSearch = value;
     });
   }
 
@@ -152,6 +142,24 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
     });
   }
 
+  late final _$linesPalpableFilteredAtom =
+      Atom(name: 'ArticlesStoreBase.linesPalpableFiltered', context: context);
+
+  @override
+  ObservableList<LineOfArticles<ArticleAbstract>> get linesPalpableFiltered {
+    _$linesPalpableFilteredAtom.reportRead();
+    return super.linesPalpableFiltered;
+  }
+
+  @override
+  set linesPalpableFiltered(
+      ObservableList<LineOfArticles<ArticleAbstract>> value) {
+    _$linesPalpableFilteredAtom.reportWrite(value, super.linesPalpableFiltered,
+        () {
+      super.linesPalpableFiltered = value;
+    });
+  }
+
   late final _$articlesSelectedForBasketMinQtAtom = Atom(
       name: 'ArticlesStoreBase.articlesSelectedForBasketMinQt',
       context: context);
@@ -176,6 +184,14 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
   @override
   Future<bool> init({List<LineOfArticles<ArticleAbstract>>? data}) {
     return _$initAsyncAction.run(() => super.init(data: data));
+  }
+
+  late final _$clearFilterAsyncAction =
+      AsyncAction('ArticlesStoreBase.clearFilter', context: context);
+
+  @override
+  Future<void> clearFilter({List<LineOfArticles<ArticleAbstract>>? data}) {
+    return _$clearFilterAsyncAction.run(() => super.clearFilter(data: data));
   }
 
   late final _$addAllArticleLinesAsyncAction =
@@ -304,17 +320,6 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
       ActionController(name: 'ArticlesStoreBase', context: context);
 
   @override
-  void setIsFilter(bool val) {
-    final _$actionInfo = _$ArticlesStoreBaseActionController.startAction(
-        name: 'ArticlesStoreBase.setIsFilter');
-    try {
-      return super.setIsFilter(val);
-    } finally {
-      _$ArticlesStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   void setFilteredBy(FilteredBy val) {
     final _$actionInfo = _$ArticlesStoreBaseActionController.startAction(
         name: 'ArticlesStoreBase.setFilteredBy');
@@ -403,11 +408,24 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
   }
 
   @override
+  void filterByTitle() {
+    final _$actionInfo = _$ArticlesStoreBaseActionController.startAction(
+        name: 'ArticlesStoreBase.filterByTitle');
+    try {
+      return super.filterByTitle();
+    } finally {
+      _$ArticlesStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 initialLoading: ${initialLoading},
+isSearch: ${isSearch},
 sortedBy: ${sortedBy},
 lines: ${lines},
+linesPalpableFiltered: ${linesPalpableFiltered},
 articlesSelectedForBasketMinQt: ${articlesSelectedForBasketMinQt},
 linesPalpableNoBasket: ${linesPalpableNoBasket},
 articlesWeebiList: ${articlesWeebiList},
