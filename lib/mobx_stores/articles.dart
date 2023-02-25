@@ -36,7 +36,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
     _isFilterPrivate = false;
     lines = ObservableList<LineOfArticles>();
     sortBy(SortedBy.title);
-    sortedBy = SortedBy.title;
+    sortedBy = Observable(SortedBy.title);
     articlesSelectedForBasketMinQt = ObservableList<ArticleWMinQt>();
   }
 
@@ -68,15 +68,20 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   void setQueryString(String val) => _queryStringPrivate = val;
 
   @observable
-  SortedBy sortedBy = SortedBy.title;
+  Observable<SortedBy> sortedBy = Observable(SortedBy.title);
 
   @observable
   ObservableList<LineOfArticles> lines = ObservableList.of(<LineOfArticles>[]);
 
   @computed
+  ObservableList<LineOfArticles> get linesPalpable =>
+      ObservableList<LineOfArticles>.of(
+          lines.where((element) => element.isPalpable ?? true));
+
+  @computed
   ObservableList<LineOfArticles> get linesPalpableNoBasket =>
       ObservableList<LineOfArticles>.of(
-          lines.where((l) => (l.isPalpable ?? true) && l.isBasket == false));
+          linesPalpable.where((l) => l.isBasket == false));
 
   // used for creating and handling article basket
   @observable
@@ -182,19 +187,19 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
     switch (sortBy) {
       case SortedBy.id:
         lines = lines.sortedById();
-        sortedBy = SortedBy.id;
+        sortedBy = Observable(SortedBy.id);
         break;
       case SortedBy.idReversed:
         lines = lines.sortedByIdReversed();
-        sortedBy = SortedBy.idReversed;
+        sortedBy = Observable(SortedBy.idReversed);
         break;
       case SortedBy.title:
         lines = lines.sortedByTitle();
-        sortedBy = SortedBy.title;
+        sortedBy = Observable(SortedBy.title);
         break;
       case SortedBy.titleReversed:
         lines = lines.sortedByTitleReversed();
-        sortedBy = SortedBy.titleReversed;
+        sortedBy = Observable(SortedBy.titleReversed);
         break;
       default:
     }

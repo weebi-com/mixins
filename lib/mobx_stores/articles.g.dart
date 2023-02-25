@@ -11,6 +11,16 @@ part of 'articles.dart';
 mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
     on ArticlesStoreBase<S>, Store {
   Computed<ObservableList<LineOfArticles<ArticleAbstract>>>?
+      _$linesPalpableComputed;
+
+  @override
+  ObservableList<LineOfArticles<ArticleAbstract>> get linesPalpable =>
+      (_$linesPalpableComputed ??=
+              Computed<ObservableList<LineOfArticles<ArticleAbstract>>>(
+                  () => super.linesPalpable,
+                  name: 'ArticlesStoreBase.linesPalpable'))
+          .value;
+  Computed<ObservableList<LineOfArticles<ArticleAbstract>>>?
       _$linesPalpableNoBasketComputed;
 
   @override
@@ -114,13 +124,13 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
       Atom(name: 'ArticlesStoreBase.sortedBy', context: context);
 
   @override
-  SortedBy get sortedBy {
+  Observable<SortedBy> get sortedBy {
     _$sortedByAtom.reportRead();
     return super.sortedBy;
   }
 
   @override
-  set sortedBy(SortedBy value) {
+  set sortedBy(Observable<SortedBy> value) {
     _$sortedByAtom.reportWrite(value, super.sortedBy, () {
       super.sortedBy = value;
     });
