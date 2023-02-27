@@ -21,8 +21,8 @@ enum SortedBy {
   unsorted,
   title,
   titleReversed,
-  id,
-  idReversed,
+  codeShortcut,
+  codeShortcutReversed,
 }
 
 enum FilteredBy { title, barcode, none }
@@ -36,8 +36,8 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
     initialLoading = true;
     lines = ObservableList<LineOfArticles>();
     linesPalpableFiltered = ObservableList<LineOfArticles>();
-    sortBy(SortedBy.title);
-    sortedBy = Observable(SortedBy.title);
+    sortedBy = Observable(SortedBy.codeShortcut);
+    sortBy(SortedBy.codeShortcut);
     articlesSelectedForBasketMinQt = ObservableList<ArticleWMinQt>();
   }
 
@@ -182,13 +182,13 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   @action
   ObservableList<LineOfArticles> sortBy(SortedBy sortBy) {
     switch (sortBy) {
-      case SortedBy.id:
+      case SortedBy.codeShortcut:
         linesPalpableFiltered = lines.sortedById().isPalpable;
-        sortedBy = Observable(SortedBy.id);
+        sortedBy = Observable(SortedBy.codeShortcut);
         break;
-      case SortedBy.idReversed:
+      case SortedBy.codeShortcutReversed:
         linesPalpableFiltered = lines.sortedByIdReversed().isPalpable;
-        sortedBy = Observable(SortedBy.idReversed);
+        sortedBy = Observable(SortedBy.codeShortcutReversed);
         break;
       case SortedBy.title:
         linesPalpableFiltered = lines.sortedByTitle().isPalpable;
@@ -428,8 +428,8 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
         for (final a in listOfArticleBasketToDelete) {
           await _articlesService.deleteForeverArticleRpc.request(a);
           final lineIndex = lines.indexWhere((l) => l.id == a.lineId);
-          final articleIndex = lines[lineIndex].articles.indexWhere(
-              (article) => article.lineId == a.lineId && article.id == a.id);
+          final articleIndex = lines[lineIndex].articles.indexWhere((article) =>
+              article.lineId == a.lineId && article.id == a.codeShortcut);
           lines[lineIndex].articles.removeAt(articleIndex);
         }
       }
@@ -485,8 +485,8 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
         for (final a in listOfArticleBasketToDelete) {
           await _articlesService.deleteForeverArticleRpc.request(a);
           final lineIndex = lines.indexWhere((l) => l.id == a.lineId);
-          final articleIndex = lines[lineIndex].articles.indexWhere(
-              (article) => article.lineId == a.lineId && article.id == a.id);
+          final articleIndex = lines[lineIndex].articles.indexWhere((article) =>
+              article.lineId == a.lineId && article.id == a.codeShortcut);
           lines[lineIndex].articles.removeAt(articleIndex);
         }
       }
@@ -519,7 +519,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
         .firstWhereOrNull((product) => product.id == updatedArticle.productId);
     final lineArticleIndex = lines.indexOf(lineArticle);
     final article = lineArticle!.articles
-        .firstWhereOrNull((a) => a.id == updatedArticle.id);
+        .firstWhereOrNull((a) => a.id == updatedArticle.codeShortcut);
     if (article != null) {
       final articleIndex = lineArticle.articles.indexOf(article);
       lines[lineArticleIndex].articles[articleIndex] = updatedArticle;
