@@ -304,7 +304,7 @@ abstract class ClosingsStoreBase<S extends ClosingsServiceAbstract> with Store {
 
   @action
   int sumHerderTicketTypeRange(String herderId, String ticketType,
-      {DateTime? start, DateTime? end}) {
+      {DateTime start, DateTime end}) {
     // if date range provided, filter by dates
     final cHerderList = (start != null && end != null)
         ? closingLedgerHerders
@@ -397,7 +397,7 @@ abstract class ClosingsStoreBase<S extends ClosingsServiceAbstract> with Store {
   }
 
   @action
-  int herderLastBalance(String herderId, {DateTime? end}) {
+  int herderLastBalance(String herderId, {DateTime end}) {
     if (closingLedgerHerders.isNotEmpty) {
       final clist = end == null
           ? closingLedgerHerders
@@ -420,7 +420,7 @@ abstract class ClosingsStoreBase<S extends ClosingsServiceAbstract> with Store {
   // ** STOCK **
   //--------------------------------
   @action
-  Observable<double> stockProductFinalQuantity(int productId, {DateTime? end}) {
+  Observable<double> stockProductFinalQuantity(int productId, {DateTime end}) {
     if (closingStocks.isNotEmpty) {
       var filterByDates = List.of(<ClosingStock>[]);
       if (end != null) {
@@ -449,7 +449,7 @@ abstract class ClosingsStoreBase<S extends ClosingsServiceAbstract> with Store {
 
   @action
   Observable<double> stockArticleFinalQuantity(int productId, int articleId,
-      {DateTime? end}) {
+      {DateTime end}) {
     if (closingStocks.isNotEmpty) {
       var filterByDates = List.of(<ClosingStock>[]);
       if (end != null) {
@@ -480,7 +480,7 @@ abstract class ClosingsStoreBase<S extends ClosingsServiceAbstract> with Store {
 
   @action
   Observable<double> stockArticleQuantityOut(int productId, int articleId,
-      {DateTime? end}) {
+      {DateTime end}) {
     if (closingStocks.isNotEmpty) {
       var filterByDates = List.of(<ClosingStock>[]);
       if (end != null) {
@@ -512,7 +512,7 @@ abstract class ClosingsStoreBase<S extends ClosingsServiceAbstract> with Store {
   @action
   Observable<double> stockShopProductFinalQuantityAbsolute(
       List<String> shopUuids, int productId,
-      {DateTime? end}) {
+      {DateTime end}) {
     var daDiff = 0.0;
     if (shopUuids.isNotEmpty && closingStockShops.isNotEmpty) {
       var filterByDates = List<ClosingStockShop>.of([]);
@@ -547,7 +547,7 @@ abstract class ClosingsStoreBase<S extends ClosingsServiceAbstract> with Store {
   @action
   Observable<double> stockShopArticleFinalQuantityAbsolute(
       List<String> shopUuids, int articleProductId, int articleId,
-      {DateTime? end}) {
+      {DateTime end}) {
     var finalQtAllShopsSummed = 0.0;
     if (shopUuids.isNotEmpty && closingStockShops.isNotEmpty) {
       var filterByDates = List<ClosingStockShop>.of([]);
@@ -611,7 +611,7 @@ abstract class ClosingsStoreBase<S extends ClosingsServiceAbstract> with Store {
                     .fold(
                       0.0,
                       (prev, shopCl) =>
-                          prev! +
+                          prev +
                           shopCl.products
                               .where((e) => e.id == productId)
                               .fold(0.0, (pv, e) => pv + e.finalQtCl),
@@ -622,7 +622,7 @@ abstract class ClosingsStoreBase<S extends ClosingsServiceAbstract> with Store {
                     .fold(
                       0.0,
                       (pv, shopCl) =>
-                          pv! +
+                          pv +
                           shopCl.products.where((e) => e.id == productId).fold(
                               0.0, (pvs, element) => pvs + element.initialQtCl),
                     ) ??
@@ -660,7 +660,7 @@ abstract class ClosingsStoreBase<S extends ClosingsServiceAbstract> with Store {
                 .fold(
                     0.0,
                     (prev, shopCl) =>
-                        prev! +
+                        prev +
                         shopCl.products
                             .where((p) => p.id == articleProductId)
                             .fold(
@@ -703,7 +703,7 @@ abstract class ClosingsStoreBase<S extends ClosingsServiceAbstract> with Store {
         qtOut += closingStockShops.where((e) => e.shopUuid == uuid).fold(
                 0.0,
                 (previousNum, shopCl) =>
-                    previousNum! +
+                    previousNum +
                     shopCl.products.where((p) => p.id == articleProductId).fold(
                           0.0,
                           (previous, product) =>

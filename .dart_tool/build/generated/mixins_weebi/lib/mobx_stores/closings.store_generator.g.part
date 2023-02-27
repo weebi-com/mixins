@@ -4,7 +4,8 @@
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$ClosingsStore on ClosingsStoreBase, Store {
+mixin _$ClosingsStore<S extends ClosingsServiceAbstract>
+    on ClosingsStoreBase<S>, Store {
   Computed<int>? _$sumSellComputed;
 
   @override
@@ -393,7 +394,7 @@ mixin _$ClosingsStore on ClosingsStoreBase, Store {
 
   @override
   int sumHerderTicketTypeRange(String herderId, String ticketType,
-      {DateTime? start, DateTime? end}) {
+      {DateTime start, DateTime end}) {
     final _$actionInfo = _$ClosingsStoreBaseActionController.startAction(
         name: 'ClosingsStoreBase.sumHerderTicketTypeRange');
     try {
@@ -418,7 +419,7 @@ mixin _$ClosingsStore on ClosingsStoreBase, Store {
   }
 
   @override
-  int herderLastBalance(String herderId, {DateTime? end}) {
+  int herderLastBalance(String herderId, {DateTime end}) {
     final _$actionInfo = _$ClosingsStoreBaseActionController.startAction(
         name: 'ClosingsStoreBase.herderLastBalance');
     try {
@@ -429,7 +430,7 @@ mixin _$ClosingsStore on ClosingsStoreBase, Store {
   }
 
   @override
-  Observable<double> stockProductFinalQuantity(int productId, {DateTime? end}) {
+  Observable<double> stockProductFinalQuantity(int productId, {DateTime end}) {
     final _$actionInfo = _$ClosingsStoreBaseActionController.startAction(
         name: 'ClosingsStoreBase.stockProductFinalQuantity');
     try {
@@ -441,7 +442,7 @@ mixin _$ClosingsStore on ClosingsStoreBase, Store {
 
   @override
   Observable<double> stockArticleFinalQuantity(int productId, int articleId,
-      {DateTime? end}) {
+      {DateTime end}) {
     final _$actionInfo = _$ClosingsStoreBaseActionController.startAction(
         name: 'ClosingsStoreBase.stockArticleFinalQuantity');
     try {
@@ -453,7 +454,7 @@ mixin _$ClosingsStore on ClosingsStoreBase, Store {
 
   @override
   Observable<double> stockArticleQuantityOut(int productId, int articleId,
-      {DateTime? end}) {
+      {DateTime end}) {
     final _$actionInfo = _$ClosingsStoreBaseActionController.startAction(
         name: 'ClosingsStoreBase.stockArticleQuantityOut');
     try {
@@ -466,7 +467,7 @@ mixin _$ClosingsStore on ClosingsStoreBase, Store {
   @override
   Observable<double> stockShopProductFinalQuantityAbsolute(
       List<String> shopUuids, int productId,
-      {DateTime? end}) {
+      {DateTime end}) {
     final _$actionInfo = _$ClosingsStoreBaseActionController.startAction(
         name: 'ClosingsStoreBase.stockShopProductFinalQuantityAbsolute');
     try {
@@ -480,7 +481,7 @@ mixin _$ClosingsStore on ClosingsStoreBase, Store {
   @override
   Observable<double> stockShopArticleFinalQuantityAbsolute(
       List<String> shopUuids, int articleProductId, int articleId,
-      {DateTime? end}) {
+      {DateTime end}) {
     final _$actionInfo = _$ClosingsStoreBaseActionController.startAction(
         name: 'ClosingsStoreBase.stockShopArticleFinalQuantityAbsolute');
     try {

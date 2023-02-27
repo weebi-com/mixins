@@ -10,7 +10,7 @@ import 'package:models_weebi/extensions.dart';
 abstract class ArticleStockStatelessAbstract<A extends ArticleAbstract>
     extends StatelessWidget {
   final A article;
-  const ArticleStockStatelessAbstract(this.article, {Key? key})
+  const ArticleStockStatelessAbstract(this.article, {Key key})
       : super(key: key);
 
   double articleTkQtIn(
@@ -76,7 +76,7 @@ abstract class ArticleStockStatelessAbstract<A extends ArticleAbstract>
   }
 
   double articleClosingFinalQt(Iterable<ClosingStockShop> closingStockShops,
-      {DateTime? end}) {
+      {DateTime end}) {
     return closingStockShops.stockShopArticleFinalQuantityAbsoluteForWeebi(
         article,
         end: end ?? DateTime.now());

@@ -24,8 +24,10 @@ abstract class LineArticleStockAbstract<ClosingsStore, TicketsStore>
   // final MobxTicketsStoreCreator mobxTicketsStoreCreator;
   // final MobxClosingStoreCreator mobxClosingStoreCreator;
   const LineArticleStockAbstract(
-      this.line, this.ticketsInvoker, this.closingStockShopsInvoker,
-      {super.key});
+    this.line,
+    this.ticketsInvoker,
+    this.closingStockShopsInvoker,
+  );
 
   bool get isSingleArticle => line.articles.length <= 1;
 
@@ -47,7 +49,7 @@ abstract class LineArticleStockAbstract<ClosingsStore, TicketsStore>
   }
 
   double lineClosingFinalQt(Iterable<ClosingStockShop> closingStockShops,
-      {DateTime? end}) {
+      {DateTime end}) {
     return closingStockShops.stockShopLineFinalQuantityAbsoluteForWeebi(line,
         end: end ?? DateTime.now());
   }

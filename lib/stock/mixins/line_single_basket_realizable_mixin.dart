@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:models_weebi/closings.dart';
 import 'package:closing/extensions/closing_stock_shops.dart';
 import 'package:models_weebi/utils.dart';
@@ -48,7 +49,7 @@ mixin LineSingleArticleBasketRealizableNow on LineArticleStockAbstract {
 
   double articleStockRemaining(Iterable<ClosingStockShop> closingsStockShops,
       Iterable<TicketWeebi> tickets, DateTime start, DateTime end,
-      {required Article wrappedArticle}) {
+      {@required Article wrappedArticle}) {
     return _articleClosingFinalQt(closingsStockShops, wrappedArticle,
             end: end) +
         _articleTkQtIn(tickets, wrappedArticle, start, end) -
@@ -57,7 +58,7 @@ mixin LineSingleArticleBasketRealizableNow on LineArticleStockAbstract {
 
   double _articleClosingFinalQt(
       Iterable<ClosingStockShop> closingStockShops, Article wrappedArticle,
-      {DateTime? end}) {
+      {DateTime end}) {
 // stockShopArticleFinalQuantityAbsoluteForWeebi
 // stockShopArticleQtOutTimeRangeForWeebi
     return closingStockShops.stockShopArticleFinalQuantityAbsoluteForWeebi(

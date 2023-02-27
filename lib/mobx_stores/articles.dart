@@ -238,7 +238,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
                   .toList());
 
   @action
-  Future<bool> init({List<LineOfArticles>? data}) async {
+  Future<bool> init({List<LineOfArticles> data}) async {
     if (data != null && data.isNotEmpty) {
       lines = ObservableList.of(data);
       linesPalpableFiltered = data.isPalpable;
@@ -254,7 +254,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @action
-  Future<void> clearFilter({List<LineOfArticles>? data}) async {
+  Future<void> clearFilter({List<LineOfArticles> data}) async {
     setFilteredBy(FilteredBy.none);
     setQueryString('');
     // only way dart can clone a list
@@ -389,7 +389,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
     // first remove it from any basket
     bool isBasketToBeDeleted = false;
     bool isBasketSingle = true;
-    late LineOfArticles<ArticleAbstract> lineToDelete;
+    LineOfArticles<ArticleAbstract> lineToDelete;
     final listOfArticleBasketToDelete = [];
 
     for (final line in lines.where((l) => (l.isBasket ?? false))) {
@@ -397,10 +397,11 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
         if ((article as ArticleBasket)
             .proxies
             .any((element) => element.proxyLineId == productData.id)) {
-          if (article.proxies.length > 1) {
-            final index = article.proxies
+          if ((article as ArticleBasket).proxies.length > 1) {
+            final index = (article as ArticleBasket)
+                .proxies
                 .indexWhere((element) => element.proxyLineId == productData.id);
-            article.proxies.removeAt(index);
+            (article as ArticleBasket).proxies.removeAt(index);
             await _articlesService.updateArticleRpc.request(article);
             final lineIndex = lines.indexOf(line);
             final articleIndex = lines[lineIndex].articles.indexOf(article);
@@ -446,18 +447,20 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
     // first remove it from any basket
     bool isBasketToBeDeleted = false;
     bool isBasketSingle = true;
-    late LineOfArticles<ArticleAbstract> lineToDelete;
+    LineOfArticles<ArticleAbstract> lineToDelete;
     final listOfArticleBasketToDelete = [];
     for (final line in lines.where((l) => (l.isBasket ?? false))) {
       for (final articleB in line.articles) {
         if ((articleB as ArticleBasket).proxies.any((proxy) =>
             proxy.proxyLineId == articleData.lineId &&
             proxy.proxyArticleId == articleData.id)) {
-          if (articleB.proxies.length > 1) {
-            final proxyParam = articleB.proxies.firstWhereOrNull((proxy) =>
-                proxy.proxyLineId == articleData.lineId &&
-                proxy.proxyArticleId == articleData.id);
-            articleB.proxies.remove(proxyParam);
+          if ((articleB as ArticleBasket).proxies.length > 1) {
+            final proxyParam = (articleB as ArticleBasket)
+                .proxies
+                .firstWhereOrNull((proxy) =>
+                    proxy.proxyLineId == articleData.lineId &&
+                    proxy.proxyArticleId == articleData.id);
+            (articleB as ArticleBasket).proxies.remove(proxyParam);
             final a = await _articlesService.updateArticleRpc.request(articleB);
             final lineIndex = lines.indexOf(line);
             final articleIndex = lines[lineIndex].articles.indexOf(a);
@@ -495,7 +498,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
     final lineArticle =
         lines.firstWhereOrNull((p) => p.id == articleData.productId);
     final articleCool =
-        lineArticle!.articles.firstWhereOrNull((a) => a.id == articleData.id);
+        lineArticle.articles.firstWhereOrNull((a) => a.id == articleData.id);
     lineArticle.articles.remove(articleCool);
     return lines;
   }
@@ -507,7 +510,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
         await _articlesService.createArticleRpc.request(articleData);
     final lineArticle =
         lines.firstWhereOrNull((line) => line.id == createdArticle.lineId);
-    lineArticle!.articles.add(createdArticle);
+    lineArticle.articles.add(createdArticle);
     return createdArticle as A;
   }
 
@@ -518,7 +521,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
     final lineArticle = lines
         .firstWhereOrNull((product) => product.id == updatedArticle.productId);
     final lineArticleIndex = lines.indexOf(lineArticle);
-    final article = lineArticle!.articles
+    final article = lineArticle.articles
         .firstWhereOrNull((a) => a.id == updatedArticle.codeShortcut);
     if (article != null) {
       final articleIndex = lineArticle.articles.indexOf(article);

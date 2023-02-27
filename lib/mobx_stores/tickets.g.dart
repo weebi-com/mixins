@@ -10,14 +10,14 @@ part of 'tickets.dart';
 
 mixin _$TicketsStore<T extends TicketsServiceAbstract>
     on TicketsStoreBase<T>, Store {
-  Computed<ObservableList<TicketWeebi>>? _$selectedComputed;
+  Computed<ObservableList<TicketWeebi>> _$selectedComputed;
 
   @override
   ObservableList<TicketWeebi> get selected => (_$selectedComputed ??=
           Computed<ObservableList<TicketWeebi>>(() => super.selected,
               name: 'TicketsStoreBase.selected'))
       .value;
-  Computed<ObservableList<TicketWeebi>>? _$selectedNoStockComputed;
+  Computed<ObservableList<TicketWeebi>> _$selectedNoStockComputed;
 
   @override
   ObservableList<TicketWeebi> get selectedNoStock =>
@@ -25,7 +25,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
               () => super.selectedNoStock,
               name: 'TicketsStoreBase.selectedNoStock'))
           .value;
-  Computed<ObservableList<TicketsGroupedByTimeFrame>>?
+  Computed<ObservableList<TicketsGroupedByTimeFrame>>
       _$selectedByTimeFrameComputed;
 
   @override
@@ -35,7 +35,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
                   () => super.selectedByTimeFrame,
                   name: 'TicketsStoreBase.selectedByTimeFrame'))
           .value;
-  Computed<TimeFrame>? _$timeFrameComputed;
+  Computed<TimeFrame> _$timeFrameComputed;
 
   @override
   TimeFrame get timeFrame =>
@@ -43,8 +43,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
               name: 'TicketsStoreBase.timeFrame'))
           .value;
 
-  late final _$ticketsAtom =
-      Atom(name: 'TicketsStoreBase.tickets', context: context);
+  final _$ticketsAtom = Atom(name: 'TicketsStoreBase.tickets');
 
   @override
   ObservableSet<TicketWeebi> get tickets {
@@ -59,8 +58,8 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
     });
   }
 
-  late final _$listOfTicketsByTimeFrameAtom =
-      Atom(name: 'TicketsStoreBase.listOfTicketsByTimeFrame', context: context);
+  final _$listOfTicketsByTimeFrameAtom =
+      Atom(name: 'TicketsStoreBase.listOfTicketsByTimeFrame');
 
   @override
   ObservableList<TicketsGroupedByTimeFrame> get listOfTicketsByTimeFrame {
@@ -77,8 +76,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
     });
   }
 
-  late final _$initialLoadingAtom =
-      Atom(name: 'TicketsStoreBase.initialLoading', context: context);
+  final _$initialLoadingAtom = Atom(name: 'TicketsStoreBase.initialLoading');
 
   @override
   bool get initialLoading {
@@ -93,7 +91,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
     });
   }
 
-  late final _$nowAtom = Atom(name: 'TicketsStoreBase.now', context: context);
+  final _$nowAtom = Atom(name: 'TicketsStoreBase.now');
 
   @override
   DateTime get now {
@@ -108,8 +106,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
     });
   }
 
-  late final _$isChangeAtom =
-      Atom(name: 'TicketsStoreBase.isChange', context: context);
+  final _$isChangeAtom = Atom(name: 'TicketsStoreBase.isChange');
 
   @override
   Observable<bool> get isChange {
@@ -124,8 +121,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
     });
   }
 
-  late final _$rangeAtom =
-      Atom(name: 'TicketsStoreBase.range', context: context);
+  final _$rangeAtom = Atom(name: 'TicketsStoreBase.range');
 
   @override
   Observable<DateTimeRange> get range {
@@ -140,24 +136,23 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
     });
   }
 
-  late final _$initAsyncAction =
-      AsyncAction('TicketsStoreBase.init', context: context);
+  final _$initAsyncAction = AsyncAction('TicketsStoreBase.init');
 
   @override
   Future<void> init() {
     return _$initAsyncAction.run(() => super.init());
   }
 
-  late final _$addAllTicketsAsyncAction =
-      AsyncAction('TicketsStoreBase.addAllTickets', context: context);
+  final _$addAllTicketsAsyncAction =
+      AsyncAction('TicketsStoreBase.addAllTickets');
 
   @override
   Future<Set<TicketWeebi>> addAllTickets(Set<TicketWeebi> daTickets) {
     return _$addAllTicketsAsyncAction.run(() => super.addAllTickets(daTickets));
   }
 
-  late final _$importPastTicketsAsyncAction =
-      AsyncAction('TicketsStoreBase.importPastTickets', context: context);
+  final _$importPastTicketsAsyncAction =
+      AsyncAction('TicketsStoreBase.importPastTickets');
 
   @override
   Future<ObservableSet<TicketWeebi>> importPastTickets(String json) {
@@ -165,16 +160,15 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
         .run(() => super.importPastTickets(json));
   }
 
-  late final _$addTicketAsyncAction =
-      AsyncAction('TicketsStoreBase.addTicket', context: context);
+  final _$addTicketAsyncAction = AsyncAction('TicketsStoreBase.addTicket');
 
   @override
   Future<TicketWeebi> addTicket(TicketWeebi ticketData) {
     return _$addTicketAsyncAction.run(() => super.addTicket(ticketData));
   }
 
-  late final _$disableTicketAsyncAction =
-      AsyncAction('TicketsStoreBase.disableTicket', context: context);
+  final _$disableTicketAsyncAction =
+      AsyncAction('TicketsStoreBase.disableTicket');
 
   @override
   Future<TicketWeebi> disableTicket(TicketWeebi ticketData) {
@@ -182,8 +176,8 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
         .run(() => super.disableTicket(ticketData));
   }
 
-  late final _$restoreTicketAsyncAction =
-      AsyncAction('TicketsStoreBase.restoreTicket', context: context);
+  final _$restoreTicketAsyncAction =
+      AsyncAction('TicketsStoreBase.restoreTicket');
 
   @override
   Future<TicketWeebi> restoreTicket(TicketWeebi ticketData) {
@@ -191,24 +185,24 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
         .run(() => super.restoreTicket(ticketData));
   }
 
-  late final _$deleteTicketAsyncAction =
-      AsyncAction('TicketsStoreBase.deleteTicket', context: context);
+  final _$deleteTicketAsyncAction =
+      AsyncAction('TicketsStoreBase.deleteTicket');
 
   @override
   Future<ObservableSet<TicketWeebi>> deleteTicket(TicketWeebi ticketData) {
     return _$deleteTicketAsyncAction.run(() => super.deleteTicket(ticketData));
   }
 
-  late final _$deleteAllTicketsAsyncAction =
-      AsyncAction('TicketsStoreBase.deleteAllTickets', context: context);
+  final _$deleteAllTicketsAsyncAction =
+      AsyncAction('TicketsStoreBase.deleteAllTickets');
 
   @override
   Future<void> deleteAllTickets() {
     return _$deleteAllTicketsAsyncAction.run(() => super.deleteAllTickets());
   }
 
-  late final _$TicketsStoreBaseActionController =
-      ActionController(name: 'TicketsStoreBase', context: context);
+  final _$TicketsStoreBaseActionController =
+      ActionController(name: 'TicketsStoreBase');
 
   @override
   void setChange() {
