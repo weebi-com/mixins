@@ -323,7 +323,8 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @action
-  Future<LineOfArticles> updateLineArticle(LineOfArticles line) async {
+  Future<LineOfArticles> updateLineArticle<A extends ArticleAbstract>(
+      LineOfArticles line) async {
     final updatedLine =
         await _articlesService.updateArticleLineRpc.request(line);
     final index = lines.indexWhere((element) => element.id == updatedLine.id);
@@ -521,8 +522,8 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
     final lineArticle = lines
         .firstWhereOrNull((product) => product.id == updatedArticle.productId);
     final lineArticleIndex = lines.indexOf(lineArticle);
-    final article = lineArticle.articles
-        .firstWhereOrNull((a) => a.id == updatedArticle.codeShortcut);
+    final article =
+        lineArticle.articles.firstWhereOrNull((a) => a.id == updatedArticle.id);
     if (article != null) {
       final articleIndex = lineArticle.articles.indexOf(article);
       lines[lineArticleIndex].articles[articleIndex] = updatedArticle;

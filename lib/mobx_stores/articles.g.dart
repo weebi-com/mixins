@@ -213,8 +213,9 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
       AsyncAction('ArticlesStoreBase.updateLineArticle');
 
   @override
-  Future<LineOfArticles<ArticleAbstract>> updateLineArticle(
-      LineOfArticles<ArticleAbstract> line) {
+  Future<LineOfArticles<ArticleAbstract>>
+      updateLineArticle<A extends ArticleAbstract>(
+          LineOfArticles<ArticleAbstract> line) {
     return _$updateLineArticleAsyncAction
         .run(() => super.updateLineArticle(line));
   }

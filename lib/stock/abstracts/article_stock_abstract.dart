@@ -1,5 +1,5 @@
+import 'package:mixins_weebi/extensions/closings/closing_stock_shops.dart';
 import 'package:models_weebi/closings.dart' show ClosingStockShop;
-import 'package:closing/closing_extensions.dart' show StockItUpTillYaGetEnough;
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:models_weebi/base.dart';

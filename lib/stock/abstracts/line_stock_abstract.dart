@@ -1,6 +1,6 @@
 import 'package:models_weebi/closings.dart'
     show ClosingStockShop, ClosingStockShopProduct;
-import 'package:closing/closing_extensions.dart' show StockItUpTillYaGetEnough;
+import 'package:mixins_weebi/extensions/closings/closing_stock_shops.dart';
 import 'package:flutter/material.dart';
 import 'package:models_weebi/utils.dart' show DateRange;
 import 'package:models_weebi/weebi_models.dart';
