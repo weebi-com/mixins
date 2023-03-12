@@ -6,8 +6,11 @@ description: A starting point for Dart libraries or applications.
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
+  flutter: ">=1.17.0"
 
 dependencies:
+  flutter:
+    sdk: flutter
   provider: ^6.0.3
   mobx: ^2.0.1
   collection: ^1.15.0
@@ -15,15 +18,17 @@ dependencies:
     hosted:
       url: https://onepub.dev/api/xnxpsdavuh/
       name: models_weebi
-      version: ^1.0.7
+    version: ^1.0.7
   services_weebi:
     hosted:
       url: https://onepub.dev/api/xnxpsdavuh/
       name: services_weebi
-      version: ^1.0.1
+    version: ^1.0.1
 
 dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.0
   test: ^1.16.0
   build_runner: ^2.1.4
   mobx_codegen: ^2.0.4
-flutter: null

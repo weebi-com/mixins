@@ -1,9 +1,9 @@
 import 'package:mixins_weebi/src/extensions/closings/filter_by_range.dart';
-import 'package:models_base/base.dart'
-    show ArticleAbstract, LineArticleAbstract;
 import 'package:collection/collection.dart';
-import 'package:models_base/utils.dart' show DateRange;
+
+import 'package:models_weebi/base.dart';
 import 'package:models_weebi/closings.dart';
+import 'package:models_weebi/utils.dart';
 
 extension StockItUpTillYaGetEnough on Iterable<ClosingStockShop> {
   double stockShopProductDiffTimeRangeForWeebi(

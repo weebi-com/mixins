@@ -1,5 +1,5 @@
 import 'package:models_weebi/closings.dart';
-import 'package:models_base/base.dart';
+import 'package:models_weebi/base.dart';
 
 extension ProductClosingBoyFeelsGoodAfterGulpingTBoneSteak<
     T extends TicketAbstract> on T {
