@@ -1,4 +1,4 @@
-import 'package:mixins_weebi/mobx_stores/tickets.dart';
+import 'package:mixins_weebi/src/mobx_stores/tickets.dart';
 import 'package:models_weebi/db.dart';
 import 'package:services_weebi/rpc_tickets.dart';
 import 'package:services_weebi/services_weebi.dart';

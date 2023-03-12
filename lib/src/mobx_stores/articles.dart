@@ -3,7 +3,7 @@ import 'dart:convert' as convert;
 
 // Package imports:
 import 'package:collection/collection.dart';
-import 'package:mixins_weebi/extensions/articles.dart';
+import 'package:mixins_weebi/src/extensions/articles.dart';
 import 'package:mobx/mobx.dart';
 import 'package:models_weebi/base.dart';
 import 'package:models_weebi/extensions.dart';

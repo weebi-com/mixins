@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:mixins_weebi/extensions/closings/filter_by_range.dart';
+import 'package:mixins_weebi/src/extensions/closings/filter_by_range.dart';
 import 'package:mobx/mobx.dart';
 import 'package:models_weebi/closings.dart';
 import 'package:models_weebi/common.dart';
