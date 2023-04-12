@@ -323,7 +323,8 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @action
-  Future<LineOfArticles> updateLineArticle(LineOfArticles line) async {
+  Future<LineOfArticles> updateLineArticle<A extends ArticleAbstract>(
+      LineOfArticles<A> line) async {
     final updatedLine =
         await _articlesService.updateArticleLineRpc.request(line);
     final index = lines.indexWhere((element) => element.id == updatedLine.id);
@@ -392,46 +393,51 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
     LineOfArticles<ArticleAbstract> lineToDelete;
     final listOfArticleBasketToDelete = [];
 
-    for (final line in lines.where((l) => (l.isBasket ?? false))) {
-      for (final article in line.articles) {
-        if ((article as ArticleBasket)
-            .proxies
-            .any((element) => element.proxyLineId == productData.id)) {
-          if ((article as ArticleBasket).proxies.length > 1) {
-            final index = (article as ArticleBasket)
-                .proxies
-                .indexWhere((element) => element.proxyLineId == productData.id);
-            (article as ArticleBasket).proxies.removeAt(index);
-            await _articlesService.updateArticleRpc.request(article);
-            final lineIndex = lines.indexOf(line);
-            final articleIndex = lines[lineIndex].articles.indexOf(article);
-            lines[lineIndex].articles[articleIndex] = article;
-          } else {
-            isBasketToBeDeleted = true;
-            if (line.articles.length > 1) {
-              isBasketSingle = false;
-              listOfArticleBasketToDelete.add(article);
+    // checking on all existing articles if one is in the proxy
+    // if the article being deleted is in a basket then remove it
+    if (productData.isBasket == false) {
+      // TODO check and enforce that a basket cannot contain another basket
+      for (final line in lines.where((l) => (l.isBasket ?? false))) {
+        for (final article in line.articles) {
+          if ((article as ArticleBasket)
+              .proxies
+              .any((element) => element.proxyLineId == productData.id)) {
+            if ((article as ArticleBasket).proxies.length > 1) {
+              final index = (article as ArticleBasket).proxies.indexWhere(
+                  (element) => element.proxyLineId == productData.id);
+              (article as ArticleBasket).proxies.removeAt(index);
+              await _articlesService.updateArticleRpc.request(article);
+              final lineIndex = lines.indexOf(line);
+              final articleIndex = lines[lineIndex].articles.indexOf(article);
+              lines[lineIndex].articles[articleIndex] = article;
             } else {
-              lineToDelete = line;
+              isBasketToBeDeleted = true;
+              if (line.articles.length > 1) {
+                isBasketSingle = false;
+                listOfArticleBasketToDelete.add(article);
+              } else {
+                lineToDelete = line;
+              }
             }
           }
         }
       }
-    }
-    // out of the loop now
-    // easy one basket only
-    if (isBasketToBeDeleted) {
-      if (isBasketSingle) {
-        await _articlesService.deleteForeverLineRpc.request(lineToDelete);
-        lines.remove(lineToDelete);
-      } else {
-        // complexy many baskets concerned
-        for (final a in listOfArticleBasketToDelete) {
-          await _articlesService.deleteForeverArticleRpc.request(a);
-          final lineIndex = lines.indexWhere((l) => l.id == a.lineId);
-          final articleIndex = lines[lineIndex].articles.indexWhere((article) =>
-              article.lineId == a.lineId && article.id == a.codeShortcut);
-          lines[lineIndex].articles.removeAt(articleIndex);
+      // out of the loop now
+      // easy one basket only
+      if (isBasketToBeDeleted) {
+        if (isBasketSingle) {
+          await _articlesService.deleteForeverLineRpc.request(lineToDelete);
+          lines.remove(lineToDelete);
+        } else {
+          // complexy many baskets concerned
+          for (final a in listOfArticleBasketToDelete) {
+            await _articlesService.deleteForeverArticleRpc.request(a);
+            final lineIndex = lines.indexWhere((l) => l.id == a.lineId);
+            final articleIndex = lines[lineIndex].articles.indexWhere(
+                (article) =>
+                    article.lineId == a.lineId && article.id == a.codeShortcut);
+            lines[lineIndex].articles.removeAt(articleIndex);
+          }
         }
       }
     }
@@ -521,8 +527,8 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
     final lineArticle = lines
         .firstWhereOrNull((product) => product.id == updatedArticle.productId);
     final lineArticleIndex = lines.indexOf(lineArticle);
-    final article = lineArticle.articles
-        .firstWhereOrNull((a) => a.id == updatedArticle.codeShortcut);
+    final article =
+        lineArticle.articles.firstWhereOrNull((a) => a.id == updatedArticle.id);
     if (article != null) {
       final articleIndex = lineArticle.articles.indexOf(article);
       lines[lineArticleIndex].articles[articleIndex] = updatedArticle;
