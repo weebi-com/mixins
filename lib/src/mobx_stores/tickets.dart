@@ -345,6 +345,16 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract>
   }
 
   @action
+  int todaySellYup(DateTime date) => tickets
+      .where((t) => t.status == true)
+      .where((t) => t.date.year == date.year)
+      .where((t) => t.date.month == date.month)
+      .where((t) => t.date.day == date.day)
+      .where((t) => t.paiementType == PaiementType.mobileMoney)
+      .where((t) => t.ticketType == TicketType.sell)
+      .fold(0, (prev, element) => prev + element.totalPriceTaxAndPromoIncluded);
+
+  @action
   int todaySpendCash(DateTime date) {
     var spendCash = tickets
         .where((t) => t.status == true)
@@ -374,6 +384,16 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract>
 
     return spendCoverCash;
   }
+
+  @action
+  int todaySpendYup(DateTime date) => tickets
+      .where((t) => t.status == true)
+      .where((t) => t.date.year == date.year)
+      .where((t) => t.date.month == date.month)
+      .where((t) => t.date.day == date.day)
+      .where((t) => t.ticketType == TicketType.spend)
+      .where((t) => t.paiementType == PaiementType.mobileMoney)
+      .fold(0, (prev, element) => prev + element.totalCostTaxAndPromoIncluded);
 
   @action
   int monthTicketCount(DateTime date) => tickets
@@ -422,6 +442,15 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract>
   }
 
   @action
+  int monthSellYup(DateTime date) => tickets
+      .where((t) => t.status == true)
+      .where((t) => t.date.year == date.year)
+      .where((t) => t.date.month == date.month)
+      .where((t) => t.ticketType == TicketType.sell)
+      .where((t) => t.paiementType == PaiementType.mobileMoney)
+      .fold(0, (prev, element) => prev + element.totalPriceTaxAndPromoIncluded);
+
+  @action
   int monthSellDeferred(DateTime date) {
     var sellDeferredMonth = tickets
         .where((t) => t.status == true)
@@ -457,6 +486,15 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract>
 
     return spendCover;
   }
+
+  @action
+  int monthSpendYup(DateTime date) => tickets
+      .where((t) => t.status == true)
+      .where((t) => t.date.year == date.year)
+      .where((t) => t.date.month == date.month)
+      .where((t) => t.ticketType == TicketType.spend)
+      .where((t) => t.paiementType == PaiementType.mobileMoney)
+      .fold(0, (prev, element) => prev + element.totalCostTaxAndPromoIncluded);
 
   @action
   int monthSpendDeferred(DateTime date) {
@@ -510,6 +548,14 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract>
       .fold(0, (prev, element) => prev + element.received);
 
   @action
+  int rangeSellYup(DateTime firstDate, DateTime lastDate) => tickets
+      .where((t) => t.status == true)
+      .where((t) => t.date.isAfter(firstDate) && t.date.isBefore(lastDate))
+      .where((t) => t.ticketType == TicketType.sell)
+      .where((t) => t.paiementType == PaiementType.mobileMoney)
+      .fold(0, (prev, element) => prev + element.totalPriceTaxAndPromoIncluded);
+
+  @action
   int rangeSellDeferred(DateTime firstDate, DateTime lastDate) {
     var rangeSellDeferred = tickets
         .where((t) => t.status == true)
@@ -537,6 +583,14 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract>
       .where((t) => t.paiementType == PaiementType.cash)
       .where((t) => t.ticketType == TicketType.spendCovered)
       .fold(0, (prev, element) => prev + element.received);
+
+  @action
+  int rangeSpendYup(DateTime firstDate, DateTime lastDate) => tickets
+      .where((t) => t.status == true)
+      .where((t) => t.date.isAfter(firstDate) && t.date.isBefore(lastDate))
+      .where((t) => t.ticketType == TicketType.spend)
+      .where((t) => t.paiementType == PaiementType.mobileMoney)
+      .fold(0, (prev, element) => prev + element.totalCostTaxAndPromoIncluded);
 
   @action
   int rangeSpendDeferred(DateTime firstDate, DateTime lastDate) {

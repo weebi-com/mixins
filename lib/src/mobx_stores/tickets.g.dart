@@ -337,6 +337,17 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
+  int todaySellYup(DateTime date) {
+    final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
+        name: 'TicketsStoreBase.todaySellYup');
+    try {
+      return super.todaySellYup(date);
+    } finally {
+      _$TicketsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   int todaySpendCash(DateTime date) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.todaySpendCash');
@@ -353,6 +364,17 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
         name: 'TicketsStoreBase.todaySpendCoverCash');
     try {
       return super.todaySpendCoverCash(date);
+    } finally {
+      _$TicketsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  int todaySpendYup(DateTime date) {
+    final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
+        name: 'TicketsStoreBase.todaySpendYup');
+    try {
+      return super.todaySpendYup(date);
     } finally {
       _$TicketsStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -414,6 +436,17 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
+  int monthSellYup(DateTime date) {
+    final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
+        name: 'TicketsStoreBase.monthSellYup');
+    try {
+      return super.monthSellYup(date);
+    } finally {
+      _$TicketsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   int monthSellDeferred(DateTime date) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.monthSellDeferred');
@@ -441,6 +474,17 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
         name: 'TicketsStoreBase.monthSpendCoverCash');
     try {
       return super.monthSpendCoverCash(date);
+    } finally {
+      _$TicketsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  int monthSpendYup(DateTime date) {
+    final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
+        name: 'TicketsStoreBase.monthSpendYup');
+    try {
+      return super.monthSpendYup(date);
     } finally {
       _$TicketsStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -513,6 +557,17 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
+  int rangeSellYup(DateTime firstDate, DateTime lastDate) {
+    final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
+        name: 'TicketsStoreBase.rangeSellYup');
+    try {
+      return super.rangeSellYup(firstDate, lastDate);
+    } finally {
+      _$TicketsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   int rangeSellDeferred(DateTime firstDate, DateTime lastDate) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.rangeSellDeferred');
@@ -540,6 +595,17 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
         name: 'TicketsStoreBase.rangeSpendCoverCash');
     try {
       return super.rangeSpendCoverCash(firstDate, lastDate);
+    } finally {
+      _$TicketsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  int rangeSpendYup(DateTime firstDate, DateTime lastDate) {
+    final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
+        name: 'TicketsStoreBase.rangeSpendYup');
+    try {
+      return super.rangeSpendYup(firstDate, lastDate);
     } finally {
       _$TicketsStoreBaseActionController.endAction(_$actionInfo);
     }
