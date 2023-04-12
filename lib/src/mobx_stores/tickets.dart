@@ -585,7 +585,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract>
       .fold(0, (prev, element) => prev + element.received);
 
   @action
-  int rangeSpendYup(DateTime firstDate, DateTime lastDate) => tickets
+  int rangeSpendMMoney(DateTime firstDate, DateTime lastDate) => tickets
       .where((t) => t.status == true)
       .where((t) => t.date.isAfter(firstDate) && t.date.isBefore(lastDate))
       .where((t) => t.ticketType == TicketType.spend)

@@ -601,11 +601,11 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int rangeSpendYup(DateTime firstDate, DateTime lastDate) {
+  int rangeSpendMMoney(DateTime firstDate, DateTime lastDate) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.rangeSpendYup');
     try {
-      return super.rangeSpendYup(firstDate, lastDate);
+      return super.rangeSpendMMoney(firstDate, lastDate);
     } finally {
       _$TicketsStoreBaseActionController.endAction(_$actionInfo);
     }
