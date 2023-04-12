@@ -18,7 +18,7 @@ dependencies:
     hosted:
       url: https://onepub.dev/api/xnxpsdavuh/
       name: models_weebi
-    version: ^1.0.7
+    version: ^1.0.9
   services_weebi:
     hosted:
       url: https://onepub.dev/api/xnxpsdavuh/

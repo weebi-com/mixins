@@ -1,2 +1,4 @@
 # Conventional directory for build outputs.
 build/
+.packages
+.gitignore
