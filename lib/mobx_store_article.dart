@@ -1,4 +1,4 @@
 library mobx_store_article;
 
-export 'mobx_stores/articles.dart';
-export 'instantiate_stores/articles.dart';
+export 'src/mobx_stores/articles.dart';
+export 'src/instantiate_stores/articles.dart';

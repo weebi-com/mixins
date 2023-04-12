@@ -1,3 +1,3 @@
 library mixins_weebi;
 
-export 'extensions/provide_stores.dart';
+export 'src/extensions/provide_stores.dart';

@@ -1,1 +1,5 @@
-.DS_Store
+# Conventional directory for build outputs.
+build/
+.packages
+.gitignore
+.dart_tool/package_config.json
