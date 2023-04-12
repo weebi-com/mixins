@@ -2,3 +2,4 @@
 build/
 .packages
 .gitignore
+.dart_tool/package_config.json
