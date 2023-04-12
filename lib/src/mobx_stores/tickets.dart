@@ -345,7 +345,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract>
   }
 
   @action
-  int todaySellYup(DateTime date) => tickets
+  int todaySellMMoney(DateTime date) => tickets
       .where((t) => t.status == true)
       .where((t) => t.date.year == date.year)
       .where((t) => t.date.month == date.month)
@@ -386,7 +386,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract>
   }
 
   @action
-  int todaySpendYup(DateTime date) => tickets
+  int todaySpendMMoney(DateTime date) => tickets
       .where((t) => t.status == true)
       .where((t) => t.date.year == date.year)
       .where((t) => t.date.month == date.month)
@@ -442,7 +442,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract>
   }
 
   @action
-  int monthSellYup(DateTime date) => tickets
+  int monthSellMMoney(DateTime date) => tickets
       .where((t) => t.status == true)
       .where((t) => t.date.year == date.year)
       .where((t) => t.date.month == date.month)
@@ -488,7 +488,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract>
   }
 
   @action
-  int monthSpendYup(DateTime date) => tickets
+  int monthSpendMMoney(DateTime date) => tickets
       .where((t) => t.status == true)
       .where((t) => t.date.year == date.year)
       .where((t) => t.date.month == date.month)
@@ -548,7 +548,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract>
       .fold(0, (prev, element) => prev + element.received);
 
   @action
-  int rangeSellYup(DateTime firstDate, DateTime lastDate) => tickets
+  int rangeSellMMoney(DateTime firstDate, DateTime lastDate) => tickets
       .where((t) => t.status == true)
       .where((t) => t.date.isAfter(firstDate) && t.date.isBefore(lastDate))
       .where((t) => t.ticketType == TicketType.sell)

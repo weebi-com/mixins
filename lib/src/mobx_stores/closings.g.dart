@@ -10,48 +10,48 @@ part of 'closings.dart';
 
 mixin _$ClosingsStore<S extends ClosingsServiceAbstract>
     on ClosingsStoreBase<S>, Store {
-  Computed<int>? _$sumSellComputed;
+  Computed<int> _$sumSellComputed;
 
   @override
   int get sumSell => (_$sumSellComputed ??=
           Computed<int>(() => super.sumSell, name: 'ClosingsStoreBase.sumSell'))
       .value;
-  Computed<int>? _$sumSellCoveredComputed;
+  Computed<int> _$sumSellCoveredComputed;
 
   @override
   int get sumSellCovered =>
       (_$sumSellCoveredComputed ??= Computed<int>(() => super.sumSellCovered,
               name: 'ClosingsStoreBase.sumSellCovered'))
           .value;
-  Computed<int>? _$sumSellDeferredComputed;
+  Computed<int> _$sumSellDeferredComputed;
 
   @override
   int get sumSellDeferred =>
       (_$sumSellDeferredComputed ??= Computed<int>(() => super.sumSellDeferred,
               name: 'ClosingsStoreBase.sumSellDeferred'))
           .value;
-  Computed<int>? _$sumSpendComputed;
+  Computed<int> _$sumSpendComputed;
 
   @override
   int get sumSpend =>
       (_$sumSpendComputed ??= Computed<int>(() => super.sumSpend,
               name: 'ClosingsStoreBase.sumSpend'))
           .value;
-  Computed<int>? _$sumSpendCoveredComputed;
+  Computed<int> _$sumSpendCoveredComputed;
 
   @override
   int get sumSpendCovered =>
       (_$sumSpendCoveredComputed ??= Computed<int>(() => super.sumSpendCovered,
               name: 'ClosingsStoreBase.sumSpendCovered'))
           .value;
-  Computed<int>? _$sumSpendDeferredComputed;
+  Computed<int> _$sumSpendDeferredComputed;
 
   @override
   int get sumSpendDeferred => (_$sumSpendDeferredComputed ??= Computed<int>(
           () => super.sumSpendDeferred,
           name: 'ClosingsStoreBase.sumSpendDeferred'))
       .value;
-  Computed<int>? _$sumWagesComputed;
+  Computed<int> _$sumWagesComputed;
 
   @override
   int get sumWages =>
@@ -59,8 +59,8 @@ mixin _$ClosingsStore<S extends ClosingsServiceAbstract>
               name: 'ClosingsStoreBase.sumWages'))
           .value;
 
-  late final _$initialLoadingAtom =
-      Atom(name: 'ClosingsStoreBase.initialLoading', context: context);
+  final _$initialLoadingAtom =
+      Atom(name: 'ClosingsStoreBase.initialLoading');
 
   @override
   bool get initialLoading {
@@ -75,8 +75,8 @@ mixin _$ClosingsStore<S extends ClosingsServiceAbstract>
     });
   }
 
-  late final _$closingRangesAtom =
-      Atom(name: 'ClosingsStoreBase.closingRanges', context: context);
+  final _$closingRangesAtom =
+      Atom(name: 'ClosingsStoreBase.closingRanges');
 
   @override
   ObservableList<ClosingRange> get closingRanges {
@@ -91,8 +91,8 @@ mixin _$ClosingsStore<S extends ClosingsServiceAbstract>
     });
   }
 
-  late final _$closingLedgersAtom =
-      Atom(name: 'ClosingsStoreBase.closingLedgers', context: context);
+  final _$closingLedgersAtom =
+      Atom(name: 'ClosingsStoreBase.closingLedgers');
 
   @override
   ObservableList<ClosingLedger> get closingLedgers {
@@ -107,8 +107,8 @@ mixin _$ClosingsStore<S extends ClosingsServiceAbstract>
     });
   }
 
-  late final _$closingLedgerShopsAtom =
-      Atom(name: 'ClosingsStoreBase.closingLedgerShops', context: context);
+  final _$closingLedgerShopsAtom =
+      Atom(name: 'ClosingsStoreBase.closingLedgerShops');
 
   @override
   ObservableList<ClosingLedgerShop> get closingLedgerShops {
@@ -123,8 +123,8 @@ mixin _$ClosingsStore<S extends ClosingsServiceAbstract>
     });
   }
 
-  late final _$closingLedgerHerdersAtom =
-      Atom(name: 'ClosingsStoreBase.closingLedgerHerders', context: context);
+  final _$closingLedgerHerdersAtom =
+      Atom(name: 'ClosingsStoreBase.closingLedgerHerders');
 
   @override
   ObservableList<ClosingLedgerHerder> get closingLedgerHerders {
@@ -140,8 +140,8 @@ mixin _$ClosingsStore<S extends ClosingsServiceAbstract>
     });
   }
 
-  late final _$closingStockHerdersAtom =
-      Atom(name: 'ClosingsStoreBase.closingStockHerders', context: context);
+  final _$closingStockHerdersAtom =
+      Atom(name: 'ClosingsStoreBase.closingStockHerders');
 
   @override
   ObservableList<ClosingStockHerder> get closingStockHerders {
@@ -156,8 +156,8 @@ mixin _$ClosingsStore<S extends ClosingsServiceAbstract>
     });
   }
 
-  late final _$closingStocksAtom =
-      Atom(name: 'ClosingsStoreBase.closingStocks', context: context);
+  final _$closingStocksAtom =
+      Atom(name: 'ClosingsStoreBase.closingStocks');
 
   @override
   ObservableList<ClosingStock<ClosingStockProduct>> get closingStocks {
@@ -172,8 +172,8 @@ mixin _$ClosingsStore<S extends ClosingsServiceAbstract>
     });
   }
 
-  late final _$closingStockShopsAtom =
-      Atom(name: 'ClosingsStoreBase.closingStockShops', context: context);
+  final _$closingStockShopsAtom =
+      Atom(name: 'ClosingsStoreBase.closingStockShops');
 
   @override
   ObservableList<ClosingStockShop<ClosingStockShopProduct>>
@@ -190,8 +190,8 @@ mixin _$ClosingsStore<S extends ClosingsServiceAbstract>
     });
   }
 
-  late final _$closingStockProductsAtom =
-      Atom(name: 'ClosingsStoreBase.closingStockProducts', context: context);
+  final _$closingStockProductsAtom =
+      Atom(name: 'ClosingsStoreBase.closingStockProducts');
 
   @override
   ObservableList<ClosingStockProduct> get closingStockProducts {
@@ -207,24 +207,24 @@ mixin _$ClosingsStore<S extends ClosingsServiceAbstract>
     });
   }
 
-  late final _$initAsyncAction =
-      AsyncAction('ClosingsStoreBase.init', context: context);
+  final _$initAsyncAction =
+      AsyncAction('ClosingsStoreBase.init');
 
   @override
   Future<void> init() {
     return _$initAsyncAction.run(() => super.init());
   }
 
-  late final _$loadTasksAsyncAction =
-      AsyncAction('ClosingsStoreBase.loadTasks', context: context);
+  final _$loadTasksAsyncAction =
+      AsyncAction('ClosingsStoreBase.loadTasks');
 
   @override
   Future<void> loadTasks() {
     return _$loadTasksAsyncAction.run(() => super.loadTasks());
   }
 
-  late final _$addAllClosingRangesAsyncAction =
-      AsyncAction('ClosingsStoreBase.addAllClosingRanges', context: context);
+  final _$addAllClosingRangesAsyncAction =
+      AsyncAction('ClosingsStoreBase.addAllClosingRanges');
 
   @override
   Future<ObservableList<ClosingRange>> addAllClosingRanges(
@@ -233,9 +233,9 @@ mixin _$ClosingsStore<S extends ClosingsServiceAbstract>
         .run(() => super.addAllClosingRanges(data));
   }
 
-  late final _$addAllClosingLedgerHerdersAsyncAction = AsyncAction(
+  final _$addAllClosingLedgerHerdersAsyncAction = AsyncAction(
       'ClosingsStoreBase.addAllClosingLedgerHerders',
-      context: context);
+  );
 
   @override
   Future<ObservableList<ClosingLedgerHerder>> addAllClosingLedgerHerders(
@@ -244,9 +244,9 @@ mixin _$ClosingsStore<S extends ClosingsServiceAbstract>
         .run(() => super.addAllClosingLedgerHerders(data));
   }
 
-  late final _$addAllClosingHerderStocksAsyncAction = AsyncAction(
+  final _$addAllClosingHerderStocksAsyncAction = AsyncAction(
       'ClosingsStoreBase.addAllClosingHerderStocks',
-      context: context);
+  );
 
   @override
   Future<ObservableList<ClosingStockHerder>> addAllClosingHerderStocks(
@@ -255,8 +255,8 @@ mixin _$ClosingsStore<S extends ClosingsServiceAbstract>
         .run(() => super.addAllClosingHerderStocks(data));
   }
 
-  late final _$addAllClosingLedgersAsyncAction =
-      AsyncAction('ClosingsStoreBase.addAllClosingLedgers', context: context);
+  final _$addAllClosingLedgersAsyncAction =
+      AsyncAction('ClosingsStoreBase.addAllClosingLedgers');
 
   @override
   Future<ObservableList<ClosingLedger>> addAllClosingLedgers(
@@ -265,9 +265,9 @@ mixin _$ClosingsStore<S extends ClosingsServiceAbstract>
         .run(() => super.addAllClosingLedgers(data));
   }
 
-  late final _$addAllClosingLedgerShopsAsyncAction = AsyncAction(
+  final _$addAllClosingLedgerShopsAsyncAction = AsyncAction(
       'ClosingsStoreBase.addAllClosingLedgerShops',
-      context: context);
+  );
 
   @override
   Future<ObservableList<ClosingLedgerShop>> addAllClosingLedgerShops(
@@ -276,8 +276,8 @@ mixin _$ClosingsStore<S extends ClosingsServiceAbstract>
         .run(() => super.addAllClosingLedgerShops(data));
   }
 
-  late final _$addAllClosingStocksAsyncAction =
-      AsyncAction('ClosingsStoreBase.addAllClosingStocks', context: context);
+  final _$addAllClosingStocksAsyncAction =
+      AsyncAction('ClosingsStoreBase.addAllClosingStocks');
 
   @override
   Future<ObservableList<ClosingStock<ClosingStockProduct>>> addAllClosingStocks(
@@ -286,9 +286,9 @@ mixin _$ClosingsStore<S extends ClosingsServiceAbstract>
         .run(() => super.addAllClosingStocks(data));
   }
 
-  late final _$addAllClosingStockShopsAsyncAction = AsyncAction(
+  final _$addAllClosingStockShopsAsyncAction = AsyncAction(
       'ClosingsStoreBase.addAllClosingStockShops',
-      context: context);
+  );
 
   @override
   Future<ObservableList<ClosingStockShop<ClosingStockShopProduct>>>
@@ -298,8 +298,8 @@ mixin _$ClosingsStore<S extends ClosingsServiceAbstract>
         .run(() => super.addAllClosingStockShops(data));
   }
 
-  late final _$createClosingRangeAsyncAction =
-      AsyncAction('ClosingsStoreBase.createClosingRange', context: context);
+  final _$createClosingRangeAsyncAction =
+      AsyncAction('ClosingsStoreBase.createClosingRange');
 
   @override
   Future<ClosingRange> createClosingRange(ClosingRange data) {
@@ -307,8 +307,8 @@ mixin _$ClosingsStore<S extends ClosingsServiceAbstract>
         .run(() => super.createClosingRange(data));
   }
 
-  late final _$deleteClosingRangeAsyncAction =
-      AsyncAction('ClosingsStoreBase.deleteClosingRange', context: context);
+  final _$deleteClosingRangeAsyncAction =
+      AsyncAction('ClosingsStoreBase.deleteClosingRange');
 
   @override
   Future<ObservableList<ClosingRange>> deleteClosingRange(ClosingRange _data) {
@@ -316,9 +316,9 @@ mixin _$ClosingsStore<S extends ClosingsServiceAbstract>
         .run(() => super.deleteClosingRange(_data));
   }
 
-  late final _$deleteAllClosingObjectsAsyncAction = AsyncAction(
+  final _$deleteAllClosingObjectsAsyncAction = AsyncAction(
       'ClosingsStoreBase.deleteAllClosingObjects',
-      context: context);
+  );
 
   @override
   Future<bool> deleteAllClosingObjects() {
@@ -326,8 +326,8 @@ mixin _$ClosingsStore<S extends ClosingsServiceAbstract>
         .run(() => super.deleteAllClosingObjects());
   }
 
-  late final _$ClosingsStoreBaseActionController =
-      ActionController(name: 'ClosingsStoreBase', context: context);
+  final _$ClosingsStoreBaseActionController =
+      ActionController(name: 'ClosingsStoreBase');
 
   @override
   int rangeMarginRaw(
