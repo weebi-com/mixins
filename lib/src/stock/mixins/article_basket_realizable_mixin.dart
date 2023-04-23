@@ -26,7 +26,7 @@ mixin ArticleBasketRealizableNow on ArticleStockStatelessAbstract {
   Iterable<BasketWrapper> articleBasketWrapThem(
     Iterable<ClosingStockShop> cStockShops,
     Iterable<TicketWeebi> tickets,
-    Iterable<LineOfArticles> lines,
+    Iterable<ArticleLines> lines,
     DateTime start, // useless
     DateTime end,
   ) {

@@ -16,7 +16,7 @@ typedef ClosingStockShopsInvoker
 
 abstract class LineArticleStockAbstract<ClosingsStore, TicketsStore>
     extends StatelessWidget {
-  final LineOfArticles line;
+  final ArticleLines line;
 
   final TicketsInvoker ticketsInvoker;
   final ClosingStockShopsInvoker closingStockShopsInvoker;

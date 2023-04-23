@@ -1,6 +1,6 @@
 name: mixins_weebi
 homepage: http://weebi.com
-version: 0.0.6
+version: 0.0.7
 publish_to: https://onepub.dev/api/xnxpsdavuh/
 description: A starting point for Dart libraries or applications.
 
@@ -18,12 +18,12 @@ dependencies:
     hosted:
       url: https://onepub.dev/api/xnxpsdavuh/
       name: models_weebi
-    version: ^1.0.9
+    version: ^1.0.11
   services_weebi:
     hosted:
       url: https://onepub.dev/api/xnxpsdavuh/
       name: services_weebi
-    version: ^1.0.1
+    version: ^1.0.2
 
 dev_dependencies:
   flutter_test:

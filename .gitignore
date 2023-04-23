@@ -3,3 +3,5 @@ build/
 .packages
 .gitignore
 .dart_tool/package_config.json
+pubspec.yaml
+pubspec.lock

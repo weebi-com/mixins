@@ -23,7 +23,7 @@ mixin LineSingleArticleBasketRealizableNow on LineArticleStockAbstract {
   Iterable<BasketWrapper> articleBasketWrapThem(
     Iterable<ClosingStockShop> closingStockShops,
     Iterable<TicketWeebi> tickets,
-    Iterable<LineOfArticles> lines,
+    Iterable<ArticleLines> lines,
     DateTime start, // useless
     DateTime end,
   ) {
