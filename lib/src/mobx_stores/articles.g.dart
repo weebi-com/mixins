@@ -203,10 +203,10 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
   );
 
   @override
-  Future<int> updateAllLinesThatMatch(
+  Future<int> updateAllArticleLinesThatMatchTitle(
       List<LineOfArticles<ArticleAbstract>> lineArticlesToUpdate) {
-    return _$updateAllLinesThatMatchAsyncAction
-        .run(() => super.updateAllLinesThatMatch(lineArticlesToUpdate));
+    return _$updateAllLinesThatMatchAsyncAction.run(
+        () => super.updateAllArticleLinesThatMatchTitle(lineArticlesToUpdate));
   }
 
   final _$updateLineArticleAsyncAction =
@@ -236,9 +236,19 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
   );
 
   @override
-  Future<void> deleteAllArticlesAndLines() {
+  Future<bool> deleteAllArticlesAndLines() {
     return _$deleteAllArticlesAndLinesAsyncAction
         .run(() => super.deleteAllArticlesAndLines());
+  }
+
+  final _$upsertAllBasedOnIdAsyncAction = AsyncAction(
+    'ArticlesStoreBase.upsertAllBasedOnId',
+  );
+
+  @override
+  Future<int> upsertAllBasedOnId(List<LineOfArticles> articlesInTheBush) {
+    return _$upsertAllBasedOnIdAsyncAction
+        .run(() => super.upsertAllBasedOnId(articlesInTheBush));
   }
 
   final _$createLineArticleAsyncAction =

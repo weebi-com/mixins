@@ -279,14 +279,41 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @action
-  Future<int> updateAllLinesThatMatch(
+  Future<int> upsertAllBasedOnId(List<LineOfArticles> articlesInTheBush) async {
+    final listToAdd = <LineOfArticles>[];
+    final listToUpdate = <LineOfArticles>[];
+    for (var i = 0; i < articlesInTheBush.length; i++) {
+      if (lines.any((e) => e.id == articlesInTheBush[i].id)) {
+        final match = lines.where((e) => e.id == articlesInTheBush[i].id);
+        if (match.length > 1) {
+          throw 'herder is found x${match.length} times : ${articlesInTheBush[i].toString()}';
+        }
+        listToUpdate.add(match.first);
+      } else {
+        listToAdd.add(articlesInTheBush[i]);
+      }
+    }
+    if (listToUpdate.isNotEmpty) {
+      for (final a in listToUpdate) {
+        await updateLineArticle(a);
+      }
+    }
+    if (listToAdd.isNotEmpty) {
+      await addAllArticleLines(listToAdd);
+    }
+    return listToUpdate.length + listToAdd.length;
+  }
+
+  @action
+  Future<int> updateAllArticleLinesThatMatchTitle(
       List<LineOfArticles> lineArticlesToUpdate) async {
     final listToUpdate = <LineOfArticles>[];
     // print(lineArticlesToUpdate.length);
     for (var i = 0; i < lineArticlesToUpdate.length; i++) {
-      if (lines.any((e) => e.title == lineArticlesToUpdate[i].title)) {
-        final match =
-            lines.where((e) => e.title == lineArticlesToUpdate[i].title);
+      if (lines
+          .any((e) => e.title == lineArticlesToUpdate[i].title.toLowerCase())) {
+        final match = lines.where(
+            (e) => e.title == lineArticlesToUpdate[i].title.toLowerCase());
         // print('match.length ${match.length}');
         if (match.length > 1) {
           //print(
@@ -348,10 +375,10 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
 
   // below is not different from above importCatalogue yet
   @action
-  Future<void> deleteAllArticlesAndLines() async {
+  Future<bool> deleteAllArticlesAndLines() async {
     await _articlesService.deleteAllLinesRpc.request([]);
     lines.clear();
-    return;
+    return true;
   }
 
   @action

@@ -200,7 +200,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract>
   }
 
   @action
-  Future<void> deleteAllTickets() async {
+  Future<bool> deleteAllTickets() async {
     await _ticketsService.deleteAllTicketsRpc.request({});
     tickets = ObservableSet.of([]);
   }
