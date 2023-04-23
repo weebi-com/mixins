@@ -21,8 +21,7 @@ part 'tickets.g.dart';
 
 class TicketsStore = TicketsStoreBase with _$TicketsStore;
 
-abstract class TicketsStoreBase<T extends TicketsServiceAbstract>
-    extends AbstractStore with Store {
+abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
   final T _ticketsService;
 
   @observable
@@ -200,7 +199,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract>
   }
 
   @action
-  Future<void> deleteAllTickets() async {
+  Future<bool> deleteAllTickets() async {
     await _ticketsService.deleteAllTicketsRpc.request({});
     tickets = ObservableSet.of([]);
   }

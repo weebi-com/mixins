@@ -7,7 +7,7 @@ import 'package:models_weebi/utils.dart';
 
 extension StockItUpTillYaGetEnough on Iterable<ClosingStockShop> {
   double stockShopProductDiffTimeRangeForWeebi(
-      LineArticleAbstract line, DateTime start, DateTime end) {
+      ArticleLineAbstract line, DateTime start, DateTime end) {
     var finalQtSum = 0.0;
     var initQtSum = 0.0;
     if (isNotEmpty) {
@@ -44,7 +44,7 @@ extension StockItUpTillYaGetEnough on Iterable<ClosingStockShop> {
     return finalQtSum - initQtSum;
   }
 
-  double stockShopLineFinalQuantityAbsoluteForWeebi(LineArticleAbstract line,
+  double stockShopLineFinalQuantityAbsoluteForWeebi(ArticleLineAbstract line,
       {DateTime end}) {
     var daDiff = 0.0;
     if (isNotEmpty) {

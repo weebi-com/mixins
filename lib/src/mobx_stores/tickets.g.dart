@@ -197,7 +197,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
       AsyncAction('TicketsStoreBase.deleteAllTickets');
 
   @override
-  Future<void> deleteAllTickets() {
+  Future<bool> deleteAllTickets() {
     return _$deleteAllTicketsAsyncAction.run(() => super.deleteAllTickets());
   }
 

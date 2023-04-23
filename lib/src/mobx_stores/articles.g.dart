@@ -10,13 +10,13 @@ part of 'articles.dart';
 
 mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
     on ArticlesStoreBase<S>, Store {
-  Computed<ObservableList<LineOfArticles<ArticleAbstract>>>
+  Computed<ObservableList<ArticleLines<ArticleAbstract>>>
       _$linesPalpableNoBasketComputed;
 
   @override
-  ObservableList<LineOfArticles<ArticleAbstract>> get linesPalpableNoBasket =>
+  ObservableList<ArticleLines<ArticleAbstract>> get linesPalpableNoBasket =>
       (_$linesPalpableNoBasketComputed ??=
-              Computed<ObservableList<LineOfArticles<ArticleAbstract>>>(
+              Computed<ObservableList<ArticleLines<ArticleAbstract>>>(
                   () => super.linesPalpableNoBasket,
                   name: 'ArticlesStoreBase.linesPalpableNoBasket'))
           .value;
@@ -35,13 +35,12 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
           Computed<ObservableList<String>>(() => super.getSuggestions,
               name: 'ArticlesStoreBase.getSuggestions'))
       .value;
-  Computed<ObservableList<LineOfArticles<ArticleAbstract>>>
-      _$linesInSellComputed;
+  Computed<ObservableList<ArticleLines<ArticleAbstract>>> _$linesInSellComputed;
 
   @override
-  ObservableList<LineOfArticles<ArticleAbstract>> get linesInSell =>
+  ObservableList<ArticleLines<ArticleAbstract>> get linesInSell =>
       (_$linesInSellComputed ??=
-              Computed<ObservableList<LineOfArticles<ArticleAbstract>>>(
+              Computed<ObservableList<ArticleLines<ArticleAbstract>>>(
                   () => super.linesInSell,
                   name: 'ArticlesStoreBase.linesInSell'))
           .value;
@@ -126,13 +125,13 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
   final _$linesAtom = Atom(name: 'ArticlesStoreBase.lines');
 
   @override
-  ObservableList<LineOfArticles<ArticleAbstract>> get lines {
+  ObservableList<ArticleLines<ArticleAbstract>> get lines {
     _$linesAtom.reportRead();
     return super.lines;
   }
 
   @override
-  set lines(ObservableList<LineOfArticles<ArticleAbstract>> value) {
+  set lines(ObservableList<ArticleLines<ArticleAbstract>> value) {
     _$linesAtom.reportWrite(value, super.lines, () {
       super.lines = value;
     });
@@ -142,14 +141,14 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
       Atom(name: 'ArticlesStoreBase.linesPalpableFiltered');
 
   @override
-  ObservableList<LineOfArticles<ArticleAbstract>> get linesPalpableFiltered {
+  ObservableList<ArticleLines<ArticleAbstract>> get linesPalpableFiltered {
     _$linesPalpableFilteredAtom.reportRead();
     return super.linesPalpableFiltered;
   }
 
   @override
   set linesPalpableFiltered(
-      ObservableList<LineOfArticles<ArticleAbstract>> value) {
+      ObservableList<ArticleLines<ArticleAbstract>> value) {
     _$linesPalpableFilteredAtom.reportWrite(value, super.linesPalpableFiltered,
         () {
       super.linesPalpableFiltered = value;
@@ -177,14 +176,14 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
   final _$initAsyncAction = AsyncAction('ArticlesStoreBase.init');
 
   @override
-  Future<bool> init({List<LineOfArticles<ArticleAbstract>> data}) {
+  Future<bool> init({List<ArticleLines<ArticleAbstract>> data}) {
     return _$initAsyncAction.run(() => super.init(data: data));
   }
 
   final _$clearFilterAsyncAction = AsyncAction('ArticlesStoreBase.clearFilter');
 
   @override
-  Future<void> clearFilter({List<LineOfArticles<ArticleAbstract>> data}) {
+  Future<void> clearFilter({List<ArticleLines<ArticleAbstract>> data}) {
     return _$clearFilterAsyncAction.run(() => super.clearFilter(data: data));
   }
 
@@ -193,7 +192,7 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
 
   @override
   Future<int> addAllArticleLines(
-      List<LineOfArticles<ArticleAbstract>> lineArticlesToSave) {
+      List<ArticleLines<ArticleAbstract>> lineArticlesToSave) {
     return _$addAllArticleLinesAsyncAction
         .run(() => super.addAllArticleLines(lineArticlesToSave));
   }
@@ -203,19 +202,19 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
   );
 
   @override
-  Future<int> updateAllLinesThatMatch(
-      List<LineOfArticles<ArticleAbstract>> lineArticlesToUpdate) {
-    return _$updateAllLinesThatMatchAsyncAction
-        .run(() => super.updateAllLinesThatMatch(lineArticlesToUpdate));
+  Future<int> updateAllArticleLinesThatMatchTitle(
+      List<ArticleLines<ArticleAbstract>> lineArticlesToUpdate) {
+    return _$updateAllLinesThatMatchAsyncAction.run(
+        () => super.updateAllArticleLinesThatMatchTitle(lineArticlesToUpdate));
   }
 
   final _$updateLineArticleAsyncAction =
       AsyncAction('ArticlesStoreBase.updateLineArticle');
 
   @override
-  Future<LineOfArticles<ArticleAbstract>>
+  Future<ArticleLines<ArticleAbstract>>
       updateLineArticle<A extends ArticleAbstract>(
-          LineOfArticles<ArticleAbstract> line) {
+          ArticleLines<ArticleAbstract> line) {
     return _$updateLineArticleAsyncAction
         .run(() => super.updateLineArticle(line));
   }
@@ -225,8 +224,8 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
   );
 
   @override
-  Future<ObservableList<LineOfArticles<ArticleAbstract>>>
-      importCatalogueFromJson(String json) {
+  Future<ObservableList<ArticleLines<ArticleAbstract>>> importCatalogueFromJson(
+      String json) {
     return _$importCatalogueFromJsonAsyncAction
         .run(() => super.importCatalogueFromJson(json));
   }
@@ -236,17 +235,27 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
   );
 
   @override
-  Future<void> deleteAllArticlesAndLines() {
+  Future<bool> deleteAllArticlesAndLines() {
     return _$deleteAllArticlesAndLinesAsyncAction
         .run(() => super.deleteAllArticlesAndLines());
+  }
+
+  final _$upsertAllBasedOnIdAsyncAction = AsyncAction(
+    'ArticlesStoreBase.upsertAllBasedOnId',
+  );
+
+  @override
+  Future<int> upsertAllBasedOnId(List<ArticleLines> articlesInTheBush) {
+    return _$upsertAllBasedOnIdAsyncAction
+        .run(() => super.upsertAllBasedOnId(articlesInTheBush));
   }
 
   final _$createLineArticleAsyncAction =
       AsyncAction('ArticlesStoreBase.createLineArticle');
 
   @override
-  Future<LineOfArticles<ArticleAbstract>>
-      createLineArticle<A extends ArticleAbstract>(LineOfArticles<A> lineData) {
+  Future<ArticleLines<ArticleAbstract>>
+      createLineArticle<A extends ArticleAbstract>(ArticleLines<A> lineData) {
     return _$createLineArticleAsyncAction
         .run(() => super.createLineArticle<A>(lineData));
   }
@@ -255,8 +264,8 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
       AsyncAction('ArticlesStoreBase.stockLowWarning');
 
   @override
-  Future<LineOfArticles<ArticleAbstract>> stockLowWarning(
-      LineOfArticles<ArticleAbstract> productFalse) {
+  Future<ArticleLines<ArticleAbstract>> stockLowWarning(
+      ArticleLines<ArticleAbstract> productFalse) {
     return _$stockLowWarningAsyncAction
         .run(() => super.stockLowWarning(productFalse));
   }
@@ -265,8 +274,8 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
       AsyncAction('ArticlesStoreBase.restoreLineArticle');
 
   @override
-  Future<LineOfArticles<ArticleAbstract>> restoreLineArticle(
-      LineOfArticles<ArticleAbstract> line) {
+  Future<ArticleLines<ArticleAbstract>> restoreLineArticle(
+      ArticleLines<ArticleAbstract> line) {
     return _$restoreLineArticleAsyncAction
         .run(() => super.restoreLineArticle(line));
   }
@@ -276,8 +285,8 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
   );
 
   @override
-  Future<ObservableList<LineOfArticles<ArticleAbstract>>>
-      deleteForeverLineArticle(LineOfArticles<ArticleAbstract> productData) {
+  Future<ObservableList<ArticleLines<ArticleAbstract>>>
+      deleteForeverLineArticle(ArticleLines<ArticleAbstract> productData) {
     return _$deleteForeverLineArticleAsyncAction
         .run(() => super.deleteForeverLineArticle(productData));
   }
@@ -286,7 +295,7 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
       AsyncAction('ArticlesStoreBase.deleteForeverArticle');
 
   @override
-  Future<ObservableList<LineOfArticles<ArticleAbstract>>>
+  Future<ObservableList<ArticleLines<ArticleAbstract>>>
       deleteForeverArticle<A extends ArticleAbstract>(A articleData) {
     return _$deleteForeverArticleAsyncAction
         .run(() => super.deleteForeverArticle<A>(articleData));
@@ -392,7 +401,7 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
   }
 
   @override
-  ObservableList<LineOfArticles<ArticleAbstract>> sortBy(SortedBy sortBy) {
+  ObservableList<ArticleLines<ArticleAbstract>> sortBy(SortedBy sortBy) {
     final _$actionInfo = _$ArticlesStoreBaseActionController.startAction(
         name: 'ArticlesStoreBase.sortBy');
     try {
