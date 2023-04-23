@@ -307,7 +307,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   Future<int> updateAllArticleLinesThatMatchTitle(
       List<ArticleLines> lineArticlesToUpdate) async {
     final listToUpdate = <ArticleLines>[];
-    // print(lineArticlesToUpdate.length);
+    //TODO fix this using findDups
     for (var i = 0; i < lineArticlesToUpdate.length; i++) {
       if (lines
           .any((e) => e.title == lineArticlesToUpdate[i].title.toLowerCase())) {
