@@ -292,7 +292,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
 
   @action
   Future<int> upsertAllBasedOnId(List<ArticleLines> articlesInTheBush) async {
-    final twoLists = articlesInTheBush.findDups(oldList: lines);
+    final twoLists = articlesInTheBush.findDups(oldList: lines.toList());
     if (twoLists.dups.isNotEmpty) {
       for (final a in twoLists.dups) {
         await updateLineArticle(a);
