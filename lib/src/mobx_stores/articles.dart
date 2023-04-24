@@ -3,6 +3,7 @@ import 'dart:convert' as convert;
 
 // Package imports:
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:mixins_weebi/src/extensions/articles.dart';
 import 'package:mobx/mobx.dart';
 import 'package:models_weebi/base.dart';
@@ -16,6 +17,18 @@ import 'package:models_weebi/weebi_models.dart'
     show ArticleBasket, ArticleWMinQt, Article, ArticleLines;
 
 part 'articles.g.dart';
+
+class ResponseLight {
+  final int code;
+  final int countHandled;
+  final int countIgnored;
+  final List<ArticleLines> linesIgnored;
+  const ResponseLight(
+      {@required this.code,
+      @required this.linesIgnored,
+      @required this.countHandled,
+      @required this.countIgnored});
+}
 
 enum SortedBy {
   unsorted,
@@ -305,47 +318,12 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
 
   @action
   Future<int> updateAllArticleLinesThatMatchTitle(
-      List<ArticleLines> lineArticlesToUpdate) async {
-    final listToUpdate = <ArticleLines>[];
-    //TODO fix this using findDups
-    for (var i = 0; i < lineArticlesToUpdate.length; i++) {
-      if (lines
-          .any((e) => e.title == lineArticlesToUpdate[i].title.toLowerCase())) {
-        final match = lines.where(
-            (e) => e.title == lineArticlesToUpdate[i].title.toLowerCase());
-        // print('match.length ${match.length}');
-        if (match.length > 1) {
-          //print(
-          //    'dups found x${match.length} times : e.${lineArticlesToUpdate[i].toString()}');
-          throw 'x${match.length} articles ont le titre ${lines[i].title}, veuillez les renommer pour éviter les erreurs d\'import';
-        } else {
-          // print('try copy');
-          final tempToupdate = match.first.copyWith(articles: [
-            (match.first.articles.first as Article).copyWith(
-              price: (lineArticlesToUpdate[i].articles.first as Article).price,
-              cost: (lineArticlesToUpdate[i].articles.first as Article).cost,
-              articleCode: lineArticlesToUpdate[i]
-                  .articles
-                  .first
-                  .articleCode, //TODO ask Sidy if this is better than title
-            )
-          ]);
-          print('try add');
-          listToUpdate.add(tempToupdate);
-        }
-      } else {
-        print('no match in any');
-      }
+      List<ArticleLines> linesToUpdate) async {
+    final twoLists = linesToUpdate.findDups(oldList: lines.toList());
+    for (var i = 0; i < twoLists.dups.length; i++) {
+      await updateLineArticle(twoLists.dups[i]);
     }
-    if (listToUpdate.isNotEmpty) {
-      for (final l in listToUpdate) {
-        // print('try update ${l.toMap()}');
-        await updateLineArticle(l);
-      }
-    } else {
-      print('no match');
-    }
-    return listToUpdate.length;
+    return twoLists.dups.length;
   }
 
   @action

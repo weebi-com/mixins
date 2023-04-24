@@ -24,10 +24,9 @@ abstract class LineArticleStockAbstract<ClosingsStore, TicketsStore>
   // final MobxTicketsStoreCreator mobxTicketsStoreCreator;
   // final MobxClosingStoreCreator mobxClosingStoreCreator;
   const LineArticleStockAbstract(
-    this.line,
-    this.ticketsInvoker,
-    this.closingStockShopsInvoker,
-  );
+      this.line, this.ticketsInvoker, this.closingStockShopsInvoker,
+      {Key key})
+      : super(key: key);
 
   bool get isSingleArticle => line.articles.length <= 1;
 

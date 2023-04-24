@@ -6,7 +6,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
-import 'package:models_weebi/abstractions.dart';
 import 'package:models_weebi/common.dart' show PaiementType, TicketType;
 import 'package:models_weebi/utils.dart' show WeebiDates;
 
@@ -202,6 +201,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
   Future<bool> deleteAllTickets() async {
     await _ticketsService.deleteAllTicketsRpc.request({});
     tickets = ObservableSet.of([]);
+    return true;
   }
 
   @action

@@ -1,3 +1,7 @@
+## 0.0.8
+
+- rework articles store
+
 ## 0.0.7
 
 - increment models + services
