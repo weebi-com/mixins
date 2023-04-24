@@ -292,28 +292,16 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
 
   @action
   Future<int> upsertAllBasedOnId(List<ArticleLines> articlesInTheBush) async {
-    final listToAdd = <ArticleLines>[];
-    final listToUpdate = <ArticleLines>[];
-    for (var i = 0; i < articlesInTheBush.length; i++) {
-      if (lines.any((e) => e.id == articlesInTheBush[i].id)) {
-        final match = lines.where((e) => e.id == articlesInTheBush[i].id);
-        if (match.length > 1) {
-          throw 'herder is found x${match.length} times : ${articlesInTheBush[i].toString()}';
-        }
-        listToUpdate.add(match.first);
-      } else {
-        listToAdd.add(articlesInTheBush[i]);
-      }
-    }
-    if (listToUpdate.isNotEmpty) {
-      for (final a in listToUpdate) {
+    final twoLists = await articlesInTheBush.findDups(oldList: lines);
+    if (twoLists.dups.isNotEmpty) {
+      for (final a in twoLists.dups) {
         await updateLineArticle(a);
       }
     }
-    if (listToAdd.isNotEmpty) {
-      await addAllArticleLines(listToAdd);
+    if (twoLists.noDups.isNotEmpty) {
+      await addAllArticleLines(twoLists.noDups);
     }
-    return listToUpdate.length + listToAdd.length;
+    return twoLists.dups.length + twoLists.noDups.length;
   }
 
   @action
