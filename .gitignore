@@ -5,3 +5,4 @@ build/
 .dart_tool/package_config.json
 pubspec.yaml
 pubspec.lock
+.dart_tool/package_config_subset

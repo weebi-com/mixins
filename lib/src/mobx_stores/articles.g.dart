@@ -197,17 +197,6 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
         .run(() => super.addAllArticleLines(lineArticlesToSave));
   }
 
-  final _$updateAllArticleLinesThatMatchTitleAsyncAction = AsyncAction(
-    'ArticlesStoreBase.updateAllArticleLinesThatMatchTitle',
-  );
-
-  @override
-  Future<int> updateAllArticleLinesThatMatchTitle(
-      List<ArticleLines<ArticleAbstract>> lineArticlesToUpdate) {
-    return _$updateAllArticleLinesThatMatchTitleAsyncAction.run(
-        () => super.updateAllArticleLinesThatMatchTitle(lineArticlesToUpdate));
-  }
-
   final _$updateLineArticleAsyncAction =
       AsyncAction('ArticlesStoreBase.updateLineArticle');
 

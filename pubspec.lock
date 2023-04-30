@@ -343,10 +343,10 @@ packages:
   models_weebi:
     dependency: "direct main"
     description:
-      name: models_weebi
-      url: "https://onepub.dev/api/xnxpsdavuh/"
-    source: hosted
-    version: "1.0.11"
+      path: "../models_weebi"
+      relative: true
+    source: path
+    version: "1.0.12"
   nested:
     dependency: transitive
     description:
@@ -413,10 +413,10 @@ packages:
   services_weebi:
     dependency: "direct main"
     description:
-      name: services_weebi
-      url: "https://onepub.dev/api/xnxpsdavuh/"
-    source: hosted
-    version: "1.0.2"
+      path: "../services_weebi"
+      relative: true
+    source: path
+    version: "1.0.3"
   shelf:
     dependency: transitive
     description:

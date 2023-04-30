@@ -292,26 +292,29 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
 
   @action
   Future<int> upsertAllBasedOnId(List<ArticleLines> articlesInTheBush) async {
-    final twoLists = articlesInTheBush.findDups(oldList: lines.toList());
-    if (twoLists.dups.isNotEmpty) {
-      for (final a in twoLists.dups) {
+    final listToAdd = <ArticleLines>[];
+    final listToUpdate = <ArticleLines>[];
+    for (var i = 0; i < articlesInTheBush.length; i++) {
+      if (lines.any((e) => e.id == articlesInTheBush[i].id)) {
+        final match = lines.where((e) => e.id == articlesInTheBush[i].id);
+        if (match.length > 1) {
+          print(
+              'herder is found x${match.length} times : ${articlesInTheBush[i].toString()}');
+        }
+        listToUpdate.add(match.last);
+      } else {
+        listToAdd.add(articlesInTheBush[i]);
+      }
+    }
+    if (listToUpdate.isNotEmpty) {
+      for (final a in listToUpdate) {
         await updateLineArticle(a);
       }
     }
-    if (twoLists.noDups.isNotEmpty) {
-      await addAllArticleLines(twoLists.noDups);
+    if (listToAdd.isNotEmpty) {
+      await addAllArticleLines(listToAdd);
     }
-    return twoLists.dups.length + twoLists.noDups.length;
-  }
-
-  @action
-  Future<int> updateAllArticleLinesThatMatchTitle(
-      List<ArticleLines> linesToUpdate) async {
-    final twoLists = linesToUpdate.findDups(oldList: lines.toList());
-    for (var i = 0; i < twoLists.dups.length; i++) {
-      await updateLineArticle(twoLists.dups[i]);
-    }
-    return twoLists.dups.length;
+    return listToUpdate.length + listToAdd.length;
   }
 
   @action
