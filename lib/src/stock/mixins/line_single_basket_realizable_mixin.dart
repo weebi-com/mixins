@@ -23,7 +23,7 @@ mixin LineSingleArticleBasketRealizableNow on LineArticleStockAbstract {
   Iterable<BasketWrapper> articleBasketWrapThem(
     Iterable<ClosingStockShop> closingStockShops,
     Iterable<TicketWeebi> tickets,
-    Iterable<ArticleLines> lines,
+    Iterable<ArticleLine> lines,
     DateTime start, // useless
     DateTime end,
   ) {
@@ -49,15 +49,15 @@ mixin LineSingleArticleBasketRealizableNow on LineArticleStockAbstract {
 
   double articleStockRemaining(Iterable<ClosingStockShop> closingsStockShops,
       Iterable<TicketWeebi> tickets, DateTime start, DateTime end,
-      {@required Article wrappedArticle}) {
+      {@required ArticleRetail wrappedArticle}) {
     return _articleClosingFinalQt(closingsStockShops, wrappedArticle,
             end: end) +
         _articleTkQtIn(tickets, wrappedArticle, start, end) -
         _articleTkQtOut(tickets, wrappedArticle, start, end);
   }
 
-  double _articleClosingFinalQt(
-      Iterable<ClosingStockShop> closingStockShops, Article wrappedArticle,
+  double _articleClosingFinalQt(Iterable<ClosingStockShop> closingStockShops,
+      ArticleRetail wrappedArticle,
       {DateTime end}) {
 // stockShopArticleFinalQuantityAbsoluteForWeebi
 // stockShopArticleQtOutTimeRangeForWeebi
@@ -68,7 +68,7 @@ mixin LineSingleArticleBasketRealizableNow on LineArticleStockAbstract {
 
   double _articleTkQtIn(
     Iterable<TicketWeebi> tickets,
-    Article wrappedArticle,
+    ArticleRetail wrappedArticle,
     DateTime start,
     DateTime end,
   ) {
@@ -79,7 +79,7 @@ mixin LineSingleArticleBasketRealizableNow on LineArticleStockAbstract {
 
   double _articleTkQtOut(
     Iterable<TicketWeebi> tickets,
-    Article wrappedArticle,
+    ArticleRetail wrappedArticle,
     DateTime start,
     DateTime end,
   ) {

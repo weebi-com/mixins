@@ -18,7 +18,7 @@ class ArticlesStoreInstantiater {
     final createLineArticleRpc = CreateArticleLineRpc(dbArticles);
     final createArticleRpc = CreateArticleRpc(dbArticles);
     final deleteForeverArticleRpc = DeleteForeverArticleRpc(dbArticles);
-    final deleteAllProductsRpc = DeleteAllArticleLinesRpc(dbArticles);
+    final deleteAllProductsRpc = DeleteAllArticleLineRpc(dbArticles);
 
     final ArticlesService articlesService = ArticlesService(
       getLinesRpc,

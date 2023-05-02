@@ -14,7 +14,7 @@ import 'package:services_weebi/services_weebi.dart';
 
 // Project imports:
 import 'package:models_weebi/weebi_models.dart'
-    show ArticleBasket, ArticleWMinQt, Article, ArticleLines;
+    show ArticleBasket, ArticleWMinQt, ArticleRetail, ArticleLine;
 
 part 'articles.g.dart';
 
@@ -22,7 +22,7 @@ class ResponseLight {
   final int code;
   final int countHandled;
   final int countIgnored;
-  final List<ArticleLines> linesIgnored;
+  final List<ArticleLine> linesIgnored;
   const ResponseLight(
       {@required this.code,
       @required this.linesIgnored,
@@ -47,8 +47,8 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
 
   ArticlesStoreBase(this._articlesService) {
     initialLoading = true;
-    lines = ObservableList<ArticleLines>();
-    linesPalpableFiltered = ObservableList<ArticleLines>();
+    lines = ObservableList<ArticleLine>();
+    linesPalpableFiltered = ObservableList<ArticleLine>();
     sortedBy = Observable(SortedBy.codeShortcut);
     sortBy(SortedBy.codeShortcut);
     articlesSelectedForBasketMinQt = ObservableList<ArticleWMinQt>();
@@ -82,15 +82,15 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   Observable<SortedBy> sortedBy = Observable(SortedBy.title);
 
   @observable
-  ObservableList<ArticleLines> lines = ObservableList.of(<ArticleLines>[]);
+  ObservableList<ArticleLine> lines = ObservableList.of(<ArticleLine>[]);
 
   @observable
-  ObservableList<ArticleLines> linesPalpableFiltered =
-      ObservableList.of(<ArticleLines>[]);
+  ObservableList<ArticleLine> linesPalpableFiltered =
+      ObservableList.of(<ArticleLine>[]);
 
   @computed
-  ObservableList<ArticleLines> get linesPalpableNoBasket =>
-      ObservableList<ArticleLines>.of(
+  ObservableList<ArticleLine> get linesPalpableNoBasket =>
+      ObservableList<ArticleLine>.of(
           lines.isPalpable.where((l) => l.isBasket == false));
 
   // used for creating and handling article basket
@@ -163,14 +163,14 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
       articlesSelectedForBasketMinQt = ObservableList<ArticleWMinQt>.of([]);
 
   @computed
-  ObservableList<Article> get articlesWeebiList {
-    final articlesWeebiList = ObservableList<Article>.of([]);
+  ObservableList<ArticleRetail> get articlesWeebiList {
+    final articlesWeebiList = ObservableList<ArticleRetail>.of([]);
     final filtered = lines
         .where((element) => element.isBasket == false)
         .where((element) => element.isPalpable == true);
     for (final line in filtered) {
       for (final article in line.articles) {
-        articlesWeebiList.add(article as Article);
+        articlesWeebiList.add(article as ArticleRetail);
       }
     }
     return articlesWeebiList;
@@ -193,7 +193,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   ///
 
   @action
-  ObservableList<ArticleLines> sortBy(SortedBy sortBy) {
+  ObservableList<ArticleLine> sortBy(SortedBy sortBy) {
     switch (sortBy) {
       case SortedBy.codeShortcut:
         linesPalpableFiltered = lines.sortedById().isPalpable;
@@ -230,13 +230,13 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @computed
-  ObservableList<ArticleLines> get linesInSell => lines.isEmpty
-      ? ObservableList<ArticleLines>.of([])
+  ObservableList<ArticleLine> get linesInSell => lines.isEmpty
+      ? ObservableList<ArticleLine>.of([])
       : filteredBy == FilteredBy.title && queryString.isNotEmpty
-          ? ObservableList<ArticleLines>.of(
+          ? ObservableList<ArticleLine>.of(
               lines.filterByTitle(queryString).where((p) => p.status).toList())
           : filteredBy == FilteredBy.barcode && queryString.isNotEmpty
-              ? ObservableList<ArticleLines>.of(lines
+              ? ObservableList<ArticleLine>.of(lines
                   .where((p) => p.status)
                   .where((p) => p.isPalpable ?? true)
                   .where((p) => p.title != '*')
@@ -244,14 +244,14 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
                       p.barcode.toString().trim() ==
                       queryString) // same queryString ?
                   .toList())
-              : ObservableList<ArticleLines>.of(lines
+              : ObservableList<ArticleLine>.of(lines
                   .where((p) => p.status)
                   .where((p) => p.isPalpable ?? true)
                   .where((p) => p.title != '*')
                   .toList());
 
   @action
-  Future<bool> init({List<ArticleLines> data}) async {
+  Future<bool> init({List<ArticleLine> data}) async {
     if (data != null && data.isNotEmpty) {
       lines = ObservableList.of(data);
       linesPalpableFiltered = data.isPalpable;
@@ -267,12 +267,12 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @action
-  Future<void> clearFilter({List<ArticleLines> data}) async {
+  Future<void> clearFilter({List<ArticleLine> data}) async {
     setFilteredBy(FilteredBy.none);
     setQueryString('');
     // only way dart can clone a list
     linesPalpableFiltered = lines
-        .map((e) => ArticleLines(
+        .map((e) => ArticleLine(
             id: e.id,
             articles: e.articles,
             title: e.title,
@@ -283,17 +283,17 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @action
-  Future<int> addAllArticleLines(List<ArticleLines> lineArticlesToSave) async {
+  Future<int> addAllArticleLine(List<ArticleLine> lineArticlesToSave) async {
     //TODO get a count to check this ok
-    await _articlesService.addAllArticleLinesRpc.request(lineArticlesToSave);
+    await _articlesService.addAllArticleLineRpc.request(lineArticlesToSave);
     lines.addAll(lineArticlesToSave);
     return lineArticlesToSave.length;
   }
 
   @action
-  Future<int> upsertAllBasedOnId(List<ArticleLines> articlesInTheBush) async {
-    final listToAdd = <ArticleLines>[];
-    final listToUpdate = <ArticleLines>[];
+  Future<int> upsertAllBasedOnId(List<ArticleLine> articlesInTheBush) async {
+    final listToAdd = <ArticleLine>[];
+    final listToUpdate = <ArticleLine>[];
     for (var i = 0; i < articlesInTheBush.length; i++) {
       if (lines.any((e) => e.id == articlesInTheBush[i].id)) {
         final match = lines.where((e) => e.id == articlesInTheBush[i].id);
@@ -312,14 +312,14 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
       }
     }
     if (listToAdd.isNotEmpty) {
-      await addAllArticleLines(listToAdd);
+      await addAllArticleLine(listToAdd);
     }
     return listToUpdate.length + listToAdd.length;
   }
 
   @action
-  Future<ArticleLines> updateLineArticle<A extends ArticleAbstract>(
-      ArticleLines line) async {
+  Future<ArticleLine> updateLineArticle<A extends ArticleAbstract>(
+      ArticleLine line) async {
     final updatedLine =
         await _articlesService.updateArticleLineRpc.request(line);
     final index = lines.indexWhere((element) => element.id == updatedLine.id);
@@ -329,15 +329,15 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @action
-  Future<ObservableList<ArticleLines>> importCatalogueFromJson(
+  Future<ObservableList<ArticleLine>> importCatalogueFromJson(
       String json) async {
     final lineArticles = (convert.json.decode(json) as List)
         .cast<Map>() // ?
         .cast<Map<String, dynamic>>()
-        .map((line) => ArticleLines.fromMap(line))
+        .map((line) => ArticleLine.fromMap(line))
         .toList();
     lines = ObservableList.of(lineArticles);
-    await _articlesService.addAllArticleLinesRpc.request(lines);
+    await _articlesService.addAllArticleLineRpc.request(lines);
     return lines;
   }
 
@@ -350,19 +350,19 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @action
-  Future<ArticleLines> createLineArticle<A extends ArticleAbstract>(
-      ArticleLines<A> lineData) async {
+  Future<ArticleLine> createLineArticle<A extends ArticleAbstract>(
+      ArticleLine<A> lineData) async {
     final lineArticle =
         await _articlesService.createLineArticleRpc.request(lineData);
     lines.add(lineData);
-    return lineData is ArticleLines<Article>
-        ? lineData as ArticleLines<Article>
-        : lineData as ArticleLines<ArticleBasket>;
+    return lineData is ArticleLine<ArticleRetail>
+        ? lineData as ArticleLine<ArticleRetail>
+        : lineData as ArticleLine<ArticleBasket>;
   }
 
 // rename this to fit the use case of warning that product is out of stock
   @action
-  Future<ArticleLines> stockLowWarning(ArticleLines productFalse) async {
+  Future<ArticleLine> stockLowWarning(ArticleLine productFalse) async {
     final stockLowProduct =
         await _articlesService.updateArticleLineRpc.request(productFalse);
     var productIndex = stockLowProduct.id;
@@ -371,7 +371,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @action // not used at the moment
-  Future<ArticleLines> restoreLineArticle(ArticleLines line) async {
+  Future<ArticleLine> restoreLineArticle(ArticleLine line) async {
     final restoredLine =
         await _articlesService.updateArticleLineRpc.request(line);
     final productIndex = restoredLine.id;
@@ -380,12 +380,12 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @action
-  Future<ObservableList<ArticleLines>> deleteForeverLineArticle(
-      ArticleLines productData) async {
+  Future<ObservableList<ArticleLine>> deleteForeverLineArticle(
+      ArticleLine productData) async {
     // first remove it from any basket
     bool isBasketToBeDeleted = false;
     bool isBasketSingle = true;
-    ArticleLines<ArticleAbstract> lineToDelete;
+    ArticleLine<ArticleAbstract> lineToDelete;
     final listOfArticleBasketToDelete = [];
 
     // checking on all existing articles if one is in the proxy
@@ -443,12 +443,12 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @action
-  Future<ObservableList<ArticleLines>>
+  Future<ObservableList<ArticleLine>>
       deleteForeverArticle<A extends ArticleAbstract>(A articleData) async {
     // first remove it from any basket
     bool isBasketToBeDeleted = false;
     bool isBasketSingle = true;
-    ArticleLines<ArticleAbstract> lineToDelete;
+    ArticleLine<ArticleAbstract> lineToDelete;
     final listOfArticleBasketToDelete = [];
     for (final line in lines.where((l) => (l.isBasket ?? false))) {
       for (final articleB in line.articles) {
