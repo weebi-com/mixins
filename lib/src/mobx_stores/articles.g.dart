@@ -11,6 +11,17 @@ part of 'articles.dart';
 mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
     on ArticlesStoreBase<S>, Store {
   Computed<ObservableList<ArticleLine<ArticleAbstract>>>
+      _$linesPalpableFilteredComputed;
+
+  @override
+  ObservableList<ArticleLine<ArticleAbstract>> get linesPalpableFiltered =>
+      (_$linesPalpableFilteredComputed ??=
+              Computed<ObservableList<ArticleLine<ArticleAbstract>>>(
+                  () => super.linesPalpableFiltered,
+                  name: 'ArticlesStoreBase.linesPalpableFiltered'))
+          .value;
+
+  Computed<ObservableList<ArticleLine<ArticleAbstract>>>
       _$linesPalpableNoBasketComputed;
 
   @override
@@ -34,6 +45,14 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
   ObservableList<String> get getSuggestions => (_$getSuggestionsComputed ??=
           Computed<ObservableList<String>>(() => super.getSuggestions,
               name: 'ArticlesStoreBase.getSuggestions'))
+      .value;
+
+  Computed<ObservableList<String>> _$getLinesNamesComputed;
+
+  @override
+  ObservableList<String> get getLinesNames => (_$getLinesNamesComputed ??=
+          Computed<ObservableList<String>>(() => super.getLinesNames,
+              name: 'ArticlesStoreBase.getLinesNames'))
       .value;
   Computed<ObservableList<ArticleLine<ArticleAbstract>>> _$linesInSellComputed;
 
@@ -60,34 +79,19 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
     });
   }
 
-  final _$isSearchAtom = Atom(name: 'ArticlesStoreBase.isSearch');
+  final _$_searchedByPrivateAtom =
+      Atom(name: 'ArticlesStoreBase._searchedByPrivate');
 
   @override
-  bool get isSearch {
-    _$isSearchAtom.reportRead();
-    return super.isSearch;
+  SearchedBy get _searchedByPrivate {
+    _$_searchedByPrivateAtom.reportRead();
+    return super._searchedByPrivate;
   }
 
   @override
-  set isSearch(bool value) {
-    _$isSearchAtom.reportWrite(value, super.isSearch, () {
-      super.isSearch = value;
-    });
-  }
-
-  final _$_filteredByPrivateAtom =
-      Atom(name: 'ArticlesStoreBase._filteredByPrivate');
-
-  @override
-  FilteredBy get _filteredByPrivate {
-    _$_filteredByPrivateAtom.reportRead();
-    return super._filteredByPrivate;
-  }
-
-  @override
-  set _filteredByPrivate(FilteredBy value) {
-    _$_filteredByPrivateAtom.reportWrite(value, super._filteredByPrivate, () {
-      super._filteredByPrivate = value;
+  set _searchedByPrivate(SearchedBy value) {
+    _$_searchedByPrivateAtom.reportWrite(value, super._searchedByPrivate, () {
+      super._searchedByPrivate = value;
     });
   }
 
@@ -137,21 +141,18 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
     });
   }
 
-  final _$linesPalpableFilteredAtom =
-      Atom(name: 'ArticlesStoreBase.linesPalpableFiltered');
+  final _$_linesFilteredAtom = Atom(name: 'ArticlesStoreBase._linesFiltered');
 
   @override
-  ObservableList<ArticleLine<ArticleAbstract>> get linesPalpableFiltered {
-    _$linesPalpableFilteredAtom.reportRead();
-    return super.linesPalpableFiltered;
+  ObservableList<ArticleLine<ArticleAbstract>> get _linesFiltered {
+    _$_linesFilteredAtom.reportRead();
+    return super._linesFiltered;
   }
 
   @override
-  set linesPalpableFiltered(
-      ObservableList<ArticleLine<ArticleAbstract>> value) {
-    _$linesPalpableFilteredAtom.reportWrite(value, super.linesPalpableFiltered,
-        () {
-      super.linesPalpableFiltered = value;
+  set _linesFiltered(ObservableList<ArticleLine<ArticleAbstract>> value) {
+    _$_linesFilteredAtom.reportWrite(value, super._linesFiltered, () {
+      super._linesFiltered = value;
     });
   }
 
@@ -183,8 +184,8 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
   final _$clearFilterAsyncAction = AsyncAction('ArticlesStoreBase.clearFilter');
 
   @override
-  Future<void> clearFilter({List<ArticleLine<ArticleAbstract>> data}) {
-    return _$clearFilterAsyncAction.run(() => super.clearFilter(data: data));
+  Future<void> clearSearch({List<ArticleLine<ArticleAbstract>> data}) {
+    return _$clearFilterAsyncAction.run(() => super.clearSearch(data: data));
   }
 
   final _$addAllArticleLineAsyncAction =
@@ -201,11 +202,10 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
       AsyncAction('ArticlesStoreBase.updateLineArticle');
 
   @override
-  Future<ArticleLine<ArticleAbstract>>
-      updateLineArticle<A extends ArticleAbstract>(
-          ArticleLine<ArticleAbstract> line) {
+  Future<ArticleLine<A>> updateLineArticle<A extends ArticleAbstract>(
+      ArticleLine<A> line) {
     return _$updateLineArticleAsyncAction
-        .run(() => super.updateLineArticle(line));
+        .run(() => super.updateLineArticle<A>(line));
   }
 
   final _$importCatalogueFromJsonAsyncAction = AsyncAction(
@@ -243,20 +243,10 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
       AsyncAction('ArticlesStoreBase.createLineArticle');
 
   @override
-  Future<ArticleLine<ArticleAbstract>>
-      createLineArticle<A extends ArticleAbstract>(ArticleLine<A> lineData) {
+  Future<ArticleLine<A>> createLineArticle<A extends ArticleAbstract>(
+      ArticleLine<A> lineData) {
     return _$createLineArticleAsyncAction
         .run(() => super.createLineArticle<A>(lineData));
-  }
-
-  final _$stockLowWarningAsyncAction =
-      AsyncAction('ArticlesStoreBase.stockLowWarning');
-
-  @override
-  Future<ArticleLine<ArticleAbstract>> stockLowWarning(
-      ArticleLine<ArticleAbstract> productFalse) {
-    return _$stockLowWarningAsyncAction
-        .run(() => super.stockLowWarning(productFalse));
   }
 
   final _$restoreLineArticleAsyncAction =
@@ -313,11 +303,11 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
       ActionController(name: 'ArticlesStoreBase');
 
   @override
-  void setFilteredBy(FilteredBy val) {
+  void setSearchedBy(SearchedBy val) {
     final _$actionInfo = _$ArticlesStoreBaseActionController.startAction(
         name: 'ArticlesStoreBase.setFilteredBy');
     try {
-      return super.setFilteredBy(val);
+      return super.setSearchedBy(val);
     } finally {
       _$ArticlesStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -401,11 +391,11 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
   }
 
   @override
-  void filterByTitle() {
+  void searchPalpablesByTitleOrId() {
     final _$actionInfo = _$ArticlesStoreBaseActionController.startAction(
-        name: 'ArticlesStoreBase.filterByTitle');
+        name: 'ArticlesStoreBase.searchByTitleOrId');
     try {
-      return super.filterByTitle();
+      return super.searchPalpablesByTitleOrId();
     } finally {
       _$ArticlesStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -415,7 +405,6 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
   String toString() {
     return '''
 initialLoading: ${initialLoading},
-isSearch: ${isSearch},
 sortedBy: ${sortedBy},
 lines: ${lines},
 linesPalpableFiltered: ${linesPalpableFiltered},

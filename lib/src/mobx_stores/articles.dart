@@ -34,11 +34,11 @@ enum SortedBy {
   unsorted,
   title,
   titleReversed,
-  codeShortcut,
-  codeShortcutReversed,
+  id,
+  idReversed,
 }
 
-enum FilteredBy { title, barcode, none }
+enum SearchedBy { titleOrId, barcode, none }
 
 class ArticlesStore = ArticlesStoreBase with _$ArticlesStore;
 
@@ -48,9 +48,9 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   ArticlesStoreBase(this._articlesService) {
     initialLoading = true;
     lines = ObservableList<ArticleLine>();
-    linesPalpableFiltered = ObservableList<ArticleLine>();
-    sortedBy = Observable(SortedBy.codeShortcut);
-    sortBy(SortedBy.codeShortcut);
+    _linesFiltered = ObservableList<ArticleLine>();
+    sortedBy = Observable(SortedBy.id);
+    sortBy(SortedBy.id);
     articlesSelectedForBasketMinQt = ObservableList<ArticleWMinQt>();
   }
 
@@ -58,15 +58,12 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   bool initialLoading = false;
 
   @observable
-  bool isSearch = false;
+  SearchedBy _searchedByPrivate = SearchedBy.none;
 
-  @observable
-  FilteredBy _filteredByPrivate = FilteredBy.none;
-
-  FilteredBy get filteredBy => _filteredByPrivate;
+  SearchedBy get searchedBy => _searchedByPrivate;
 
   @action
-  void setFilteredBy(FilteredBy val) => _filteredByPrivate = val;
+  void setSearchedBy(SearchedBy val) => _searchedByPrivate = val;
 
   @observable
   String _queryStringPrivate = '';
@@ -85,13 +82,16 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   ObservableList<ArticleLine> lines = ObservableList.of(<ArticleLine>[]);
 
   @observable
-  ObservableList<ArticleLine> linesPalpableFiltered =
+  ObservableList<ArticleLine> _linesFiltered =
       ObservableList.of(<ArticleLine>[]);
+
+  @computed
+  ObservableList<ArticleLine> get linesPalpableFiltered => _linesFiltered;
 
   @computed
   ObservableList<ArticleLine> get linesPalpableNoBasket =>
       ObservableList<ArticleLine>.of(
-          lines.isPalpable.where((l) => l.isBasket == false));
+          lines.palpables.where((l) => l.isBasket == false));
 
   // used for creating and handling article basket
   @observable
@@ -190,25 +190,34 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
           .contains(queryString.trim().withoutAccents.toLowerCase()));
   }
 
+  @computed
+  ObservableList<String> get getLinesNames {
+    final strings = List<String>.of([]);
+    for (final a in lines) {
+      strings.add(a.title.trim().withoutAccents.toLowerCase());
+    }
+    return ObservableList<String>.of(strings);
+  }
+
   ///
 
   @action
   ObservableList<ArticleLine> sortBy(SortedBy sortBy) {
     switch (sortBy) {
-      case SortedBy.codeShortcut:
-        linesPalpableFiltered = lines.sortedById().isPalpable;
-        sortedBy = Observable(SortedBy.codeShortcut);
+      case SortedBy.id:
+        lines = lines.sortedById().palpables;
+        sortedBy = Observable(SortedBy.id);
         break;
-      case SortedBy.codeShortcutReversed:
-        linesPalpableFiltered = lines.sortedByIdReversed().isPalpable;
-        sortedBy = Observable(SortedBy.codeShortcutReversed);
+      case SortedBy.idReversed:
+        lines = lines.sortedByIdReversed().palpables;
+        sortedBy = Observable(SortedBy.idReversed);
         break;
       case SortedBy.title:
-        linesPalpableFiltered = lines.sortedByTitle().isPalpable;
+        lines = lines.sortedByTitle().palpables;
         sortedBy = Observable(SortedBy.title);
         break;
       case SortedBy.titleReversed:
-        linesPalpableFiltered = lines.sortedByTitleReversed().isPalpable;
+        lines = lines.sortedByTitleReversed().palpables;
         sortedBy = Observable(SortedBy.titleReversed);
         break;
       default:
@@ -217,13 +226,13 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @action
-  void filterByTitle() {
+  void searchPalpablesByTitleOrId() {
     if (lines.isNotEmpty) {
-      if (filteredBy == FilteredBy.title) {
+      if (searchedBy == SearchedBy.titleOrId) {
         if (queryString.isNotEmpty) {
-          linesPalpableFiltered = lines.filterByTitle(queryString).isPalpable;
+          _linesFiltered = lines.searchByTitleOrId(queryString).palpables;
         } else {
-          linesPalpableFiltered = lines.isPalpable;
+          _linesFiltered = lines.palpables;
         }
       }
     }
@@ -232,10 +241,12 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   @computed
   ObservableList<ArticleLine> get linesInSell => lines.isEmpty
       ? ObservableList<ArticleLine>.of([])
-      : filteredBy == FilteredBy.title && queryString.isNotEmpty
-          ? ObservableList<ArticleLine>.of(
-              lines.filterByTitle(queryString).where((p) => p.status).toList())
-          : filteredBy == FilteredBy.barcode && queryString.isNotEmpty
+      : searchedBy == SearchedBy.titleOrId && queryString.isNotEmpty
+          ? ObservableList<ArticleLine>.of(lines
+              .searchByTitleOrId(queryString)
+              .where((p) => p.status)
+              .toList())
+          : searchedBy == SearchedBy.barcode && queryString.isNotEmpty
               ? ObservableList<ArticleLine>.of(lines
                   .where((p) => p.status)
                   .where((p) => p.isPalpable ?? true)
@@ -254,12 +265,12 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   Future<bool> init({List<ArticleLine> data}) async {
     if (data != null && data.isNotEmpty) {
       lines = ObservableList.of(data);
-      linesPalpableFiltered = data.isPalpable;
+      _linesFiltered = data.palpables;
     } else {
       final linesFromRpc =
           await _articlesService.getArticlesLinesRpc.request(null);
       lines = ObservableList.of(linesFromRpc);
-      linesPalpableFiltered = linesFromRpc.isPalpable;
+      _linesFiltered = linesFromRpc.palpables;
     }
     initialLoading = false;
 
@@ -267,11 +278,11 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @action
-  Future<void> clearFilter({List<ArticleLine> data}) async {
-    setFilteredBy(FilteredBy.none);
+  Future<void> clearSearch({List<ArticleLine> data}) async {
+    setSearchedBy(SearchedBy.none);
     setQueryString('');
     // only way dart can clone a list
-    linesPalpableFiltered = lines
+    _linesFiltered = lines
         .map((e) => ArticleLine(
             id: e.id,
             articles: e.articles,
@@ -279,12 +290,11 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
             status: e.status,
             creationDate: e.creationDate,
             updateDate: e.updateDate))
-        .isPalpable;
+        .palpables;
   }
 
   @action
   Future<int> addAllArticleLine(List<ArticleLine> lineArticlesToSave) async {
-    //TODO get a count to check this ok
     await _articlesService.addAllArticleLineRpc.request(lineArticlesToSave);
     lines.addAll(lineArticlesToSave);
     return lineArticlesToSave.length;
@@ -292,39 +302,27 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
 
   @action
   Future<int> upsertAllBasedOnId(List<ArticleLine> articlesInTheBush) async {
-    final listToAdd = <ArticleLine>[];
-    final listToUpdate = <ArticleLine>[];
-    for (var i = 0; i < articlesInTheBush.length; i++) {
-      if (lines.any((e) => e.id == articlesInTheBush[i].id)) {
-        final match = lines.where((e) => e.id == articlesInTheBush[i].id);
-        if (match.length > 1) {
-          print(
-              'herder is found x${match.length} times : ${articlesInTheBush[i].toString()}');
-        }
-        listToUpdate.add(match.last);
-      } else {
-        listToAdd.add(articlesInTheBush[i]);
-      }
-    }
-    if (listToUpdate.isNotEmpty) {
-      for (final a in listToUpdate) {
+    final twoLists = lines.findDupsById(newList: articlesInTheBush);
+    if (twoLists.dups.isNotEmpty) {
+      for (final a in twoLists.dups) {
         await updateLineArticle(a);
       }
     }
-    if (listToAdd.isNotEmpty) {
-      await addAllArticleLine(listToAdd);
+    if (twoLists.noDups.isNotEmpty) {
+      await addAllArticleLine(twoLists.noDups);
     }
-    return listToUpdate.length + listToAdd.length;
+    return twoLists.dups.length + twoLists.noDups.length;
   }
 
   @action
-  Future<ArticleLine> updateLineArticle<A extends ArticleAbstract>(
-      ArticleLine line) async {
+  Future<ArticleLine<A>> updateLineArticle<A extends ArticleAbstract>(
+      ArticleLine<A> line) async {
     final updatedLine =
         await _articlesService.updateArticleLineRpc.request(line);
     final index = lines.indexWhere((element) => element.id == updatedLine.id);
     lines.removeAt(index);
     lines.add(updatedLine);
+
     return updatedLine;
   }
 
@@ -350,24 +348,14 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @action
-  Future<ArticleLine> createLineArticle<A extends ArticleAbstract>(
+  Future<ArticleLine<A>> createLineArticle<A extends ArticleAbstract>(
       ArticleLine<A> lineData) async {
     final lineArticle =
         await _articlesService.createLineArticleRpc.request(lineData);
-    lines.add(lineData);
+    lines.add(lineArticle);
     return lineData is ArticleLine<ArticleRetail>
         ? lineData as ArticleLine<ArticleRetail>
         : lineData as ArticleLine<ArticleBasket>;
-  }
-
-// rename this to fit the use case of warning that product is out of stock
-  @action
-  Future<ArticleLine> stockLowWarning(ArticleLine productFalse) async {
-    final stockLowProduct =
-        await _articlesService.updateArticleLineRpc.request(productFalse);
-    var productIndex = stockLowProduct.id;
-    lines[productIndex] = stockLowProduct;
-    return stockLowProduct;
   }
 
   @action // not used at the moment
@@ -429,8 +417,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
             await _articlesService.deleteForeverArticleRpc.request(a);
             final lineIndex = lines.indexWhere((l) => l.id == a.lineId);
             final articleIndex = lines[lineIndex].articles.indexWhere(
-                (article) =>
-                    article.lineId == a.lineId && article.id == a.codeShortcut);
+                (article) => article.lineId == a.lineId && article.id == a.id);
             lines[lineIndex].articles.removeAt(articleIndex);
           }
         }
@@ -489,8 +476,8 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
         for (final a in listOfArticleBasketToDelete) {
           await _articlesService.deleteForeverArticleRpc.request(a);
           final lineIndex = lines.indexWhere((l) => l.id == a.lineId);
-          final articleIndex = lines[lineIndex].articles.indexWhere((article) =>
-              article.lineId == a.lineId && article.id == a.codeShortcut);
+          final articleIndex = lines[lineIndex].articles.indexWhere(
+              (article) => article.lineId == a.lineId && article.id == a.id);
           lines[lineIndex].articles.removeAt(articleIndex);
         }
       }
