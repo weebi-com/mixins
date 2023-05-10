@@ -8,7 +8,7 @@ import 'package:mixins_weebi/src/stock/abstracts/article_stock_abstract.dart';
 mixin ArticleBasketRealizableNow on ArticleStockStatelessAbstract {
   // computes the number of articles basket available
   // => required quantites per each lot in basket
-  // a lot is a reference to an ArticleWeebi with a minimum qt needed to complete a basket
+  // a lot is a reference to an ArticleRetail with a minimum qt needed to complete a basket
   // for example my vegetable basket includes x3 carots and x2 tomatoes
   // so if I have 9 carots left I can only make x3 baskets
   int basketsRealizableNow(Iterable<BasketWrapper> thoseGoddamWrappers) {

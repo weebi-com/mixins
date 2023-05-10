@@ -1,12 +1,12 @@
 import 'package:mixins_weebi/src/instantiate_stores/articles.dart';
-import 'package:mixins_weebi/src/mobx_stores/article_line_create_form_store.dart';
+import 'package:mixins_weebi/src/mobx_stores/validators/articles/line/create_line_retail_form.dart';
 import 'package:models_weebi/weebi_models.dart';
 import 'package:test/test.dart';
 
 final line = ArticleLine.dummy;
 
 void main() {
-  test('article_form', () async {
+  test('article_form line create validator', () async {
     final articlesStore = ArticlesStoreInstantiater.noPersistence;
     final store = ArticleLineCreateFormStore(articlesStore);
     store.setupValidations();

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'article_line_update_form_store.dart';
+part of 'update_line_form.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -56,16 +56,17 @@ canComplete: ${hasErrors}
   }
 }
 
-mixin _$FormErrorState on _FormErrorState, Store {
+mixin _$FormErrorArticleLineUpdateState
+    on _FormErrorArticleLineUpdateState, Store {
   Computed<bool> _$hasErrorsComputed;
 
   @override
   bool get hasErrors =>
       (_$hasErrorsComputed ??= Computed<bool>(() => super.hasErrors,
-              name: '_FormErrorState.hasErrors'))
+              name: '_FormErrorArticleLineUpdateState.hasErrors'))
           .value;
 
-  final _$nameAtom = Atom(name: '_FormErrorState.name');
+  final _$nameAtom = Atom(name: '_FormErrorArticleLineUpdateState.name');
 
   @override
   String get nameError {

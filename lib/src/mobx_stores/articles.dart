@@ -193,8 +193,19 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   @computed
   ObservableList<String> get getLinesNames {
     final strings = List<String>.of([]);
-    for (final a in lines) {
-      strings.add(a.title.trim().withoutAccents.toLowerCase());
+    for (final line in lines) {
+      strings.add(line.title.trim().withoutAccents.toLowerCase());
+    }
+    return ObservableList<String>.of(strings);
+  }
+
+  @computed
+  ObservableList<String> get getArticlesFullNames {
+    final strings = List<String>.of([]);
+    for (final line in lines) {
+      for (final article in line.articles) {
+        strings.add(article.fullName.trim().withoutAccents.toLowerCase());
+      }
     }
     return ObservableList<String>.of(strings);
   }
@@ -492,7 +503,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @action
-  Future<A> createArticle<A extends ArticleAbstract>(A articleData,
+  Future<A> createArticleRetail<A extends ArticleAbstract>(A articleData,
       {bool isTest = false}) async {
     final createdArticle =
         await _articlesService.createArticleRpc.request(articleData);
@@ -503,7 +514,8 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @action
-  Future<A> updateArticle<A extends ArticleAbstract>(A articleData) async {
+  Future<A> updateArticleRetail<A extends ArticleAbstract>(
+      A articleData) async {
     final updatedArticle =
         await _articlesService.updateArticleRpc.request(articleData);
     final lineArticle = lines

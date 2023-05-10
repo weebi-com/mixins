@@ -1,32 +1,28 @@
 import 'package:mixins_weebi/mobx_store_article.dart';
 import 'package:mobx/mobx.dart';
-import 'package:models_weebi/common.dart';
 import 'package:models_weebi/extensions.dart';
 import 'package:models_weebi/weebi_models.dart';
-// ignore: import_of_legacy_library_into_null_safe
 
-part 'article_line_create_form_store.g.dart';
+part 'create_retail_form.g.dart';
 
-class ArticleLineCreateFormStore = _ArticleLineCreateFormStore
-    with _$ArticleLineCreateFormStore;
+class ArticleRetailCreateFormStore = _ArticleCreateFormStore
+    with _$ArticleCreateFormStore;
 
-abstract class _ArticleLineCreateFormStore with Store {
+abstract class _ArticleCreateFormStore with Store {
   final ArticlesStore _articlesStore;
-  _ArticleLineCreateFormStore(this._articlesStore) {
-//
+  final ArticleLine _line;
+  _ArticleCreateFormStore(this._articlesStore, this._line) {
+    fullName = _line.nameLine;
   }
-  final FormErrorState errorStore = FormErrorState();
+  final FormErrorArticleCreateState errorStore = FormErrorArticleCreateState();
   @observable
-  String name = '';
+  String fullName = '';
 
   @observable
   String price = '';
 
   @observable
   String cost = '';
-
-  @observable
-  StockUnit stockUnit = StockUnit.unit;
 
   @observable
   String unitsPerPiece = '';
@@ -48,7 +44,7 @@ abstract class _ArticleLineCreateFormStore with Store {
 
   void setupValidations() {
     _disposers = [
-      reaction((_) => name, validateArticleLineName),
+      reaction((_) => fullName, validateArticleFullName),
       reaction((_) => price, validatePrice),
       reaction((_) => cost, validateCost),
       reaction((_) => unitsPerPiece, validateUnitsPerPiece)
@@ -56,20 +52,26 @@ abstract class _ArticleLineCreateFormStore with Store {
   }
 
   @action
-  void validateArticleLineName(String value) {
+  void validateArticleFullName(String value) {
     if (value == null || value.isEmpty) {
-      errorStore.nameError = 'Saisir le nom de l\'article';
+      errorStore.fullNameError = 'Saisir le nom de l\'article';
       return;
     }
 
-    final isValid = _articlesStore.getLinesNames
-            .contains(value.trim().withoutAccents.toLowerCase()) ==
-        false;
-    if (isValid == false) {
-      errorStore.nameError = 'Un article avec ce nom existe déjà';
+    final isSameAsLineName = _articlesStore.getLinesNames
+        .contains(value.trim().withoutAccents.toLowerCase());
+    if (isSameAsLineName) {
+      errorStore.fullNameError =
+          'Le nom de l\'article doit être différent de la ligne, ex : Cola x1 dans la ligne Cola';
       return;
     }
-    errorStore.nameError = null;
+    final isAlreadyTaken = _articlesStore.getArticlesFullNames
+        .contains(value.trim().withoutAccents.toLowerCase());
+    if (isAlreadyTaken) {
+      errorStore.fullNameError = 'Un article avec ce nom existe déjà';
+      return;
+    }
+    errorStore.fullNameError = null;
     return;
   }
 
@@ -113,24 +115,23 @@ abstract class _ArticleLineCreateFormStore with Store {
   }
 
   void validateAll() {
-    validateArticleLineName(name);
+    validateArticleFullName(fullName);
     validatePrice(price);
     validateCost(cost);
     validateUnitsPerPiece(unitsPerPiece);
   }
 
-  Future<ArticleLine<ArticleRetail>>
-      createLineAndArticleRetailFromForm() async {
+  Future<ArticleRetail> createArticleRetailFromForm() async {
     final now = DateTime.now();
-    ArticleRetail newArticle = ArticleRetail(
-      lineId: _articlesStore.lines.nextId,
-      id: 1,
-      fullName: name.trim() ?? '',
+    ArticleRetail newArticleRetail = ArticleRetail(
+      lineId: _line.id,
+      id: _line.articles.nextId,
+      fullName: fullName.trim() ?? '',
       price: int.parse(price.trim()),
       cost: 0,
       weight: 1,
-      barcodeEAN: barcodeEAN.trim(),
       photo: '',
+      barcodeEAN: barcodeEAN.trim(),
       articleCode: _articlesStore.lines.nextId * 10 + 1,
       creationDate: now,
       updateDate: now,
@@ -139,40 +140,32 @@ abstract class _ArticleLineCreateFormStore with Store {
     );
 
     if ((cost != null && cost.isNotEmpty)) {
-      newArticle = newArticle.copyWith(cost: int.parse(cost.trim()));
+      newArticleRetail =
+          newArticleRetail.copyWith(cost: int.parse(cost.trim()));
     }
     if ((unitsPerPiece != null && unitsPerPiece.isNotEmpty)) {
-      newArticle =
-          newArticle.copyWith(weight: double.parse(unitsPerPiece.trim()));
+      newArticleRetail =
+          newArticleRetail.copyWith(weight: double.parse(unitsPerPiece.trim()));
     }
     if (barcodeEAN != null &&
         barcodeEAN is String &&
         int.tryParse(barcodeEAN.trim()) != null) {
-      newArticle = newArticle.copyWith(barcodeEAN: barcodeEAN.trim());
+      newArticleRetail =
+          newArticleRetail.copyWith(barcodeEAN: barcodeEAN.trim());
     }
 
-    final newLine = ArticleLine<ArticleRetail>(
-        id: _articlesStore.lines.nextId,
-        title: name.trim(),
-        stockUnit: stockUnit,
-        categories: [''],
-        creationDate: now,
-        updateDate: now,
-        status: true,
-        statusUpdateDate: now,
-        articles: [newArticle]);
-
-    final articleLine =
-        await _articlesStore.createLineArticle<ArticleRetail>(newLine);
-    return articleLine;
+    final articleRetailCreated = await _articlesStore
+        .createArticleRetail<ArticleRetail>(newArticleRetail);
+    return articleRetailCreated;
   }
 }
 
-class FormErrorState = _FormErrorState with _$FormErrorState;
+class FormErrorArticleCreateState = _FormErrorArticleCreateState
+    with _$FormErrorArticleCreateState;
 
-abstract class _FormErrorState with Store {
+abstract class _FormErrorArticleCreateState with Store {
   @observable
-  String nameError;
+  String fullNameError;
 
   @observable
   String unitsPerPieceError;
@@ -185,7 +178,7 @@ abstract class _FormErrorState with Store {
 
   @computed
   bool get hasErrors =>
-      nameError != null ||
+      fullNameError != null ||
       unitsPerPieceError != null ||
       priceError != null ||
       costError != null;

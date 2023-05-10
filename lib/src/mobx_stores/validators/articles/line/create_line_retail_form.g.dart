@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'article_line_create_form_store.dart';
+part of 'create_line_retail_form.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -177,16 +177,17 @@ canComplete: ${hasErrors}
   }
 }
 
-mixin _$FormErrorState on _FormErrorState, Store {
+mixin _$FormErrorLineArtcileCreateState
+    on _FormErrorLineArtcileCreateState, Store {
   Computed<bool> _$hasErrorsComputed;
 
   @override
   bool get hasErrors =>
       (_$hasErrorsComputed ??= Computed<bool>(() => super.hasErrors,
-              name: '_FormErrorState.hasErrors'))
+              name: '_FormErrorLineArtcileCreateState.hasErrors'))
           .value;
 
-  final _$nameAtom = Atom(name: '_FormErrorState.name');
+  final _$nameAtom = Atom(name: '_FormErrorLineArtcileCreateState.name');
 
   @override
   String get nameError {
@@ -201,7 +202,8 @@ mixin _$FormErrorState on _FormErrorState, Store {
     });
   }
 
-  final _$unitsPerPieceAtom = Atom(name: '_FormErrorState.unitsPerPiece');
+  final _$unitsPerPieceAtom =
+      Atom(name: '_FormErrorLineArtcileCreateState.unitsPerPiece');
 
   @override
   String get unitsPerPieceError {
@@ -216,7 +218,7 @@ mixin _$FormErrorState on _FormErrorState, Store {
     });
   }
 
-  final _$priceAtom = Atom(name: '_FormErrorState.priceError');
+  final _$priceAtom = Atom(name: '_FormErrorLineArtcileCreateState.priceError');
 
   @override
   String get priceError {
@@ -231,7 +233,8 @@ mixin _$FormErrorState on _FormErrorState, Store {
     });
   }
 
-  final _$costErrorAtom = Atom(name: '_FormErrorState.costError');
+  final _$costErrorAtom =
+      Atom(name: '_FormErrorLineArtcileCreateState.costError');
 
   @override
   String get costError {

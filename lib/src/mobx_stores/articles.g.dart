@@ -54,6 +54,16 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
           Computed<ObservableList<String>>(() => super.getLinesNames,
               name: 'ArticlesStoreBase.getLinesNames'))
       .value;
+
+  Computed<ObservableList<String>> _$getArticlesFullNamesComputed;
+
+  @override
+  ObservableList<String> get getArticlesFullNames =>
+      (_$getArticlesFullNamesComputed ??= Computed<ObservableList<String>>(
+              () => super.getArticlesFullNames,
+              name: 'ArticlesStoreBase.getArticlesFullNames'))
+          .value;
+
   Computed<ObservableList<ArticleLine<ArticleAbstract>>> _$linesInSellComputed;
 
   @override
@@ -284,19 +294,19 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
       AsyncAction('ArticlesStoreBase.createArticle');
 
   @override
-  Future<A> createArticle<A extends ArticleAbstract>(A articleData,
+  Future<A> createArticleRetail<A extends ArticleAbstract>(A articleData,
       {bool isTest = false}) {
     return _$createArticleAsyncAction
-        .run(() => super.createArticle<A>(articleData, isTest: isTest));
+        .run(() => super.createArticleRetail<A>(articleData, isTest: isTest));
   }
 
   final _$updateArticleAsyncAction =
       AsyncAction('ArticlesStoreBase.updateArticle');
 
   @override
-  Future<A> updateArticle<A extends ArticleAbstract>(A articleData) {
+  Future<A> updateArticleRetail<A extends ArticleAbstract>(A articleData) {
     return _$updateArticleAsyncAction
-        .run(() => super.updateArticle<A>(articleData));
+        .run(() => super.updateArticleRetail<A>(articleData));
   }
 
   final _$ArticlesStoreBaseActionController =

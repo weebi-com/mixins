@@ -6,7 +6,7 @@ import 'package:models_weebi/extensions.dart';
 import 'package:models_weebi/weebi_models.dart';
 // ignore: import_of_legacy_library_into_null_safe
 
-part 'article_line_update_form_store.g.dart';
+part 'update_line_form.g.dart';
 
 class ArticleLineUpdateFormStore = _ArticleLineUpdateFormStore
     with _$ArticleFormStore;
@@ -47,12 +47,11 @@ abstract class _ArticleLineUpdateFormStore with Store {
       return;
     }
 
-    final isValid = (value.trim().withoutAccents.toLowerCase() ==
+    final isAlreadyTaken = (value.trim().withoutAccents.toLowerCase() !=
             _initialName.trim().withoutAccents.toLowerCase()) ||
         (_articlesStore.getLinesNames
-                .contains(value.trim().withoutAccents.toLowerCase()) ==
-            false);
-    if (isValid == false) {
+            .contains(value.trim().withoutAccents.toLowerCase()));
+    if (isAlreadyTaken) {
       errorStore.nameError = 'Un article avec ce nom existe déjà';
       return;
     }
@@ -86,9 +85,10 @@ abstract class _ArticleLineUpdateFormStore with Store {
   }
 }
 
-class FormErrorArticleLineUpdateState = _FormErrorState with _$FormErrorState;
+class FormErrorArticleLineUpdateState = _FormErrorArticleLineUpdateState
+    with _$FormErrorArticleLineUpdateState;
 
-abstract class _FormErrorState with Store {
+abstract class _FormErrorArticleLineUpdateState with Store {
   @observable
   String nameError;
 
