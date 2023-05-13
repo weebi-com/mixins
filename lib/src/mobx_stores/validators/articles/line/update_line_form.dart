@@ -48,7 +48,7 @@ abstract class _ArticleLineUpdateFormStore with Store {
     }
 
     final isAlreadyTaken = (value.trim().withoutAccents.toLowerCase() !=
-            _initialName.trim().withoutAccents.toLowerCase()) ||
+            _initialName.trim().withoutAccents.toLowerCase()) &&
         (_articlesStore.getLinesNames
             .contains(value.trim().withoutAccents.toLowerCase()));
     if (isAlreadyTaken) {
@@ -76,9 +76,7 @@ abstract class _ArticleLineUpdateFormStore with Store {
     final lineEdited = line.copyWith(
       title: name.trim(),
       stockUnit: stockUnit,
-      creationDate: now,
       updateDate: now,
-      statusUpdateDate: now,
     );
     final temp = await _articlesStore.updateLineArticle<A>(lineEdited);
     return temp;

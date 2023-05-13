@@ -74,10 +74,11 @@ abstract class _ArticleRetailUpdateFormStore with Store {
       return;
     }
 
-    final isAlreadyTaken = (value.trim().withoutAccents.toLowerCase() !=
-            _initialFullName.trim().withoutAccents.toLowerCase()) ||
-        (_articlesStore.getArticlesFullNames
-            .contains(value.trim().withoutAccents.toLowerCase()));
+    final isAlreadyTaken =
+        _initialFullName.trim().withoutAccents.toLowerCase() !=
+                (value.trim().withoutAccents.toLowerCase()) &&
+            (_articlesStore.getArticlesFullNames
+                .contains(value.trim().withoutAccents.toLowerCase()));
     if (isAlreadyTaken) {
       errorStore.fullNameError = 'Un article avec ce nom existe déjà';
       return;
@@ -134,20 +135,11 @@ abstract class _ArticleRetailUpdateFormStore with Store {
 
   Future<ArticleRetail> updateArticleRetailFromForm() async {
     final now = DateTime.now();
-    ArticleRetail newArticleRetail = ArticleRetail(
-      lineId: _articleRetail.lineId,
-      id: _articleRetail.id,
+    ArticleRetail newArticleRetail = _articleRetail.copyWith(
       fullName: fullName.trim() ?? '',
       price: int.parse(price.trim()),
-      cost: 0,
-      weight: 1,
-      photo: '',
       barcodeEAN: barcodeEAN.trim(),
-      articleCode: _articlesStore.lines.nextId * 10 + 1,
-      creationDate: now,
       updateDate: now,
-      status: true,
-      statusUpdateDate: now,
     );
 
     if ((cost != null && cost.isNotEmpty)) {

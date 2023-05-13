@@ -289,7 +289,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @action
-  Future<void> clearSearch({List<ArticleLine> data}) async {
+  Future<void> clearSearch() async {
     setSearchedBy(SearchedBy.none);
     setQueryString('');
     // only way dart can clone a list

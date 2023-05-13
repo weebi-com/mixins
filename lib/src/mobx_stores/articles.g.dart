@@ -194,8 +194,8 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
   final _$clearFilterAsyncAction = AsyncAction('ArticlesStoreBase.clearFilter');
 
   @override
-  Future<void> clearSearch({List<ArticleLine<ArticleAbstract>> data}) {
-    return _$clearFilterAsyncAction.run(() => super.clearSearch(data: data));
+  Future<void> clearSearch() {
+    return _$clearFilterAsyncAction.run(() => super.clearSearch());
   }
 
   final _$addAllArticleLineAsyncAction =
