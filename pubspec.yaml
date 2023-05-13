@@ -1,7 +1,7 @@
 name: mixins_weebi
 homepage: http://weebi.com
 version: 0.0.9
-publish_to: https://onepub.dev/api/xnxpsdavuh/
+publish_to: none # https://onepub.dev/api/xnxpsdavuh/
 description: mixines and all about mobx stores
 
 environment:
@@ -15,17 +15,21 @@ dependencies:
   mobx: ^2.0.1
   collection: ^1.15.0
   models_weebi:
-    #path: ../models_weebi
-    hosted:
-      url: https://onepub.dev/api/xnxpsdavuh/
-      name: models_weebi
-    version: ^1.0.13
+    git:
+      url: https://github.com/weebi-com/models
+    #path: ../models_weebi 
+    #hosted:
+    #  url: https://onepub.dev/api/xnxpsdavuh/
+    #  name: models_weebi
+    #version: ^1.0.11
   services_weebi:
+    git:
+      url: https://github.com/weebi-com/services
     #path: ../services_weebi
-    hosted:
-      url: https://onepub.dev/api/xnxpsdavuh/
-      name: services_weebi
-    version: ^1.0.4
+    #hosted:
+    #  url: https://onepub.dev/api/xnxpsdavuh/
+    #  name: services_weebi
+    #version: ^1.0.2
 
 dev_dependencies:
   flutter_test:
