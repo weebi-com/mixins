@@ -329,9 +329,11 @@ packages:
   models_weebi:
     dependency: "direct main"
     description:
-      path: "../models_weebi"
-      relative: true
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: db6ddb3cf7b4224f02ca4ae202cf201582a67eaa
+      url: "https://github.com/weebi-com/models"
+    source: git
     version: "1.0.13"
   nested:
     dependency: transitive
@@ -399,10 +401,12 @@ packages:
   services_weebi:
     dependency: "direct main"
     description:
-      path: "../services_weebi"
-      relative: true
-    source: path
-    version: "1.0.3"
+      path: "."
+      ref: HEAD
+      resolved-ref: "5193ddb7968f30c83ded5d23c64f4ada985cdff7"
+      url: "https://github.com/weebi-com/services"
+    source: git
+    version: "1.0.4"
   shelf:
     dependency: transitive
     description:
