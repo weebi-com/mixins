@@ -14,11 +14,11 @@ abstract class _ArticleRetailUpdateFormStore with Store {
   final String _initialFullName;
   _ArticleRetailUpdateFormStore(this._articlesStore, this._articleRetail)
       : _initialFullName = _articleRetail.fullName {
-    fullName = _articleRetail.fullName;
+    fullName = _articleRetail.fullName ?? '';
     price = _articleRetail.price.toString();
     cost = _articleRetail.cost.toString();
     unitsPerPiece = _articleRetail.unitsPerPiece.toString();
-    barcodeEAN = _articleRetail.barcodeEAN;
+    barcodeEAN = _articleRetail.barcodeEAN ?? '';
   }
   final FormErrorArticleRetailUpdateState errorStore =
       FormErrorArticleRetailUpdateState();

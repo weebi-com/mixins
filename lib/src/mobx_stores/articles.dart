@@ -18,6 +18,14 @@ import 'package:models_weebi/weebi_models.dart'
 
 part 'articles.g.dart';
 
+extension CoolExtension on ObservableList<ArticleLine> {
+  ObservableList<ArticleLine> get notDeactivated =>
+      ObservableList<ArticleLine>.of(where((p) => p.status));
+
+  ObservableList<ArticleLine> get palpables =>
+      ObservableList<ArticleLine>.of(where((p) => p.isPalpable ?? true));
+}
+
 class ResponseLight {
   final int code;
   final int countHandled;
