@@ -329,11 +329,9 @@ packages:
   models_weebi:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "12222e5d55dd938ac6987dcd99e2f1afb17462d6"
-      url: "https://github.com/weebi-com/models"
-    source: git
+      name: models_weebi
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "1.0.13"
   nested:
     dependency: transitive
@@ -401,11 +399,9 @@ packages:
   services_weebi:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: b6e3edb74c2cdd193fb9e96f391b8a3ff38dcc84
-      url: "https://github.com/weebi-com/services"
-    source: git
+      name: services_weebi
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "1.0.4"
   shelf:
     dependency: transitive

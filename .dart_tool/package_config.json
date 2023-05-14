@@ -285,7 +285,7 @@
     },
     {
       "name": "models_weebi",
-      "rootUri": "file:///C:/Users/PC/Documents/flutter/.pub-cache/git/models-12222e5d55dd938ac6987dcd99e2f1afb17462d6/",
+      "rootUri": "file:///C:/Users/PC/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/models_weebi-1.0.13",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -345,7 +345,7 @@
     },
     {
       "name": "services_weebi",
-      "rootUri": "file:///C:/Users/PC/Documents/flutter/.pub-cache/git/services-b6e3edb74c2cdd193fb9e96f391b8a3ff38dcc84/",
+      "rootUri": "file:///C:/Users/PC/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/services_weebi-1.0.4",
       "packageUri": "lib/",
       "languageVersion": "2.7"
     },
@@ -512,7 +512,7 @@
       "languageVersion": "2.7"
     }
   ],
-  "generated": "2023-05-14T00:55:38.813065Z",
+  "generated": "2023-05-14T01:15:40.893713Z",
   "generator": "pub",
   "generatorVersion": "2.18.6"
 }

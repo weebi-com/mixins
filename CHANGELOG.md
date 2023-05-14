@@ -1,3 +1,7 @@
+## 0.0.9
+
+- rework versions for CI
+
 ## 0.0.8
 
 - rework articles store
