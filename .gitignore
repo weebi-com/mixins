@@ -1,15 +1,6 @@
 # Conventional directory for build outputs.
 build/
-.packages
-.gitignore
-.dart_tool/package_config.json
-pubspec.yaml
 pubspec.lock
-.dart_tool/package_config_subset
+
 .packages
-pubspec.lock
-.dart_tool/package_config_subset
-.dart_tool/package_config.json
-.dart_tool/version
-.dart_tool/package_config.json
-.dart_tool/package_config_subset
+.dart_tool/
