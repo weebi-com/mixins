@@ -1,3 +1,3 @@
-library mixins_weebi;
+library invokers;
 
-export 'src/extensions/provide_stores.dart';
+export 'src/invokers.dart';
