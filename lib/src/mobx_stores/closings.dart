@@ -277,14 +277,14 @@ abstract class ClosingsStoreBase<S extends ClosingsServiceAbstract> with Store {
           .where((element) =>
               element.closingRange.endDate.isBefore(date) ||
               element.closingRange.endDate.isAtSameMomentAs(date))
-          .fold(0, (prev, e) => prev + e.sellDeferred ?? 0);
+          .fold(0, (prev, e) => prev + e.sellDeferred);
   @action
   int sellCoveredBeforeDate(int herderId, DateTime date) => closingLedgerHerders
       .where((e) => e.herderId == '$herderId')
       .where((element) =>
           element.closingRange.endDate.isBefore(date) ||
           element.closingRange.endDate.isAtSameMomentAs(date))
-      .fold(0, (prev, e) => prev + e.sellCovered ?? 0);
+      .fold(0, (prev, e) => prev + e.sellCovered);
   @action
   int spendDeferredBeforeDate(int herderId, DateTime date) =>
       closingLedgerHerders
@@ -292,7 +292,7 @@ abstract class ClosingsStoreBase<S extends ClosingsServiceAbstract> with Store {
           .where((element) =>
               element.closingRange.endDate.isBefore(date) ||
               element.closingRange.endDate.isAtSameMomentAs(date))
-          .fold(0, (prev, e) => prev + e.spendDeferred ?? 0);
+          .fold(0, (prev, e) => prev + e.spendDeferred);
   @action
   int spendCoveredBeforeDate(int herderId, DateTime date) =>
       closingLedgerHerders
@@ -300,11 +300,11 @@ abstract class ClosingsStoreBase<S extends ClosingsServiceAbstract> with Store {
           .where((e) =>
               e.closingRange.endDate.isBefore(date) ||
               e.closingRange.endDate.isAtSameMomentAs(date))
-          .fold(0, (prev, e) => prev + e.spendCovered ?? 0);
+          .fold(0, (prev, e) => prev + e.spendCovered);
 
   @action
   int sumHerderTicketTypeRange(String herderId, String ticketType,
-      {DateTime start, DateTime end}) {
+      {DateTime? start, DateTime? end}) {
     // if date range provided, filter by dates
     final cHerderList = (start != null && end != null)
         ? closingLedgerHerders
@@ -347,18 +347,14 @@ abstract class ClosingsStoreBase<S extends ClosingsServiceAbstract> with Store {
     var tt = 0;
     final _closingLedgerShops = <ClosingLedgerShop>[];
     if (shopUuids.isNotEmpty && closingLedgerShops.isNotEmpty) {
-      if (start != null && end != null) {
-        if (closingLedgerShops.filterByRange(start, end).isNotEmpty) {
-          _closingLedgerShops
-              .addAll(closingLedgerShops.filterByRange(start, end));
-        } else {
-          //print('no _closingLedgerShops');
-          return tt;
-        }
+      if (closingLedgerShops.filterByRange(start, end).isNotEmpty) {
+        _closingLedgerShops
+            .addAll(closingLedgerShops.filterByRange(start, end));
       } else {
-        print('no dates passed in sumLedgerShopsTicketTypeRange');
-        return 0;
+        //print('no _closingLedgerShops');
+        return tt;
       }
+
       for (final uuid in shopUuids) {
         final filterByShop =
             _closingLedgerShops.where((cL) => cL.shopUuid == uuid);
@@ -397,189 +393,183 @@ abstract class ClosingsStoreBase<S extends ClosingsServiceAbstract> with Store {
   }
 
   @action
-  int herderLastBalance(String herderId, {DateTime end}) {
-    if (closingLedgerHerders.isNotEmpty) {
-      final clist = end == null
-          ? closingLedgerHerders
-          : closingLedgerHerders
-              .where((element) => element.closingRange.endDate.isBefore(end));
-      clist.toList().sort((a, b) =>
-          a.closingRange.startDate.compareTo(b.closingRange.startDate));
-      final temp = closingLedgerHerders
-              .firstWhereOrNull((e) => e.herderId == herderId)
-              ?.balance ??
-          0;
-      // print('herderLastBalance $temp');
-      return temp;
-    } else {
+  int herderLastBalance(String herderId, {DateTime? end}) {
+    if (closingLedgerHerders.isEmpty) {
       return 0;
     }
+    final clist = end == null
+        ? closingLedgerHerders
+        : closingLedgerHerders
+            .where((element) => element.closingRange.endDate.isBefore(end));
+    clist.toList().sort(
+        (a, b) => a.closingRange.startDate.compareTo(b.closingRange.startDate));
+    final temp = closingLedgerHerders
+            .firstWhereOrNull((e) => e.herderId == herderId)
+            ?.balance ??
+        0;
+    // print('herderLastBalance $temp');
+    return temp;
   }
 
   //--------------------------------
   // ** STOCK **
   //--------------------------------
   @action
-  Observable<double> stockProductFinalQuantity(int productId, {DateTime end}) {
-    if (closingStocks.isNotEmpty) {
-      var filterByDates = List.of(<ClosingStock>[]);
-      if (end != null) {
-        filterByDates = closingStocks
-            .where((c) =>
-                c.closingRange.endDate.isBefore(end) ||
-                c.closingRange.endDate.isAtSameMomentAs(end))
-            .toList()
-          ..sort((a, b) =>
-              a.closingRange.startDate.compareTo(b.closingRange.startDate));
-      } else {
-        filterByDates = closingStocks.toList()
-          ..sort((a, b) =>
-              a.closingRange.startDate.compareTo(b.closingRange.startDate));
-      }
-      final _stockProductFinalQuantity = filterByDates.last.products
-              .firstWhereOrNull((element) => element.id == productId)
-              ?.finalQtCl ??
-          0.0;
-      // print('_stockProductFinalQuantity $_stockProductFinalQuantity');
-      return Observable(_stockProductFinalQuantity);
-    } else {
+  Observable<double> stockProductFinalQuantity(int productId, {DateTime? end}) {
+    if (closingStocks.isEmpty) {
       return Observable(0.0);
     }
+    final filterByDates = List.of(<ClosingStock>[]);
+    if (end != null) {
+      filterByDates.addAll(closingStocks
+          .where((c) =>
+              c.closingRange.endDate.isBefore(end) ||
+              c.closingRange.endDate.isAtSameMomentAs(end))
+          .toList()
+        ..sort((a, b) =>
+            a.closingRange.startDate.compareTo(b.closingRange.startDate)));
+    } else {
+      filterByDates.addAll(closingStocks.toList()
+        ..sort((a, b) =>
+            a.closingRange.startDate.compareTo(b.closingRange.startDate)));
+    }
+    final _stockProductFinalQuantity = filterByDates.last.products
+            .firstWhereOrNull((element) => element.id == productId)
+            ?.finalQtCl ??
+        0.0;
+    // print('_stockProductFinalQuantity $_stockProductFinalQuantity');
+    return Observable(_stockProductFinalQuantity);
   }
 
   @action
   Observable<double> stockArticleFinalQuantity(int productId, int articleId,
-      {DateTime end}) {
-    if (closingStocks.isNotEmpty) {
-      var filterByDates = List.of(<ClosingStock>[]);
-      if (end != null) {
-        filterByDates = closingStocks
-            .where((c) =>
-                c.closingRange.endDate.isBefore(end) ||
-                c.closingRange.endDate.isAtSameMomentAs(end))
-            .toList()
-          ..sort((a, b) =>
-              a.closingRange.startDate.compareTo(b.closingRange.startDate));
-      } else {
-        filterByDates = closingStocks.toList()
-          ..sort((a, b) =>
-              a.closingRange.startDate.compareTo(b.closingRange.startDate));
-      }
-      final _stockProductFinalQuantity = filterByDates.last.products
-              .firstWhereOrNull((e) => e.id == productId)
-              ?.articles
-              ?.firstWhereOrNull((element) =>
-                  element.id == articleId && element.productId == productId)
-              ?.finalQtCl ??
-          0.0;
-      return Observable(_stockProductFinalQuantity);
-    } else {
+      {DateTime? end}) {
+    if (closingStocks.isEmpty) {
       return Observable(0.0);
     }
+    var filterByDates = List.of(<ClosingStock>[]);
+    if (end != null) {
+      filterByDates = closingStocks
+          .where((c) =>
+              c.closingRange.endDate.isBefore(end) ||
+              c.closingRange.endDate.isAtSameMomentAs(end))
+          .toList()
+        ..sort((a, b) =>
+            a.closingRange.startDate.compareTo(b.closingRange.startDate));
+    } else {
+      filterByDates = closingStocks.toList()
+        ..sort((a, b) =>
+            a.closingRange.startDate.compareTo(b.closingRange.startDate));
+    }
+    final _stockProductFinalQuantity = filterByDates.last.products
+            .firstWhereOrNull((e) => e.id == productId)
+            ?.articles
+            .firstWhereOrNull((element) =>
+                element.id == articleId && element.productId == productId)
+            ?.finalQtCl ??
+        0.0;
+    return Observable(_stockProductFinalQuantity);
   }
 
   @action
   Observable<double> stockArticleQuantityOut(int productId, int articleId,
-      {DateTime end}) {
-    if (closingStocks.isNotEmpty) {
-      var filterByDates = List.of(<ClosingStock>[]);
-      if (end != null) {
-        filterByDates = closingStocks
-            .where((c) =>
-                c.closingRange.endDate.isBefore(end) ||
-                c.closingRange.endDate.isAtSameMomentAs(end))
-            .toList()
-          ..sort((a, b) =>
-              a.closingRange.startDate.compareTo(b.closingRange.startDate));
-      } else {
-        filterByDates = closingStocks.toList()
-          ..sort((a, b) =>
-              a.closingRange.startDate.compareTo(b.closingRange.startDate));
-      }
-      final qtOut = filterByDates.last.products
-              .firstWhereOrNull((e) => e.id == productId)
-              ?.articles
-              ?.firstWhereOrNull((element) =>
-                  element.id == articleId && element.productId == productId)
-              ?.quantityOut ??
-          0.0;
-      return Observable(qtOut);
-    } else {
+      {DateTime? end}) {
+    if (closingStocks.isEmpty) {
       return Observable(0.0);
     }
+    var filterByDates = List.of(<ClosingStock>[]);
+    if (end != null) {
+      filterByDates = closingStocks
+          .where((c) =>
+              c.closingRange.endDate.isBefore(end) ||
+              c.closingRange.endDate.isAtSameMomentAs(end))
+          .toList()
+        ..sort((a, b) =>
+            a.closingRange.startDate.compareTo(b.closingRange.startDate));
+    } else {
+      filterByDates = closingStocks.toList()
+        ..sort((a, b) =>
+            a.closingRange.startDate.compareTo(b.closingRange.startDate));
+    }
+    final qtOut = filterByDates.last.products
+            .firstWhereOrNull((e) => e.id == productId)
+            ?.articles
+            .firstWhereOrNull((element) =>
+                element.id == articleId && element.productId == productId)
+            ?.quantityOut ??
+        0.0;
+    return Observable(qtOut);
   }
 
   @action
   Observable<double> stockShopProductFinalQuantityAbsolute(
       List<String> shopUuids, int productId,
-      {DateTime end}) {
+      {DateTime? end}) {
     var daDiff = 0.0;
-    if (shopUuids.isNotEmpty && closingStockShops.isNotEmpty) {
-      var filterByDates = List<ClosingStockShop>.of([]);
-      if (end != null) {
-        filterByDates = closingStockShops
-            .where((c) =>
-                c.closingRange.endDate.isBefore(end) ||
-                c.closingRange.endDate.isAtSameMomentAs(end))
-            .toList();
-      } else {
-        filterByDates = closingStockShops.toList();
-      }
-      for (final uuid in shopUuids) {
-        // ignore: omit_local_variable_types
-        final List<ClosingStockShop<ClosingStockShopProduct>> filterByUuid =
-            filterByDates.where((e) => e.shopUuid == uuid).toList();
-        if (filterByUuid.isNotEmpty) {
-          filterByUuid.sort((a, b) =>
-              a.closingRange.startDate.compareTo(b.closingRange.startDate));
-          daDiff += filterByUuid.last.products
-                  .firstWhereOrNull((element) => element.id == productId)
-                  ?.finalQtCl ??
-              0.0;
-        }
-      }
-      return Observable(daDiff);
-    } else {
+    if (shopUuids.isEmpty || closingStockShops.isEmpty) {
       return Observable(0.0);
     }
+    var filterByDates = List<ClosingStockShop>.of([]);
+    if (end != null) {
+      filterByDates = closingStockShops
+          .where((c) =>
+              c.closingRange.endDate.isBefore(end) ||
+              c.closingRange.endDate.isAtSameMomentAs(end))
+          .toList();
+    } else {
+      filterByDates = closingStockShops.toList();
+    }
+    for (final uuid in shopUuids) {
+      // ignore: omit_local_variable_types
+      final List<ClosingStockShop<ClosingStockShopProduct>> filterByUuid =
+          filterByDates.where((e) => e.shopUuid == uuid).toList();
+      if (filterByUuid.isNotEmpty) {
+        filterByUuid.sort((a, b) =>
+            a.closingRange.startDate.compareTo(b.closingRange.startDate));
+        daDiff += filterByUuid.last.products
+                .firstWhereOrNull((element) => element.id == productId)
+                ?.finalQtCl ??
+            0.0;
+      }
+    }
+    return Observable(daDiff);
   }
 
   @action
   Observable<double> stockShopArticleFinalQuantityAbsolute(
       List<String> shopUuids, int articleProductId, int articleId,
-      {DateTime end}) {
+      {DateTime? end}) {
     var finalQtAllShopsSummed = 0.0;
-    if (shopUuids.isNotEmpty && closingStockShops.isNotEmpty) {
-      var filterByDates = List<ClosingStockShop>.of([]);
-      if (end != null) {
-        filterByDates = closingStockShops
-            .where((c) =>
-                c.closingRange.endDate.isBefore(end) ||
-                c.closingRange.endDate.isAtSameMomentAs(end))
-            .toList();
-      } else {
-        filterByDates = closingStockShops.toList();
-      }
-      for (final uuid in shopUuids) {
-        final filterByShop = filterByDates.where((e) => e.shopUuid == uuid);
-        if (filterByShop.isNotEmpty) {
-          filterByShop.toList().sort((a, b) =>
-              a.closingRange.startDate.compareTo(b.closingRange.startDate));
-          final daObject = filterByShop.last;
-          finalQtAllShopsSummed += daObject.products
-                  .firstWhereOrNull((e) => e.id == articleProductId)
-                  ?.articles
-                  ?.firstWhereOrNull((element) =>
-                      element.id == articleId &&
-                      element.productId == articleProductId)
-                  ?.finalQtCl ??
-              0.0;
-        }
-      }
-      return Observable(finalQtAllShopsSummed);
-    } else {
+    if (shopUuids.isEmpty || closingStockShops.isEmpty) {
       return Observable(0.0);
     }
+    var filterByDates = List<ClosingStockShop>.of([]);
+    if (end != null) {
+      filterByDates = closingStockShops
+          .where((c) =>
+              c.closingRange.endDate.isBefore(end) ||
+              c.closingRange.endDate.isAtSameMomentAs(end))
+          .toList();
+    } else {
+      filterByDates = closingStockShops.toList();
+    }
+    for (final uuid in shopUuids) {
+      final filterByShop = filterByDates.where((e) => e.shopUuid == uuid);
+      if (filterByShop.isNotEmpty) {
+        filterByShop.toList().sort((a, b) =>
+            a.closingRange.startDate.compareTo(b.closingRange.startDate));
+        final daObject = filterByShop.last;
+        finalQtAllShopsSummed += daObject.products
+                .firstWhereOrNull((e) => e.id == articleProductId)
+                ?.articles
+                .firstWhereOrNull((element) =>
+                    element.id == articleId &&
+                    element.productId == articleProductId)
+                ?.finalQtCl ??
+            0.0;
+      }
+    }
+    return Observable(finalQtAllShopsSummed);
   }
 
   @action
@@ -588,142 +578,121 @@ abstract class ClosingsStoreBase<S extends ClosingsServiceAbstract> with Store {
     var finalQtSum = 0.0;
     var initQtSum = 0.0;
 
-    if (shopUuids.isNotEmpty && closingStockShops.isNotEmpty) {
-      // used set up a dateRange filter
-      final closingStockShops = <ClosingStockShop>[];
-      if (start != null && end != null) {
-        if (closingStockShops.filterByRange(start, end).isNotEmpty) {
-          final temp = closingStockShops.filterByRange(start, end);
-          closingStockShops.addAll(temp);
-        } else {
-          // print('stockShopProductDiffTimeRange : filterByRange($start, $end) is empty && filterByStartDate(start) is empty');
+    if (shopUuids.isEmpty || closingStockShops.isEmpty) {
+      return Observable(0.0);
+    }
+    if (closingStockShops.filterByRange(start, end).isEmpty) {
+      print(
+          'stockShopProductDiffTimeRange : filterByRange($start, $end) is empty && filterByStartDate(start) is empty');
+      return Observable(0.0);
+    }
+    final filterByDates = List<ClosingStockShop>.of([]);
+    filterByDates.addAll(closingStockShops.filterByRange(start, end));
+    if (shopUuids.isNotEmpty) {
+      for (final uuid in shopUuids) {
+        if (filterByDates.any((e) => e.shopUuid == uuid) == false) {
+          print('shopUuids is Empty OR filterByDates is Empty');
           return Observable(0.0);
         }
-      } else {
-        print('closing.store stockShopProductDiffTimeRange no dates passed');
-        return Observable(0.0);
-      }
-      if (shopUuids.isNotEmpty && closingStockShops.isNotEmpty) {
-        for (final uuid in shopUuids) {
-          if (closingStockShops.any((e) => e.shopUuid == uuid)) {
-            finalQtSum += closingStockShops
-                    .where((shopCl) => shopCl.shopUuid == uuid)
-                    .fold(
+        finalQtSum +=
+            filterByDates.where((shopCl) => shopCl.shopUuid == uuid).fold(
                       0.0,
                       (prev, shopCl) =>
-                          prev +
+                          prev! +
                           shopCl.products
                               .where((e) => e.id == productId)
                               .fold(0.0, (pv, e) => pv + e.finalQtCl),
                     ) ??
                 0.0;
-            initQtSum += closingStockShops
-                    .where((shopCl) => shopCl.shopUuid == uuid)
-                    .fold(
+        initQtSum +=
+            filterByDates.where((shopCl) => shopCl.shopUuid == uuid).fold(
                       0.0,
                       (pv, shopCl) =>
-                          pv +
+                          pv! +
                           shopCl.products.where((e) => e.id == productId).fold(
                               0.0, (pvs, element) => pvs + element.initialQtCl),
                     ) ??
                 0.0;
-          }
-          //print('$uuid $productId initQtSum $initQtSum');
-          //print('$uuid $productId finalQtSum $finalQtSum');
-        }
-        return Observable(finalQtSum - initQtSum);
-      } else {
-        return Observable(0.0);
       }
-    } else {
-      print('shopUuids is Empty OR closingStockShops is Empty');
-      return Observable(0.0);
+      //print('$uuid $productId initQtSum $initQtSum');
+      //print('$uuid $productId finalQtSum $finalQtSum');
     }
+    return Observable(finalQtSum - initQtSum);
   }
 
   @action
   Observable<double> stockShopArticleQtInTimeRange(List<String> shopUuids,
       int articleProductId, int articleId, DateTime start, DateTime end) {
     var qtIn = 0.0;
-    final closingStockShops = <ClosingStockShop>[];
-    if (shopUuids.isNotEmpty && closingStockShops.isNotEmpty) {
-      if (closingStockShops.filterByRange(start, end).isNotEmpty) {
-        closingStockShops.addAll(closingStockShops.filterByRange(start, end));
-      } else {
-        // no match
-        print('no match');
-        return Observable(0.0);
-      }
-      for (final uuid in shopUuids) {
-        qtIn += closingStockShops
-                .where((element) => element.shopUuid == uuid)
-                .fold(
-                    0.0,
-                    (prev, shopCl) =>
-                        prev +
-                        shopCl.products
-                            .where((p) => p.id == articleProductId)
-                            .fold(
-                              0.0,
-                              (previous, product) =>
-                                  previous +
-                                  product.articles
-                                      .where((a) =>
-                                          a.id == articleId &&
-                                          a.productId == articleProductId)
-                                      .fold(
-                                          0.0,
-                                          (previousStuff, article) =>
-                                              previousStuff +
-                                              article.quantityIn),
-                            )) ??
-            0.0;
-      }
-      return Observable(qtIn);
-    } else {
+    if (shopUuids.isEmpty || closingStockShops.isEmpty) {
       print('shopUuids is Empty OR closingStockShops is Empty');
       return Observable(0.0);
     }
+    if (closingStockShops.filterByRange(start, end).isEmpty) {
+      print('no match');
+      return Observable(0.0);
+    }
+    final filterByDates = List<ClosingStockShop>.of([]);
+    filterByDates.addAll(closingStockShops.filterByRange(start, end));
+    for (final uuid in shopUuids) {
+      qtIn += filterByDates.where((element) => element.shopUuid == uuid).fold(
+              0.0,
+              (prev, shopCl) =>
+                  prev! +
+                  shopCl.products.where((p) => p.id == articleProductId).fold(
+                        0.0,
+                        (previous, product) =>
+                            previous +
+                            product.articles
+                                .where((a) =>
+                                    a.id == articleId &&
+                                    a.productId == articleProductId)
+                                .fold(
+                                    0.0,
+                                    (previousStuff, article) =>
+                                        previousStuff + article.quantityIn),
+                      )) ??
+          0.0;
+    }
+    return Observable(qtIn);
   }
 
   @action
   Observable<double> stockShopArticleQtOutTimeRange(List<String> shopUuids,
       int articleProductId, int articleId, DateTime start, DateTime end) {
     var qtOut = 0.0;
-    if (shopUuids.isNotEmpty && closingStockShops.isNotEmpty) {
-      final closingStockShops = <ClosingStockShop>[];
-      if (closingStockShops.filterByRange(start, end).isNotEmpty) {
-        closingStockShops.addAll(closingStockShops.filterByRange(start, end));
-      } else {
-        print('no match');
-        return Observable(0.0);
-      }
-
-      for (final uuid in shopUuids) {
-        qtOut += closingStockShops.where((e) => e.shopUuid == uuid).fold(
-                0.0,
-                (previousNum, shopCl) =>
-                    previousNum +
-                    shopCl.products.where((p) => p.id == articleProductId).fold(
-                          0.0,
-                          (previous, product) =>
-                              previous +
-                              product.articles
-                                  .where((a) =>
-                                      a.productId == articleProductId &&
-                                      a.id == articleId)
-                                  .fold(
-                                      0.0,
-                                      (prev, article) =>
-                                          prev + article.quantityOut),
-                        )) ??
-            0.0;
-      }
-      return Observable(qtOut);
-    } else {
+    if (shopUuids.isEmpty || closingStockShops.isEmpty) {
       print('shopUuids is Empty OR closingStockShops is Empty');
       return Observable(0.0);
     }
+    if (closingStockShops.filterByRange(start, end).isEmpty) {
+      print('no match');
+      return Observable(0.0);
+    }
+
+    final filterByDates = List<ClosingStockShop>.of([]);
+    filterByDates.addAll(closingStockShops.filterByRange(start, end));
+    for (final uuid in shopUuids) {
+      qtOut += filterByDates.where((e) => e.shopUuid == uuid).fold(
+              0.0,
+              (previousNum, shopCl) =>
+                  previousNum! +
+                  shopCl.products.where((p) => p.id == articleProductId).fold(
+                        0.0,
+                        (previous, product) =>
+                            previous +
+                            product.articles
+                                .where((a) =>
+                                    a.productId == articleProductId &&
+                                    a.id == articleId)
+                                .fold(
+                                    0.0,
+                                    (prev, article) =>
+                                        prev + article.quantityOut),
+                      )) ??
+          0.0;
+    }
+    return Observable(qtOut);
   }
 
   @action
@@ -731,18 +700,16 @@ abstract class ClosingsStoreBase<S extends ClosingsServiceAbstract> with Store {
       DateTime end, int herderId, int productId) {
     var daList =
         closingStockHerders.where((c) => c.herderId == '$herderId').toList();
-    if (daList.isNotEmpty) {
-      daList = daList
-        ..sort(
-            (a, b) => a.closingRange.endDate.compareTo(b.closingRange.endDate))
-        ..toList();
-      return daList.last.products
-              .firstWhereOrNull((cssp) => cssp.id == productId)
-              ?.finalQtCl ??
-          0.0;
-    } else {
+    if (daList.isEmpty) {
       print('closingHerderStocks list found no match');
       return 0.0;
     }
+    daList = daList
+      ..sort((a, b) => a.closingRange.endDate.compareTo(b.closingRange.endDate))
+      ..toList();
+    return daList.last.products
+            .firstWhereOrNull((cssp) => cssp.id == productId)
+            ?.finalQtCl ??
+        0.0;
   }
 }

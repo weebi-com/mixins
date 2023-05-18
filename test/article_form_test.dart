@@ -3,7 +3,7 @@ import 'package:mixins_weebi/src/mobx_stores/validators/articles/line/create_lin
 import 'package:models_weebi/weebi_models.dart';
 import 'package:test/test.dart';
 
-final line = ArticleLine.dummy;
+final line = ArticleLine.dummyRetail;
 
 void main() {
   test('article_form line create validator', () async {
@@ -14,7 +14,7 @@ void main() {
     store.price = line.articles.first.price.toString();
     store.cost = line.articles.first.cost.toString();
     store.unitsPerPiece = line.articles.first.unitsPerPiece.toString();
-    store.barcodeEAN = line.articles.first.barcodeEAN;
+    store.barcodeEAN = line.articles.first.barcodeEAN ?? '';
 
     store.name = '';
     expect(store.hasErrors, isTrue); // name is required

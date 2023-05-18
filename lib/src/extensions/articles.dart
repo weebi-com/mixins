@@ -5,7 +5,7 @@ import 'package:models_weebi/weebi_models.dart';
 extension Filter on Iterable<ArticleLine> {
   ObservableList<ArticleLine> searchByTitleOrId(String queryString) {
     return ObservableList<ArticleLine>.of(where((p) => p.title != '*')
-        .where((p) => p.isPalpable)
+        .where((p) => p.isNotQuickSpend)
         .where((p) =>
             p.title
                 .toLowerCase()

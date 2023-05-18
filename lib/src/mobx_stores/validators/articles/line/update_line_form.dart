@@ -9,7 +9,7 @@ import 'package:models_weebi/weebi_models.dart';
 part 'update_line_form.g.dart';
 
 class ArticleLineUpdateFormStore = _ArticleLineUpdateFormStore
-    with _$ArticleFormStore;
+    with _$ArticleLineUpdateFormStore;
 
 abstract class _ArticleLineUpdateFormStore with Store {
   final ArticlesStore _articlesStore;
@@ -32,7 +32,7 @@ abstract class _ArticleLineUpdateFormStore with Store {
   @computed
   bool get hasErrors => errorStore.hasErrors;
 
-  List<ReactionDisposer> _disposers;
+  List<ReactionDisposer> _disposers = [];
 
   void setupValidations() {
     _disposers = [
@@ -42,7 +42,7 @@ abstract class _ArticleLineUpdateFormStore with Store {
 
   @action
   void validateArticleLineName(String value) {
-    if (value == null || value.isEmpty) {
+    if (value.isEmpty) {
       errorStore.nameError = 'Saisir le nom de l\'article';
       return;
     }
@@ -56,7 +56,7 @@ abstract class _ArticleLineUpdateFormStore with Store {
       return;
     }
 
-    errorStore.nameError = null;
+    errorStore.nameError = '';
     return;
   }
 
@@ -88,8 +88,8 @@ class FormErrorArticleLineUpdateState = _FormErrorArticleLineUpdateState
 
 abstract class _FormErrorArticleLineUpdateState with Store {
   @observable
-  String nameError;
+  String nameError = '';
 
   @computed
-  bool get hasErrors => nameError != null;
+  bool get hasErrors => nameError.isNotEmpty;
 }

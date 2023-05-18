@@ -3,7 +3,6 @@ import 'dart:convert' as convert;
 
 // Package imports:
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 import 'package:mixins_weebi/src/extensions/articles.dart';
 import 'package:mobx/mobx.dart';
 import 'package:models_weebi/base.dart';
@@ -22,8 +21,8 @@ extension CoolExtension on ObservableList<ArticleLine> {
   ObservableList<ArticleLine> get notDeactivated =>
       ObservableList<ArticleLine>.of(where((p) => p.status));
 
-  ObservableList<ArticleLine> get palpables =>
-      ObservableList<ArticleLine>.of(where((p) => p.isPalpable ?? true));
+  ObservableList<ArticleLine> get notQuickSpend =>
+      ObservableList<ArticleLine>.of(where((p) => p.isNotQuickSpend));
 }
 
 class ResponseLight {
@@ -32,10 +31,10 @@ class ResponseLight {
   final int countIgnored;
   final List<ArticleLine> linesIgnored;
   const ResponseLight(
-      {@required this.code,
-      @required this.linesIgnored,
-      @required this.countHandled,
-      @required this.countIgnored});
+      {required this.code,
+      required this.linesIgnored,
+      required this.countHandled,
+      required this.countIgnored});
 }
 
 enum SortedBy {
@@ -97,9 +96,9 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   ObservableList<ArticleLine> get linesPalpableFiltered => _linesFiltered;
 
   @computed
-  ObservableList<ArticleLine> get linesPalpableNoBasket =>
+  ObservableList<ArticleLine> get linesNotQuikspendNotBasket =>
       ObservableList<ArticleLine>.of(
-          lines.palpables.where((l) => l.isBasket == false));
+          lines.notQuickSpend.where((l) => l.isBasket == false));
 
   // used for creating and handling article basket
   @observable
@@ -224,19 +223,19 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   ObservableList<ArticleLine> sortBy(SortedBy sortBy) {
     switch (sortBy) {
       case SortedBy.id:
-        lines = lines.sortedById().palpables;
+        lines = lines.sortedById().notQuickSpend;
         sortedBy = Observable(SortedBy.id);
         break;
       case SortedBy.idReversed:
-        lines = lines.sortedByIdReversed().palpables;
+        lines = lines.sortedByIdReversed().notQuickSpend;
         sortedBy = Observable(SortedBy.idReversed);
         break;
       case SortedBy.title:
-        lines = lines.sortedByTitle().palpables;
+        lines = lines.sortedByTitle().notQuickSpend;
         sortedBy = Observable(SortedBy.title);
         break;
       case SortedBy.titleReversed:
-        lines = lines.sortedByTitleReversed().palpables;
+        lines = lines.sortedByTitleReversed().notQuickSpend;
         sortedBy = Observable(SortedBy.titleReversed);
         break;
       default:
@@ -249,9 +248,9 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
     if (lines.isNotEmpty) {
       if (searchedBy == SearchedBy.titleOrId) {
         if (queryString.isNotEmpty) {
-          _linesFiltered = lines.searchByTitleOrId(queryString).palpables;
+          _linesFiltered = lines.searchByTitleOrId(queryString).notQuickSpend;
         } else {
-          _linesFiltered = lines.palpables;
+          _linesFiltered = lines.notQuickSpend;
         }
       }
     }
@@ -281,7 +280,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
                   .toList());
 
   @action
-  Future<bool> init({List<ArticleLine> data}) async {
+  Future<bool> init({List<ArticleLine>? data}) async {
     if (data != null && data.isNotEmpty) {
       lines = ObservableList.of(data);
       _linesFiltered = data.palpables;
@@ -342,7 +341,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
     lines.removeAt(index);
     lines.add(updatedLine);
 
-    return updatedLine;
+    return line;
   }
 
   @action
@@ -372,9 +371,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
     final lineArticle =
         await _articlesService.createLineArticleRpc.request(lineData);
     lines.add(lineArticle);
-    return lineData is ArticleLine<ArticleRetail>
-        ? lineData as ArticleLine<ArticleRetail>
-        : lineData as ArticleLine<ArticleBasket>;
+    return lineData;
   }
 
   @action // not used at the moment
@@ -392,7 +389,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
     // first remove it from any basket
     bool isBasketToBeDeleted = false;
     bool isBasketSingle = true;
-    ArticleLine<ArticleAbstract> lineToDelete;
+    late ArticleLine<ArticleAbstract> lineToDelete;
     final listOfArticleBasketToDelete = [];
 
     // checking on all existing articles if one is in the proxy
@@ -404,10 +401,10 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
           if ((article as ArticleBasket)
               .proxies
               .any((element) => element.proxyLineId == productData.id)) {
-            if ((article as ArticleBasket).proxies.length > 1) {
-              final index = (article as ArticleBasket).proxies.indexWhere(
+            if ((article).proxies.length > 1) {
+              final index = (article).proxies.indexWhere(
                   (element) => element.proxyLineId == productData.id);
-              (article as ArticleBasket).proxies.removeAt(index);
+              (article).proxies.removeAt(index);
               await _articlesService.updateArticleRpc.request(article);
               final lineIndex = lines.indexOf(line);
               final articleIndex = lines[lineIndex].articles.indexOf(article);
@@ -454,20 +451,18 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
     // first remove it from any basket
     bool isBasketToBeDeleted = false;
     bool isBasketSingle = true;
-    ArticleLine<ArticleAbstract> lineToDelete;
+    late ArticleLine<ArticleAbstract> lineToDelete;
     final listOfArticleBasketToDelete = [];
     for (final line in lines.where((l) => (l.isBasket ?? false))) {
       for (final articleB in line.articles) {
         if ((articleB as ArticleBasket).proxies.any((proxy) =>
             proxy.proxyLineId == articleData.lineId &&
             proxy.proxyArticleId == articleData.id)) {
-          if ((articleB as ArticleBasket).proxies.length > 1) {
-            final proxyParam = (articleB as ArticleBasket)
-                .proxies
-                .firstWhereOrNull((proxy) =>
-                    proxy.proxyLineId == articleData.lineId &&
-                    proxy.proxyArticleId == articleData.id);
-            (articleB as ArticleBasket).proxies.remove(proxyParam);
+          if (articleB.proxies.length > 1) {
+            final proxyParam = articleB.proxies.firstWhereOrNull((proxy) =>
+                proxy.proxyLineId == articleData.lineId &&
+                proxy.proxyArticleId == articleData.id);
+            articleB.proxies.remove(proxyParam);
             final a = await _articlesService.updateArticleRpc.request(articleB);
             final lineIndex = lines.indexOf(line);
             final articleIndex = lines[lineIndex].articles.indexOf(a);
@@ -504,9 +499,11 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
     await _articlesService.deleteForeverArticleRpc.request(articleData);
     final lineArticle =
         lines.firstWhereOrNull((p) => p.id == articleData.productId);
-    final articleCool =
-        lineArticle.articles.firstWhereOrNull((a) => a.id == articleData.id);
-    lineArticle.articles.remove(articleCool);
+    if (lineArticle != null && lineArticle.articles.isNotEmpty) {
+      final articleCool =
+          lineArticle.articles.firstWhereOrNull((a) => a.id == articleData.id);
+      lineArticle.articles.remove(articleCool);
+    }
     return lines;
   }
 
@@ -517,7 +514,9 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
         await _articlesService.createArticleRpc.request(articleData);
     final lineArticle =
         lines.firstWhereOrNull((line) => line.id == createdArticle.lineId);
-    lineArticle.articles.add(createdArticle);
+    if (lineArticle != null && lineArticle.articles.isNotEmpty) {
+      lineArticle.articles.add(createdArticle);
+    }
     return createdArticle as A;
   }
 
@@ -529,6 +528,10 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
     final lineArticle = lines
         .firstWhereOrNull((product) => product.id == updatedArticle.productId);
     final lineArticleIndex = lines.indexOf(lineArticle);
+
+    if (lineArticle == null || lineArticle.articles.isNotEmpty) {
+      throw 'error in updateArticle';
+    }
     final article =
         lineArticle.articles.firstWhereOrNull((a) => a.id == updatedArticle.id);
     if (article != null) {

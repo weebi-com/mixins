@@ -13,29 +13,28 @@ extension StockItUpTillYaGetEnough on Iterable<ClosingStockShop> {
     if (isNotEmpty) {
       // used set up a dateRange filter
       final _closingStockShops = <ClosingStockShop>[];
-      if (start != null && end != null) {
-        if (filterByRange(start, end).isNotEmpty) {
-          final temp = filterByRange(start, end);
-          _closingStockShops.addAll(temp);
-          if (_closingStockShops.isNotEmpty) {
-            finalQtSum += _closingStockShops.fold(
-                  0.0,
-                  (prev, shopCl) =>
-                      prev +
-                      shopCl.products
-                          .where((e) => e.id == line.id)
-                          .fold(0.0, (pv, e) => pv + e.finalQtCl),
-                ) ??
-                0.0;
-            initQtSum += _closingStockShops.fold(
-                  0.0,
-                  (pv, shopCl) =>
-                      pv +
-                      shopCl.products.where((e) => e.id == line.id).fold(
-                          0.0, (pvs, element) => pvs + element.initialQtCl),
-                ) ??
-                0.0;
-          }
+      if (filterByRange(start, end).isNotEmpty) {
+        final temp = filterByRange(start, end);
+        _closingStockShops.addAll(temp);
+        if (_closingStockShops.isNotEmpty) {
+          finalQtSum += _closingStockShops.fold(
+                0.0,
+                (prev, shopCl) =>
+                    prev! +
+                    shopCl.products
+                        .where((e) => e.id == line.id)
+                        .fold(0.0, (pv, e) => pv + e.finalQtCl),
+              ) ??
+              0.0;
+          initQtSum += _closingStockShops.fold(
+                0.0,
+                (pv, shopCl) =>
+                    pv! +
+                    shopCl.products
+                        .where((e) => e.id == line.id)
+                        .fold(0.0, (pvs, element) => pvs + element.initialQtCl),
+              ) ??
+              0.0;
         }
       }
       //print('$uuid $productId initQtSum $initQtSum');
@@ -45,10 +44,11 @@ extension StockItUpTillYaGetEnough on Iterable<ClosingStockShop> {
   }
 
   double stockShopLineFinalQuantityAbsoluteForWeebi(ArticleLineAbstract line,
-      {DateTime end}) {
+      {DateTime? end}) {
     var daDiff = 0.0;
     if (isNotEmpty) {
-      var filterByDates = List<ClosingStockShop>.of([]);
+      Iterable<ClosingStockShop<ClosingStockShopProduct>> filterByDates =
+          List<ClosingStockShop>.of([]);
       if (end != null) {
         filterByDates = where((c) =>
             c.closingRange.endDate.isBefore(end) ||
@@ -56,7 +56,7 @@ extension StockItUpTillYaGetEnough on Iterable<ClosingStockShop> {
       } else {
         filterByDates = this;
       }
-      filterByDates.sort((a, b) =>
+      filterByDates.toList().sort((a, b) =>
           a.closingRange.startDate.compareTo(b.closingRange.startDate));
       daDiff += filterByDates.last.products
               .firstWhereOrNull((p) => p.id == line.id)
@@ -68,12 +68,12 @@ extension StockItUpTillYaGetEnough on Iterable<ClosingStockShop> {
 
   double
       stockShopArticleFinalQuantityAbsoluteForWeebi<A extends ArticleAbstract>(
-    A article, {
-    DateTime end,
-  }) {
+          A article,
+          {DateTime? end}) {
     var finalQtAllShopsSummed = 0.0;
     if (isNotEmpty) {
-      var filteredByDate = List<ClosingStockShop>.of([]);
+      Iterable<ClosingStockShop<ClosingStockShopProduct>> filteredByDate =
+          List<ClosingStockShop>.of([]);
       if (end != null) {
         filteredByDate = where((c) =>
             c.closingRange.endDate.isBefore(end) ||
@@ -88,7 +88,7 @@ extension StockItUpTillYaGetEnough on Iterable<ClosingStockShop> {
         finalQtAllShopsSummed += daObject.products
                 .firstWhereOrNull((e) => e.id == article.lineId)
                 ?.articles
-                ?.firstWhereOrNull(
+                .firstWhereOrNull(
                     (a) => a.lineId == article.lineId && a.id == article.id)
                 ?.finalQtCl ??
             0.0;
@@ -102,16 +102,14 @@ extension StockItUpTillYaGetEnough on Iterable<ClosingStockShop> {
     var _qtIn = 0.0;
     final _closingStockShops = <ClosingStockShop>[];
     if (isNotEmpty) {
-      if (range.startDate != null && range.endDate != null) {
-        if (filterByRange(range.startDate, range.endDate).isNotEmpty) {
-          _closingStockShops
-              .addAll(filterByRange(range.startDate, range.endDate));
-        }
+      if (filterByRange(range.startDate, range.endDate).isNotEmpty) {
+        _closingStockShops
+            .addAll(filterByRange(range.startDate, range.endDate));
       }
       _qtIn += _closingStockShops.fold(
               0.0,
               (prev, shopCl) =>
-                  prev +
+                  prev! +
                   shopCl.products.where((p) => p.id == article.lineId).fold(
                         0.0,
                         (previous, product) =>
@@ -137,16 +135,14 @@ extension StockItUpTillYaGetEnough on Iterable<ClosingStockShop> {
     var _qtOut = 0.0;
     final _closingStockShops = <ClosingStockShop>[];
     if (isNotEmpty) {
-      if (range.startDate != null && range.endDate != null) {
-        if (filterByRange(range.startDate, range.endDate).isNotEmpty) {
-          _closingStockShops
-              .addAll(filterByRange(range.startDate, range.endDate));
-        }
+      if (filterByRange(range.startDate, range.endDate).isNotEmpty) {
+        _closingStockShops
+            .addAll(filterByRange(range.startDate, range.endDate));
       }
       _qtOut += _closingStockShops.fold(
               0.0,
               (prev, shopCl) =>
-                  prev +
+                  prev! +
                   shopCl.products.where((p) => p.id == article.lineId).fold(
                         0.0,
                         (previous, product) =>

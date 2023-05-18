@@ -20,6 +20,6 @@ Future<String> createClosingRange(
   } catch (e) {
     print(e);
     // showDialogWeebiNotOk('$e', context);
-    return e;
+    return e.toString();
   }
 }

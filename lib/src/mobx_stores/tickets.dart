@@ -3,11 +3,10 @@ import 'dart:convert' as convert;
 
 // Package imports:
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
 import 'package:models_weebi/common.dart' show PaiementType, TicketType;
-import 'package:models_weebi/utils.dart' show WeebiDates;
+import 'package:models_weebi/utils.dart' show DateRangeW, WeebiDates;
 
 // Project imports:
 import 'package:models_weebi/weebi_models.dart' show Herder, TicketWeebi;
@@ -40,8 +39,8 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
   Observable<bool> isChange = Observable(false);
 
   @observable
-  Observable<DateTimeRange> range = Observable(
-    DateTimeRange(
+  Observable<DateRangeW> range = Observable(
+    DateRangeW(
       start: WeebiDates.defaultFirstDate,
       end: WeebiDates.defaultLastDate,
     ),
@@ -53,13 +52,13 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
     isChange = Observable(false);
     listOfTicketsByTimeFrame = ObservableList<TicketsGroupedByTimeFrame>();
     range = Observable(
-      DateTimeRange(
+      DateRangeW(
         start: WeebiDates.defaultFirstDate,
         end: WeebiDates.defaultLastDate,
       ),
     );
     // * reuse for filtering past 30 days
-    // range = Observable(DateTimeRange(
+    // range = Observable(DateRange(
     //     start: DateTime.now().subtract(const Duration(days: 30)),
     //     end: DateTime.now().add(const Duration(hours: 1))));
   }
@@ -71,11 +70,11 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
   ObservableList<TicketWeebi> get selected => ObservableList.of(
         tickets
             .where((e) =>
-                e.date.isAfter(range.value.start) ||
-                e.date.isAtSameMomentAs(range.value.start))
+                e.date.isAfter(range.value.startDate) ||
+                e.date.isAtSameMomentAs(range.value.startDate))
             .where((e) =>
-                e.date.isBefore(range.value.end) ||
-                e.date.isAtSameMomentAs(range.value.end))
+                e.date.isBefore(range.value.endDate) ||
+                e.date.isAtSameMomentAs(range.value.endDate))
             .sorted((a, b) => a.date.compareTo(b.date)),
       );
 
@@ -92,20 +91,20 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
     switch (timeFrame) {
       case TimeFrame.day:
         return ObservableList.of(
-            tickets.groupByHour(range.value.start, range.value.end));
+            tickets.groupByHour(range.value.startDate, range.value.endDate));
       case TimeFrame.week:
-        return ObservableList.of(
-            tickets.groupByDayOfTheWeek(range.value.start, range.value.end));
+        return ObservableList.of(tickets.groupByDayOfTheWeek(
+            range.value.startDate, range.value.endDate));
       case TimeFrame.month:
-        return ObservableList.of(
-            tickets.groupByDayOfTheMonth(range.value.start, range.value.end));
+        return ObservableList.of(tickets.groupByDayOfTheMonth(
+            range.value.startDate, range.value.endDate));
       default:
         return ObservableList.of([]);
     }
   }
 
   @action
-  Observable<DateTimeRange> setRange(DateTimeRange rangeParam) =>
+  Observable<DateRangeW> setRange(DateRangeW rangeParam) =>
       range = Observable(rangeParam);
 
   @computed
@@ -219,11 +218,11 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
       .length;
 
   @action
-  Observable<double> lineQuantityInDash(int productId, DateTimeRange range) {
+  Observable<double> lineQuantityInDash(int productId, DateRangeW range) {
     final double stockCount = tickets
         .where((t) => t.status)
         .where((t) => t.date.isAfter(range.start))
-        .where((t) => t.date.isBefore(range.end))
+        .where((t) => t.date.isBefore(range.endDate))
         .where((t) =>
             t.ticketType == TicketType.spend ||
             t.ticketType == TicketType.spendDeferred ||
@@ -238,11 +237,11 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
   }
 
   @action
-  Observable<double> lineQuantityOutDash(int productId, DateTimeRange range) {
+  Observable<double> lineQuantityOutDash(int productId, DateRangeW range) {
     final double stockCount = tickets
         .where((t) => t.status == true)
         .where((t) => t.date.isAfter(range.start))
-        .where((t) => t.date.isBefore(range.end))
+        .where((t) => t.date.isBefore(range.endDate))
         .where((t) =>
             t.ticketType == TicketType.sell ||
             t.ticketType == TicketType.sellDeferred ||
@@ -291,7 +290,9 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
         .where((t) => t.ticketType == TicketType.sell)
         .where((t) => t.paiementType == PaiementType.cash)
         .fold(
-            0, (prev, element) => prev + element.totalPriceTaxAndPromoIncluded);
+            0,
+            (int prev, element) =>
+                prev + element.totalPriceTaxAndPromoIncluded);
 
     return sellCash;
   }
@@ -306,7 +307,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
             t.date.day == date.day)
         .where((t) => t.paiementType == PaiementType.cash)
         .where((t) => t.ticketType == TicketType.sellCovered)
-        .fold(0, (prev, element) => prev + element.received);
+        .fold(0, (int prev, element) => prev + element.received);
 
     return sellCover;
   }
@@ -322,7 +323,9 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
         .where((t) => t.paiementType == PaiementType.nope)
         .where((t) => t.ticketType == TicketType.sellDeferred)
         .fold(
-            0, (prev, element) => prev + element.totalPriceTaxAndPromoIncluded);
+            0,
+            (int prev, element) =>
+                prev + element.totalPriceTaxAndPromoIncluded);
 
     return sellDeferredToday.round();
   }
@@ -337,8 +340,8 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
             t.date.day == date.day)
         .where((t) => t.paiementType == PaiementType.nope)
         .where((t) => t.ticketType == TicketType.spendDeferred)
-        .fold(
-            0, (prev, element) => prev + element.totalCostTaxAndPromoIncluded);
+        .fold(0,
+            (int prev, element) => prev + element.totalCostTaxAndPromoIncluded);
 
     return spendDeferredToday.round();
   }
@@ -363,8 +366,8 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
             t.date.day == date.day)
         .where((t) => t.ticketType == TicketType.spend)
         .where((t) => t.paiementType == PaiementType.cash)
-        .fold(
-            0, (prev, element) => prev + element.totalCostTaxAndPromoIncluded);
+        .fold(0,
+            (int prev, element) => prev + element.totalCostTaxAndPromoIncluded);
 
     return spendCash;
   }
@@ -373,13 +376,12 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
   int todaySpendCoverCash(DateTime date) {
     var spendCoverCash = tickets
         .where((t) => t.status == true)
-        .where((t) =>
-            t.date.year == date.year &&
-            t.date.month == date.month &&
-            t.date.day == date.day)
+        .where((t) => t.date.year == date.year)
+        .where((t) => t.date.month == date.month)
+        .where((t) => t.date.day == date.day)
         .where((t) => t.ticketType == TicketType.spendCovered)
         .where((t) => t.paiementType == PaiementType.cash)
-        .fold(0, (prev, element) => prev + element.received);
+        .fold(0, (int prev, element) => prev + element.received);
 
     return spendCoverCash;
   }
@@ -423,7 +425,9 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
         .where((t) => t.ticketType == TicketType.sell)
         .where((t) => t.paiementType == PaiementType.cash)
         .fold(
-            0, (prev, element) => prev + element.totalPriceTaxAndPromoIncluded);
+            0,
+            (int prev, element) =>
+                prev + element.totalPriceTaxAndPromoIncluded);
 
     return sellCash;
   }
@@ -432,10 +436,11 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
   int monthSellCoverCash(DateTime date) {
     var sellCover = tickets
         .where((t) => t.status == true)
-        .where((t) => t.date.year == date.year && t.date.month == date.month)
+        .where((t) => t.date.year == date.year)
+        .where((t) => t.date.month == date.month)
         .where((t) => t.paiementType == PaiementType.cash)
         .where((t) => t.ticketType == TicketType.sellCovered)
-        .fold(0, (prev, element) => prev + element.received);
+        .fold(0, (int prev, element) => prev + element.received);
 
     return sellCover;
   }
@@ -457,7 +462,9 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
         .where((t) => t.paiementType == PaiementType.nope)
         .where((t) => t.ticketType == TicketType.sellDeferred)
         .fold(
-            0, (prev, element) => prev + element.totalPriceTaxAndPromoIncluded);
+            0,
+            (int prev, element) =>
+                prev + element.totalPriceTaxAndPromoIncluded);
 
     return sellDeferredMonth.round();
   }
@@ -469,8 +476,8 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
         .where((t) => t.date.year == date.year && t.date.month == date.month)
         .where((t) => t.ticketType == TicketType.spend)
         .where((t) => t.paiementType == PaiementType.cash)
-        .fold(
-            0, (prev, element) => prev + element.totalCostTaxAndPromoIncluded);
+        .fold(0,
+            (int prev, element) => prev + element.totalCostTaxAndPromoIncluded);
     return spendCash;
   }
 
@@ -481,7 +488,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
         .where((t) => t.date.year == date.year && t.date.month == date.month)
         .where((t) => t.paiementType == PaiementType.cash)
         .where((t) => t.ticketType == TicketType.spendCovered)
-        .fold(0, (prev, element) => prev + element.received);
+        .fold(0, (int prev, element) => prev + element.received);
 
     return spendCover;
   }
@@ -502,8 +509,8 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
         .where((t) => t.date.year == date.year && t.date.month == date.month)
         .where((t) => t.paiementType == PaiementType.nope)
         .where((t) => t.ticketType == TicketType.spendDeferred)
-        .fold(
-            0, (prev, element) => prev + element.totalCostTaxAndPromoIncluded);
+        .fold(0,
+            (int prev, element) => prev + element.totalCostTaxAndPromoIncluded);
 
     return spendDeferredMonth.round();
   }
@@ -562,7 +569,9 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
         .where((t) => t.paiementType == PaiementType.nope)
         .where((t) => t.ticketType == TicketType.sellDeferred)
         .fold(
-            0, (prev, element) => prev + element.totalPriceTaxAndPromoIncluded);
+            0,
+            (int prev, element) =>
+                prev + element.totalPriceTaxAndPromoIncluded);
 
     return rangeSellDeferred.round();
   }
@@ -598,8 +607,8 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
         .where((t) => t.date.isAfter(firstDate) && t.date.isBefore(lastDate))
         .where((t) => t.paiementType == PaiementType.nope)
         .where((t) => t.ticketType == TicketType.spendDeferred)
-        .fold(
-            0, (prev, element) => prev + element.totalCostTaxAndPromoIncluded);
+        .fold(0,
+            (int prev, element) => prev + element.totalCostTaxAndPromoIncluded);
 
     return rangespendDeferred.round();
   }
@@ -661,8 +670,10 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
           .where((t) => t.ticketType == TicketType.sell)
           .where((t) => t.paiementType == PaiementType.cash)
           .where((t) => t.contactInfo == herder.id.toString())
-          .fold(0,
-              (prev, element) => prev + element.totalPriceTaxAndPromoIncluded);
+          .fold(
+              0,
+              (int prev, element) =>
+                  prev + element.totalPriceTaxAndPromoIncluded);
 
       map[soldPerClient.toString()] = herder;
     }
@@ -682,8 +693,10 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
               t.ticketType == TicketType.sellDeferred ||
               t.ticketType == TicketType.sell)
           .where((t) => t.contactInfo == herder.id.toString())
-          .fold(0,
-              (prev, element) => prev + element.totalPriceTaxAndPromoIncluded);
+          .fold(
+              0,
+              (int prev, element) =>
+                  prev + element.totalPriceTaxAndPromoIncluded);
 
       map[soldPerClient.toString()] = herder;
     }
@@ -704,8 +717,10 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
           .where((t) => t.ticketType == TicketType.sell)
           .where((t) => t.paiementType == PaiementType.cash)
           .where((t) => t.contactInfo == herder.id.toString())
-          .fold(0,
-              (prev, element) => prev + element.totalPriceTaxAndPromoIncluded);
+          .fold(
+              0,
+              (int prev, element) =>
+                  prev + element.totalPriceTaxAndPromoIncluded);
 
       map[soldPerClient.toString()] = herder;
     }
@@ -725,8 +740,10 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
               t.date.day == date.day)
           .where((t) => t.ticketType == TicketType.sellDeferred)
           .where((t) => t.contactInfo == herder.id.toString())
-          .fold(0,
-              (prev, element) => prev + element.totalPriceTaxAndPromoIncluded);
+          .fold(
+              0,
+              (int prev, element) =>
+                  prev + element.totalPriceTaxAndPromoIncluded);
 
       map[soldPerClient.toString()] = herder;
     }
@@ -748,8 +765,10 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
               t.ticketType == TicketType.sell &&
               t.ticketType == TicketType.sellDeferred)
           .where((t) => t.contactInfo == herder.id.toString())
-          .fold(0,
-              (prev, element) => prev + element.totalPriceTaxAndPromoIncluded);
+          .fold(
+              0,
+              (int prev, element) =>
+                  prev + element.totalPriceTaxAndPromoIncluded);
 
       map[soldPerClient.toString()] = herder;
     }

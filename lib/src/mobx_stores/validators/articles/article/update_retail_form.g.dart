@@ -9,67 +9,39 @@ part of 'update_retail_form.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$ArticleRetailUpdateFormStore on _ArticleRetailUpdateFormStore, Store {
-  final _$usernameCheckAtom = Atom(name: '_FormStore.usernameCheck');
+  Computed<bool>? _$isArticleCreationPendingComputed;
 
   @override
-  ObservableFuture<bool> get isArticleCreated {
-    _$usernameCheckAtom.reportRead();
-    return super.isArticleCreated;
-  }
-
-  @override
-  set isArticleCreated(ObservableFuture<bool> value) {
-    _$usernameCheckAtom.reportWrite(value, super.isArticleCreated, () {
-      super.isArticleCreated = value;
-    });
-  }
-
-  Computed<bool> _$isUserCheckPendingComputed;
-
-  @override
-  bool get isArticleCreationPending => (_$isUserCheckPendingComputed ??=
+  bool get isArticleCreationPending => (_$isArticleCreationPendingComputed ??=
           Computed<bool>(() => super.isArticleCreationPending,
-              name: '_FormStore.isArticleCreationPending'))
+              name: '_ArticleRetailUpdateFormStore.isArticleCreationPending'))
       .value;
-
-  Computed<bool> _$hasErrors;
+  Computed<bool>? _$hasErrorsComputed;
 
   @override
-  bool get hasErrors => (_$hasErrors ??= Computed<bool>(() => super.hasErrors,
-          name: '_ArticleFormStore.hasErrors'))
-      .value;
+  bool get hasErrors =>
+      (_$hasErrorsComputed ??= Computed<bool>(() => super.hasErrors,
+              name: '_ArticleRetailUpdateFormStore.hasErrors'))
+          .value;
 
-  final _$nameAtom = Atom(name: '_ArticleFormStore.name');
+  late final _$fullNameAtom =
+      Atom(name: '_ArticleRetailUpdateFormStore.fullName', context: context);
 
   @override
   String get fullName {
-    _$nameAtom.reportRead();
+    _$fullNameAtom.reportRead();
     return super.fullName;
   }
 
   @override
   set fullName(String value) {
-    _$nameAtom.reportWrite(value, super.fullName, () {
+    _$fullNameAtom.reportWrite(value, super.fullName, () {
       super.fullName = value;
     });
   }
 
-  final _$unitsPerAtom = Atom(name: '_ArticleFormStore.unitsPer');
-
-  @override
-  String get unitsPerPiece {
-    _$unitsPerAtom.reportRead();
-    return super.unitsPerPiece;
-  }
-
-  @override
-  set unitsPerPiece(String value) {
-    _$unitsPerAtom.reportWrite(value, super.unitsPerPiece, () {
-      super.unitsPerPiece = value;
-    });
-  }
-
-  final _$priceAtom = Atom(name: '_ArticleFormStore.price');
+  late final _$priceAtom =
+      Atom(name: '_ArticleRetailUpdateFormStore.price', context: context);
 
   @override
   String get price {
@@ -84,7 +56,8 @@ mixin _$ArticleRetailUpdateFormStore on _ArticleRetailUpdateFormStore, Store {
     });
   }
 
-  final _$costAtom = Atom(name: '_ArticleFormStore.cost');
+  late final _$costAtom =
+      Atom(name: '_ArticleRetailUpdateFormStore.cost', context: context);
 
   @override
   String get cost {
@@ -99,7 +72,24 @@ mixin _$ArticleRetailUpdateFormStore on _ArticleRetailUpdateFormStore, Store {
     });
   }
 
-  final _$barcodeEANAtom = Atom(name: '_ArticleFormStore.barcodeEAN');
+  late final _$unitsPerPieceAtom = Atom(
+      name: '_ArticleRetailUpdateFormStore.unitsPerPiece', context: context);
+
+  @override
+  String get unitsPerPiece {
+    _$unitsPerPieceAtom.reportRead();
+    return super.unitsPerPiece;
+  }
+
+  @override
+  set unitsPerPiece(String value) {
+    _$unitsPerPieceAtom.reportWrite(value, super.unitsPerPiece, () {
+      super.unitsPerPiece = value;
+    });
+  }
+
+  late final _$barcodeEANAtom =
+      Atom(name: '_ArticleRetailUpdateFormStore.barcodeEAN', context: context);
 
   @override
   String get barcodeEAN {
@@ -114,56 +104,89 @@ mixin _$ArticleRetailUpdateFormStore on _ArticleRetailUpdateFormStore, Store {
     });
   }
 
-  final _$_ArticleRetailUpdateFormStore =
-      ActionController(name: '_ArticleFormStore');
+  late final _$isArticleCreatedAtom = Atom(
+      name: '_ArticleRetailUpdateFormStore.isArticleCreated', context: context);
+
+  @override
+  ObservableFuture<bool> get isArticleCreated {
+    _$isArticleCreatedAtom.reportRead();
+    return super.isArticleCreated;
+  }
+
+  @override
+  set isArticleCreated(ObservableFuture<bool> value) {
+    _$isArticleCreatedAtom.reportWrite(value, super.isArticleCreated, () {
+      super.isArticleCreated = value;
+    });
+  }
+
+  late final _$_ArticleRetailUpdateFormStoreActionController =
+      ActionController(name: '_ArticleRetailUpdateFormStore', context: context);
+
+  @override
+  void validateArticleFullName(String value) {
+    final _$actionInfo =
+        _$_ArticleRetailUpdateFormStoreActionController.startAction(
+            name: '_ArticleRetailUpdateFormStore.validateArticleFullName');
+    try {
+      return super.validateArticleFullName(value);
+    } finally {
+      _$_ArticleRetailUpdateFormStoreActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void validatePrice(String value) {
-    final _$actionInfo = _$_ArticleRetailUpdateFormStore.startAction(
-        name: '_ArticleFormStore.validatePrice');
+    final _$actionInfo = _$_ArticleRetailUpdateFormStoreActionController
+        .startAction(name: '_ArticleRetailUpdateFormStore.validatePrice');
     try {
       return super.validatePrice(value);
     } finally {
-      _$_ArticleRetailUpdateFormStore.endAction(_$actionInfo);
+      _$_ArticleRetailUpdateFormStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void validateCost(String value) {
-    final _$actionInfo = _$_ArticleRetailUpdateFormStore.startAction(
-        name: '_ArticleFormStore.validateCost');
+    final _$actionInfo = _$_ArticleRetailUpdateFormStoreActionController
+        .startAction(name: '_ArticleRetailUpdateFormStore.validateCost');
     try {
       return super.validateCost(value);
     } finally {
-      _$_ArticleRetailUpdateFormStore.endAction(_$actionInfo);
+      _$_ArticleRetailUpdateFormStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void validateUnitsPerPiece(String value) {
-    final _$actionInfo = _$_ArticleRetailUpdateFormStore.startAction(
-        name: '_ArticleFormStore.validateUnitsPerPiece');
+    final _$actionInfo =
+        _$_ArticleRetailUpdateFormStoreActionController.startAction(
+            name: '_ArticleRetailUpdateFormStore.validateUnitsPerPiece');
     try {
       return super.validateUnitsPerPiece(value);
     } finally {
-      _$_ArticleRetailUpdateFormStore.endAction(_$actionInfo);
+      _$_ArticleRetailUpdateFormStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   String toString() {
     return '''
-name: ${fullName},
-email: ${unitsPerPiece},
-usernameCheck: ${isArticleCreated},
-canComplete: ${hasErrors}
+fullName: ${fullName},
+price: ${price},
+cost: ${cost},
+unitsPerPiece: ${unitsPerPiece},
+barcodeEAN: ${barcodeEAN},
+isArticleCreated: ${isArticleCreated},
+isArticleCreationPending: ${isArticleCreationPending},
+hasErrors: ${hasErrors}
     ''';
   }
 }
 
 mixin _$FormErrorArticleRetailUpdateState
     on _FormErrorArticleRetailUpdateState, Store {
-  Computed<bool> _$hasErrorsComputed;
+  Computed<bool>? _$hasErrorsComputed;
 
   @override
   bool get hasErrors =>
@@ -171,55 +194,58 @@ mixin _$FormErrorArticleRetailUpdateState
               name: '_FormErrorArticleRetailUpdateState.hasErrors'))
           .value;
 
-  final _$nameAtom = Atom(name: '_FormErrorArticleRetailUpdateState.name');
+  late final _$fullNameErrorAtom = Atom(
+      name: '_FormErrorArticleRetailUpdateState.fullNameError',
+      context: context);
 
   @override
   String get fullNameError {
-    _$nameAtom.reportRead();
+    _$fullNameErrorAtom.reportRead();
     return super.fullNameError;
   }
 
   @override
   set fullNameError(String value) {
-    _$nameAtom.reportWrite(value, super.fullNameError, () {
+    _$fullNameErrorAtom.reportWrite(value, super.fullNameError, () {
       super.fullNameError = value;
     });
   }
 
-  final _$unitsPerPieceAtom =
-      Atom(name: '_FormErrorArticleRetailUpdateState.unitsPerPiece');
+  late final _$unitsPerPieceErrorAtom = Atom(
+      name: '_FormErrorArticleRetailUpdateState.unitsPerPieceError',
+      context: context);
 
   @override
   String get unitsPerPieceError {
-    _$unitsPerPieceAtom.reportRead();
+    _$unitsPerPieceErrorAtom.reportRead();
     return super.unitsPerPieceError;
   }
 
   @override
   set unitsPerPieceError(String value) {
-    _$unitsPerPieceAtom.reportWrite(value, super.unitsPerPieceError, () {
+    _$unitsPerPieceErrorAtom.reportWrite(value, super.unitsPerPieceError, () {
       super.unitsPerPieceError = value;
     });
   }
 
-  final _$priceAtom =
-      Atom(name: '_FormErrorArticleRetailUpdateState.priceError');
+  late final _$priceErrorAtom = Atom(
+      name: '_FormErrorArticleRetailUpdateState.priceError', context: context);
 
   @override
   String get priceError {
-    _$priceAtom.reportRead();
+    _$priceErrorAtom.reportRead();
     return super.priceError;
   }
 
   @override
   set priceError(String value) {
-    _$priceAtom.reportWrite(value, super.priceError, () {
+    _$priceErrorAtom.reportWrite(value, super.priceError, () {
       super.priceError = value;
     });
   }
 
-  final _$costErrorAtom =
-      Atom(name: '_FormErrorArticleRetailUpdateState.costError');
+  late final _$costErrorAtom = Atom(
+      name: '_FormErrorArticleRetailUpdateState.costError', context: context);
 
   @override
   String get costError {
@@ -237,10 +263,10 @@ mixin _$FormErrorArticleRetailUpdateState
   @override
   String toString() {
     return '''
-username: ${fullNameError},
-unitsPerPiece: ${unitsPerPieceError},
-price: ${priceError},
-cost: ${costError},
+fullNameError: ${fullNameError},
+unitsPerPieceError: ${unitsPerPieceError},
+priceError: ${priceError},
+costError: ${costError},
 hasErrors: ${hasErrors}
     ''';
   }

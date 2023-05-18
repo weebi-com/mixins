@@ -1,10 +1,7 @@
 library stock;
 
-export 'src/stock/abstracts/article_stock_abstract.dart';
-export 'src/stock/abstracts/line_stock_abstract.dart';
+export 'src/stock/logic/stock_now_line_retail.dart';
+export 'src/stock/logic/stock_now_article_basket.dart';
 
-export 'src/stock/mixins/article_basket_realizable_mixin.dart';
-export 'src/stock/mixins/article_stock_now_mixin.dart';
-
-export 'src/stock/mixins/line_single_basket_realizable_mixin.dart';
-export 'src/stock/mixins/line_stock_now_mixin.dart';
+export 'src/stock/logic/stock_now_article_retail.dart';
+export 'src/stock/logic/stock_article_diff.dart';

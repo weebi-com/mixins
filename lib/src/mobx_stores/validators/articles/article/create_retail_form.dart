@@ -6,7 +6,7 @@ import 'package:models_weebi/weebi_models.dart';
 part 'create_retail_form.g.dart';
 
 class ArticleRetailCreateFormStore = _ArticleCreateFormStore
-    with _$ArticleCreateFormStore;
+    with _$ArticleRetailCreateFormStore;
 
 abstract class _ArticleCreateFormStore with Store {
   final ArticlesStore _articlesStore;
@@ -40,7 +40,7 @@ abstract class _ArticleCreateFormStore with Store {
   @computed
   bool get hasErrors => errorStore.hasErrors;
 
-  List<ReactionDisposer> _disposers;
+  List<ReactionDisposer> _disposers = [];
 
   void setupValidations() {
     _disposers = [
@@ -53,7 +53,7 @@ abstract class _ArticleCreateFormStore with Store {
 
   @action
   void validateArticleFullName(String value) {
-    if (value == null || value.isEmpty) {
+    if (value.isEmpty) {
       errorStore.fullNameError = 'Saisir le nom de l\'article';
       return;
     }
@@ -62,7 +62,7 @@ abstract class _ArticleCreateFormStore with Store {
         .contains(value.trim().withoutAccents.toLowerCase());
     if (isSameAsLineName) {
       errorStore.fullNameError =
-          'Le nom de l\'article doit être différent de la ligne, ex : Cola x1 dans la ligne Cola';
+          'Le nom doit être différent de l\'article, ex : Cola x1 au lieu de Cola';
       return;
     }
     final isAlreadyTaken = _articlesStore.getArticlesFullNames
@@ -71,18 +71,18 @@ abstract class _ArticleCreateFormStore with Store {
       errorStore.fullNameError = 'Un article avec ce nom existe déjà';
       return;
     }
-    errorStore.fullNameError = null;
+    errorStore.fullNameError = '';
     return;
   }
 
   @action
   void validatePrice(String value) {
-    if (value == null || value.isEmpty) {
+    if (value.isEmpty) {
       errorStore.priceError = 'Saisir le prix de vente';
     } else if (int.tryParse(value) == null) {
       errorStore.priceError = 'erreur $value';
     } else {
-      errorStore.priceError = null;
+      errorStore.priceError = '';
     }
     return;
   }
@@ -92,18 +92,18 @@ abstract class _ArticleCreateFormStore with Store {
     if (value.isNotEmpty && int.tryParse(value) == null) {
       errorStore.costError = 'erreur $value';
     } else {
-      errorStore.costError = null;
+      errorStore.costError = '';
     }
     return;
   }
 
   @action
   void validateUnitsPerPiece(String value) {
-    if (value != null && value.isNotEmpty && double.tryParse(value) == null) {
+    if (value.isNotEmpty && double.tryParse(value) == null) {
       errorStore.unitsPerPieceError =
           'erreur $value, exemple : 1.5 et non pas 1,5';
     } else {
-      errorStore.unitsPerPieceError = null;
+      errorStore.unitsPerPieceError = '';
     }
     return;
   }
@@ -126,7 +126,7 @@ abstract class _ArticleCreateFormStore with Store {
     ArticleRetail newArticleRetail = ArticleRetail(
       lineId: _line.id,
       id: _line.articles.nextId,
-      fullName: fullName.trim() ?? '',
+      fullName: fullName.trim(),
       price: int.parse(price.trim()),
       cost: 0,
       weight: 1,
@@ -139,17 +139,15 @@ abstract class _ArticleCreateFormStore with Store {
       statusUpdateDate: now,
     );
 
-    if ((cost != null && cost.isNotEmpty)) {
+    if ((cost.isNotEmpty)) {
       newArticleRetail =
           newArticleRetail.copyWith(cost: int.parse(cost.trim()));
     }
-    if ((unitsPerPiece != null && unitsPerPiece.isNotEmpty)) {
+    if ((unitsPerPiece.isNotEmpty)) {
       newArticleRetail =
           newArticleRetail.copyWith(weight: double.parse(unitsPerPiece.trim()));
     }
-    if (barcodeEAN != null &&
-        barcodeEAN is String &&
-        int.tryParse(barcodeEAN.trim()) != null) {
+    if (int.tryParse(barcodeEAN.trim()) != null) {
       newArticleRetail =
           newArticleRetail.copyWith(barcodeEAN: barcodeEAN.trim());
     }
@@ -165,21 +163,21 @@ class FormErrorArticleCreateState = _FormErrorArticleCreateState
 
 abstract class _FormErrorArticleCreateState with Store {
   @observable
-  String fullNameError;
+  String fullNameError = '';
 
   @observable
-  String unitsPerPieceError;
+  String unitsPerPieceError = '';
 
   @observable
-  String priceError;
+  String priceError = '';
 
   @observable
-  String costError;
+  String costError = '';
 
   @computed
   bool get hasErrors =>
-      fullNameError != null ||
-      unitsPerPieceError != null ||
-      priceError != null ||
-      costError != null;
+      fullNameError.isNotEmpty ||
+      unitsPerPieceError.isNotEmpty ||
+      priceError.isNotEmpty ||
+      costError.isNotEmpty;
 }

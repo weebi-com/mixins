@@ -7,9 +7,12 @@ Future<void> main() async {
   final testClosingsStore = ClosingsStoreInstantiater.noPersistence;
   group('test closing stock shops', () {
     test('rangeStockShopProductQuantityDiff x1 closing', () async {
-      await testClosingsStore.addAllClosingRanges([ClosingRange.dummyFeb]);
-      await testClosingsStore
+      final d =
+          await testClosingsStore.addAllClosingRanges([ClosingRange.dummyFeb]);
+      final dd = await testClosingsStore
           .addAllClosingStockShops(ClosingStockShop.dummyFeb);
+      expect(d.isNotEmpty, isTrue);
+      expect(dd.isNotEmpty, isTrue);
       final t = testClosingsStore.stockShopProductDiffTimeRange(
         ['pierre_entrepot'],
         1,
@@ -19,8 +22,9 @@ Future<void> main() async {
       expect(t, 3.0);
     });
     test('rangeStockShopProductQuantityDiff x2 closing included', () async {
-      await testClosingsStore
+      final d = await testClosingsStore
           .addAllClosingStockShops(ClosingStockShop.dummyMar);
+      expect(d.isNotEmpty, isTrue);
       final t = testClosingsStore.stockShopProductDiffTimeRange(
         ['pierre_entrepot'],
         1,

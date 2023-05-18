@@ -8,15 +8,17 @@ part of 'update_line_form.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$ArticleFormStore on _ArticleLineUpdateFormStore, Store {
-  Computed<bool> _$hasErrors;
+mixin _$ArticleLineUpdateFormStore on _ArticleLineUpdateFormStore, Store {
+  Computed<bool>? _$hasErrorsComputed;
 
   @override
-  bool get hasErrors => (_$hasErrors ??= Computed<bool>(() => super.hasErrors,
-          name: '_ArticleFormStore.hasErrors'))
-      .value;
+  bool get hasErrors =>
+      (_$hasErrorsComputed ??= Computed<bool>(() => super.hasErrors,
+              name: '_ArticleLineUpdateFormStore.hasErrors'))
+          .value;
 
-  final _$nameAtom = Atom(name: '_ArticleFormStore.name');
+  late final _$nameAtom =
+      Atom(name: '_ArticleLineUpdateFormStore.name', context: context);
 
   @override
   String get name {
@@ -31,7 +33,8 @@ mixin _$ArticleFormStore on _ArticleLineUpdateFormStore, Store {
     });
   }
 
-  final _$stockUnitAtom = Atom(name: '_ArticleFormStore.stockUnit');
+  late final _$stockUnitAtom =
+      Atom(name: '_ArticleLineUpdateFormStore.stockUnit', context: context);
 
   @override
   StockUnit get stockUnit {
@@ -46,19 +49,34 @@ mixin _$ArticleFormStore on _ArticleLineUpdateFormStore, Store {
     });
   }
 
+  late final _$_ArticleLineUpdateFormStoreActionController =
+      ActionController(name: '_ArticleLineUpdateFormStore', context: context);
+
+  @override
+  void validateArticleLineName(String value) {
+    final _$actionInfo =
+        _$_ArticleLineUpdateFormStoreActionController.startAction(
+            name: '_ArticleLineUpdateFormStore.validateArticleLineName');
+    try {
+      return super.validateArticleLineName(value);
+    } finally {
+      _$_ArticleLineUpdateFormStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
 name: ${name},
-password: ${stockUnit},
-canComplete: ${hasErrors}
+stockUnit: ${stockUnit},
+hasErrors: ${hasErrors}
     ''';
   }
 }
 
 mixin _$FormErrorArticleLineUpdateState
     on _FormErrorArticleLineUpdateState, Store {
-  Computed<bool> _$hasErrorsComputed;
+  Computed<bool>? _$hasErrorsComputed;
 
   @override
   bool get hasErrors =>
@@ -66,17 +84,18 @@ mixin _$FormErrorArticleLineUpdateState
               name: '_FormErrorArticleLineUpdateState.hasErrors'))
           .value;
 
-  final _$nameAtom = Atom(name: '_FormErrorArticleLineUpdateState.name');
+  late final _$nameErrorAtom = Atom(
+      name: '_FormErrorArticleLineUpdateState.nameError', context: context);
 
   @override
   String get nameError {
-    _$nameAtom.reportRead();
+    _$nameErrorAtom.reportRead();
     return super.nameError;
   }
 
   @override
   set nameError(String value) {
-    _$nameAtom.reportWrite(value, super.nameError, () {
+    _$nameErrorAtom.reportWrite(value, super.nameError, () {
       super.nameError = value;
     });
   }
@@ -84,7 +103,7 @@ mixin _$FormErrorArticleLineUpdateState
   @override
   String toString() {
     return '''
-username: ${nameError},
+nameError: ${nameError},
 hasErrors: ${hasErrors}
     ''';
   }
