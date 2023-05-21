@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'create_line_retail_form.dart';
+part of 'calibrate_create_retail_form.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -8,24 +8,24 @@ part of 'create_line_retail_form.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$ArticleLineCreateFormStore on _ArticleLineCreateFormStore, Store {
+mixin _$ArticleCalibreCreateFormStore on _ArticleCalibreCreateFormStore, Store {
   Computed<bool>? _$isArticleCreationPendingComputed;
 
   @override
   bool get isArticleCreationPending => (_$isArticleCreationPendingComputed ??=
           Computed<bool>(() => super.isArticleCreationPending,
-              name: '_ArticleLineCreateFormStore.isArticleCreationPending'))
+              name: '_ArticleCalibreCreateFormStore.isArticleCreationPending'))
       .value;
   Computed<bool>? _$hasErrorsComputed;
 
   @override
   bool get hasErrors =>
       (_$hasErrorsComputed ??= Computed<bool>(() => super.hasErrors,
-              name: '_ArticleLineCreateFormStore.hasErrors'))
+              name: '_ArticleCalibreCreateFormStore.hasErrors'))
           .value;
 
   late final _$nameAtom =
-      Atom(name: '_ArticleLineCreateFormStore.name', context: context);
+      Atom(name: '_ArticleCalibreCreateFormStore.name', context: context);
 
   @override
   String get name {
@@ -41,7 +41,7 @@ mixin _$ArticleLineCreateFormStore on _ArticleLineCreateFormStore, Store {
   }
 
   late final _$priceAtom =
-      Atom(name: '_ArticleLineCreateFormStore.price', context: context);
+      Atom(name: '_ArticleCalibreCreateFormStore.price', context: context);
 
   @override
   String get price {
@@ -57,7 +57,7 @@ mixin _$ArticleLineCreateFormStore on _ArticleLineCreateFormStore, Store {
   }
 
   late final _$costAtom =
-      Atom(name: '_ArticleLineCreateFormStore.cost', context: context);
+      Atom(name: '_ArticleCalibreCreateFormStore.cost', context: context);
 
   @override
   String get cost {
@@ -73,7 +73,7 @@ mixin _$ArticleLineCreateFormStore on _ArticleLineCreateFormStore, Store {
   }
 
   late final _$stockUnitAtom =
-      Atom(name: '_ArticleLineCreateFormStore.stockUnit', context: context);
+      Atom(name: '_ArticleCalibreCreateFormStore.stockUnit', context: context);
 
   @override
   StockUnit get stockUnit {
@@ -88,8 +88,8 @@ mixin _$ArticleLineCreateFormStore on _ArticleLineCreateFormStore, Store {
     });
   }
 
-  late final _$unitsPerPieceAtom =
-      Atom(name: '_ArticleLineCreateFormStore.unitsPerPiece', context: context);
+  late final _$unitsPerPieceAtom = Atom(
+      name: '_ArticleCalibreCreateFormStore.unitsPerPiece', context: context);
 
   @override
   String get unitsPerPiece {
@@ -105,7 +105,7 @@ mixin _$ArticleLineCreateFormStore on _ArticleLineCreateFormStore, Store {
   }
 
   late final _$barcodeEANAtom =
-      Atom(name: '_ArticleLineCreateFormStore.barcodeEAN', context: context);
+      Atom(name: '_ArticleCalibreCreateFormStore.barcodeEAN', context: context);
 
   @override
   String get barcodeEAN {
@@ -121,7 +121,8 @@ mixin _$ArticleLineCreateFormStore on _ArticleLineCreateFormStore, Store {
   }
 
   late final _$isArticleCreatedAtom = Atom(
-      name: '_ArticleLineCreateFormStore.isArticleCreated', context: context);
+      name: '_ArticleCalibreCreateFormStore.isArticleCreated',
+      context: context);
 
   @override
   ObservableFuture<bool> get isArticleCreated {
@@ -136,51 +137,53 @@ mixin _$ArticleLineCreateFormStore on _ArticleLineCreateFormStore, Store {
     });
   }
 
-  late final _$_ArticleLineCreateFormStoreActionController =
-      ActionController(name: '_ArticleLineCreateFormStore', context: context);
+  late final _$_ArticleCalibreCreateFormStoreActionController =
+      ActionController(
+          name: '_ArticleCalibreCreateFormStore', context: context);
 
   @override
-  void validateArticleLineName(String value) {
+  void validateArticleCalibreName(String value) {
     final _$actionInfo =
-        _$_ArticleLineCreateFormStoreActionController.startAction(
-            name: '_ArticleLineCreateFormStore.validateArticleLineName');
+        _$_ArticleCalibreCreateFormStoreActionController.startAction(
+            name: '_ArticleCalibreCreateFormStore.validateArticleCalibreName');
     try {
-      return super.validateArticleLineName(value);
+      return super.validateArticleCalibreName(value);
     } finally {
-      _$_ArticleLineCreateFormStoreActionController.endAction(_$actionInfo);
+      _$_ArticleCalibreCreateFormStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void validatePrice(String value) {
-    final _$actionInfo = _$_ArticleLineCreateFormStoreActionController
-        .startAction(name: '_ArticleLineCreateFormStore.validatePrice');
+    final _$actionInfo = _$_ArticleCalibreCreateFormStoreActionController
+        .startAction(name: '_ArticleCalibreCreateFormStore.validatePrice');
     try {
       return super.validatePrice(value);
     } finally {
-      _$_ArticleLineCreateFormStoreActionController.endAction(_$actionInfo);
+      _$_ArticleCalibreCreateFormStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void validateCost(String value) {
-    final _$actionInfo = _$_ArticleLineCreateFormStoreActionController
-        .startAction(name: '_ArticleLineCreateFormStore.validateCost');
+    final _$actionInfo = _$_ArticleCalibreCreateFormStoreActionController
+        .startAction(name: '_ArticleCalibreCreateFormStore.validateCost');
     try {
       return super.validateCost(value);
     } finally {
-      _$_ArticleLineCreateFormStoreActionController.endAction(_$actionInfo);
+      _$_ArticleCalibreCreateFormStoreActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void validateUnitsPerPiece(String value) {
-    final _$actionInfo = _$_ArticleLineCreateFormStoreActionController
-        .startAction(name: '_ArticleLineCreateFormStore.validateUnitsPerPiece');
+    final _$actionInfo =
+        _$_ArticleCalibreCreateFormStoreActionController.startAction(
+            name: '_ArticleCalibreCreateFormStore.validateUnitsPerPiece');
     try {
       return super.validateUnitsPerPiece(value);
     } finally {
-      _$_ArticleLineCreateFormStoreActionController.endAction(_$actionInfo);
+      _$_ArticleCalibreCreateFormStoreActionController.endAction(_$actionInfo);
     }
   }
 

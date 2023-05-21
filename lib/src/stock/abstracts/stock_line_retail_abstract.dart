@@ -5,8 +5,10 @@ import 'package:models_weebi/weebi_models.dart';
 
 abstract class StockLineRetailArticleAbstract<A extends ArticleAbstract>
     extends StockAbstract {
-  final ArticleLine<ArticleRetail> line;
-  StockLineRetailArticleAbstract(this.line, TicketsInvoker ticketsInvoker,
+  final ArticleCalibre<ArticleRetail> articleCalibreRetail;
+  StockLineRetailArticleAbstract(
+      this.articleCalibreRetail,
+      TicketsInvoker ticketsInvoker,
       ClosingStockShopsInvoker closingStockShopsInvoker)
       : super(ticketsInvoker, closingStockShopsInvoker);
 }
@@ -14,10 +16,10 @@ abstract class StockLineRetailArticleAbstract<A extends ArticleAbstract>
 abstract class StockNowLineRetailAbstract
     extends StockLineRetailArticleAbstract {
   StockNowLineRetailAbstract(
-    ArticleLine<ArticleRetail> line,
+    ArticleCalibre<ArticleRetail> articleCalibreRetail,
     TicketsInvoker ticketsInvoker,
     ClosingStockShopsInvoker closingStockShopsInvoker,
-  ) : super(line, ticketsInvoker, closingStockShopsInvoker);
+  ) : super(articleCalibreRetail, ticketsInvoker, closingStockShopsInvoker);
 
   double get stockNow;
 }
@@ -27,7 +29,7 @@ abstract class StockDiffLineRetailAbstract
   final DateTime start;
   final DateTime end;
   StockDiffLineRetailAbstract(
-    ArticleLine<ArticleRetail> line,
+    ArticleCalibre<ArticleRetail> line,
     this.start,
     this.end,
     TicketsInvoker ticketsInvoker,

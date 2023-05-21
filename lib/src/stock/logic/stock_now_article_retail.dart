@@ -7,7 +7,8 @@ import 'package:models_weebi/weebi_models.dart';
 
 class StockNowArticleRetail
     implements StockNowArticleRetailAbstract<ArticleRetail> {
-  final List<ArticleLine> linesNoQuickspend; // used to identify articles in the
+  final List<ArticleCalibre>
+      linesNoQuickspend; // used to identify articles in the
 
   @override
   final ArticleRetail article;

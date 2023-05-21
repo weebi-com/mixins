@@ -6,23 +6,23 @@ import 'package:models_weebi/extensions.dart';
 import 'package:models_weebi/weebi_models.dart';
 // ignore: import_of_legacy_library_into_null_safe
 
-part 'update_line_form.g.dart';
+part 'update_calibre_form.g.dart';
 
-class ArticleLineUpdateFormStore = _ArticleLineUpdateFormStore
-    with _$ArticleLineUpdateFormStore;
+class ArticleCalibreUpdateFormStore = _ArticleCalibreUpdateFormStore
+    with _$ArticleCalibreUpdateFormStore;
 
-abstract class _ArticleLineUpdateFormStore with Store {
+abstract class _ArticleCalibreUpdateFormStore with Store {
   final ArticlesStore _articlesStore;
-  final ArticleLine _line;
+  final ArticleCalibre _line;
   final String _initialName;
 
-  _ArticleLineUpdateFormStore(this._articlesStore, this._line)
+  _ArticleCalibreUpdateFormStore(this._articlesStore, this._line)
       : _initialName = _line.nameLine {
     name = _line.nameLine;
     stockUnit = _line.stockUnit;
   }
-  final FormErrorArticleLineUpdateState errorStore =
-      FormErrorArticleLineUpdateState();
+  final FormErrorArticleCalibreUpdateState errorStore =
+      FormErrorArticleCalibreUpdateState();
   @observable
   String name = '';
 
@@ -36,12 +36,12 @@ abstract class _ArticleLineUpdateFormStore with Store {
 
   void setupValidations() {
     _disposers = [
-      reaction((_) => name, validateArticleLineName),
+      reaction((_) => name, validateArticleCalibreName),
     ];
   }
 
   @action
-  void validateArticleLineName(String value) {
+  void validateArticleCalibreName(String value) {
     if (value.isEmpty) {
       errorStore.nameError = 'Saisir le nom de l\'article';
       return;
@@ -49,7 +49,7 @@ abstract class _ArticleLineUpdateFormStore with Store {
 
     final isAlreadyTaken = (value.trim().withoutAccents.toLowerCase() !=
             _initialName.trim().withoutAccents.toLowerCase()) &&
-        (_articlesStore.getLinesNames
+        (_articlesStore.getCalibresNames
             .contains(value.trim().withoutAccents.toLowerCase()));
     if (isAlreadyTaken) {
       errorStore.nameError = 'Un article avec ce nom existe déjà';
@@ -67,11 +67,12 @@ abstract class _ArticleLineUpdateFormStore with Store {
   }
 
   void validateAll() {
-    validateArticleLineName(name);
+    validateArticleCalibreName(name);
   }
 
-  Future<ArticleLine<A>> updateLineArticleFromForm<A extends ArticleAbstract>(
-      ArticleLine<A> line) async {
+  Future<ArticleCalibre<A>>
+      updateLineArticleFromForm<A extends ArticleAbstract>(
+          ArticleCalibre<A> line) async {
     final now = DateTime.now();
     final lineEdited = line.copyWith(
       title: name.trim(),
@@ -83,10 +84,10 @@ abstract class _ArticleLineUpdateFormStore with Store {
   }
 }
 
-class FormErrorArticleLineUpdateState = _FormErrorArticleLineUpdateState
-    with _$FormErrorArticleLineUpdateState;
+class FormErrorArticleCalibreUpdateState = _FormErrorArticleCalibreUpdateState
+    with _$FormErrorArticleCalibreUpdateState;
 
-abstract class _FormErrorArticleLineUpdateState with Store {
+abstract class _FormErrorArticleCalibreUpdateState with Store {
   @observable
   String nameError = '';
 

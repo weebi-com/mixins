@@ -7,7 +7,7 @@ import 'package:models_weebi/utils.dart';
 
 extension StockItUpTillYaGetEnough on Iterable<ClosingStockShop> {
   double stockShopProductDiffTimeRangeForWeebi(
-      ArticleLineAbstract line, DateTime start, DateTime end) {
+      ArticleCalibreAbstract calibreAbstract, DateTime start, DateTime end) {
     var finalQtSum = 0.0;
     var initQtSum = 0.0;
     if (isNotEmpty) {
@@ -22,7 +22,7 @@ extension StockItUpTillYaGetEnough on Iterable<ClosingStockShop> {
                 (prev, shopCl) =>
                     prev! +
                     shopCl.products
-                        .where((e) => e.id == line.id)
+                        .where((e) => e.id == calibreAbstract.id)
                         .fold(0.0, (pv, e) => pv + e.finalQtCl),
               ) ??
               0.0;
@@ -31,7 +31,7 @@ extension StockItUpTillYaGetEnough on Iterable<ClosingStockShop> {
                 (pv, shopCl) =>
                     pv! +
                     shopCl.products
-                        .where((e) => e.id == line.id)
+                        .where((e) => e.id == calibreAbstract.id)
                         .fold(0.0, (pvs, element) => pvs + element.initialQtCl),
               ) ??
               0.0;
@@ -43,7 +43,8 @@ extension StockItUpTillYaGetEnough on Iterable<ClosingStockShop> {
     return finalQtSum - initQtSum;
   }
 
-  double stockShopLineFinalQuantityAbsoluteForWeebi(ArticleLineAbstract line,
+  double stockShopCaliberFinalQuantityAbsoluteForWeebi(
+      ArticleCalibreAbstract calibreAbstract,
       {DateTime? end}) {
     var daDiff = 0.0;
     if (isNotEmpty) {
@@ -59,7 +60,7 @@ extension StockItUpTillYaGetEnough on Iterable<ClosingStockShop> {
       filterByDates.toList().sort((a, b) =>
           a.closingRange.startDate.compareTo(b.closingRange.startDate));
       daDiff += filterByDates.last.products
-              .firstWhereOrNull((p) => p.id == line.id)
+              .firstWhereOrNull((p) => p.id == calibreAbstract.id)
               ?.finalQtCl ??
           0.0;
     }
@@ -86,10 +87,10 @@ extension StockItUpTillYaGetEnough on Iterable<ClosingStockShop> {
             a.closingRange.startDate.compareTo(b.closingRange.startDate));
         final daObject = filteredByDate.last;
         finalQtAllShopsSummed += daObject.products
-                .firstWhereOrNull((e) => e.id == article.lineId)
+                .firstWhereOrNull((e) => e.id == article.calibreId)
                 ?.articles
-                .firstWhereOrNull(
-                    (a) => a.lineId == article.lineId && a.id == article.id)
+                .firstWhereOrNull((a) =>
+                    a.calibreId == article.calibreId && a.id == article.id)
                 ?.finalQtCl ??
             0.0;
       }
@@ -110,13 +111,13 @@ extension StockItUpTillYaGetEnough on Iterable<ClosingStockShop> {
               0.0,
               (prev, shopCl) =>
                   prev! +
-                  shopCl.products.where((p) => p.id == article.lineId).fold(
+                  shopCl.products.where((p) => p.id == article.calibreId).fold(
                         0.0,
                         (previous, product) =>
                             previous +
                             product.articles
                                 .where((a) =>
-                                    a.productId == article.lineId &&
+                                    a.productId == article.calibreId &&
                                     a.id == article.id)
                                 .fold(
                                     0.0,
@@ -143,13 +144,13 @@ extension StockItUpTillYaGetEnough on Iterable<ClosingStockShop> {
               0.0,
               (prev, shopCl) =>
                   prev! +
-                  shopCl.products.where((p) => p.id == article.lineId).fold(
+                  shopCl.products.where((p) => p.id == article.calibreId).fold(
                         0.0,
                         (previous, product) =>
                             previous +
                             product.articles
                                 .where((a) =>
-                                    a.productId == article.lineId &&
+                                    a.productId == article.calibreId &&
                                     a.id == article.id)
                                 .fold(
                                     0.0,

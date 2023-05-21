@@ -10,7 +10,7 @@ class ArticleRetailCreateFormStore = _ArticleCreateFormStore
 
 abstract class _ArticleCreateFormStore with Store {
   final ArticlesStore _articlesStore;
-  final ArticleLine _line;
+  final ArticleCalibre _line;
   _ArticleCreateFormStore(this._articlesStore, this._line) {
     fullName = _line.nameLine;
   }
@@ -58,7 +58,7 @@ abstract class _ArticleCreateFormStore with Store {
       return;
     }
 
-    final isSameAsLineName = _articlesStore.getLinesNames
+    final isSameAsLineName = _articlesStore.getCalibresNames
         .contains(value.trim().withoutAccents.toLowerCase());
     if (isSameAsLineName) {
       errorStore.fullNameError =
@@ -124,7 +124,7 @@ abstract class _ArticleCreateFormStore with Store {
   Future<ArticleRetail> createArticleRetailFromForm() async {
     final now = DateTime.now();
     ArticleRetail newArticleRetail = ArticleRetail(
-      lineId: _line.id,
+      calibreId: _line.id,
       id: _line.articles.nextId,
       fullName: fullName.trim(),
       price: int.parse(price.trim()),
@@ -132,7 +132,7 @@ abstract class _ArticleCreateFormStore with Store {
       weight: 1,
       photo: '',
       barcodeEAN: barcodeEAN.trim(),
-      articleCode: _articlesStore.lines.nextId * 10 + 1,
+      articleCode: _articlesStore.calibres.nextId * 10 + 1,
       creationDate: now,
       updateDate: now,
       status: true,

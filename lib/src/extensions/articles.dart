@@ -2,9 +2,9 @@ import 'package:mobx/mobx.dart';
 import 'package:models_weebi/extensions.dart';
 import 'package:models_weebi/weebi_models.dart';
 
-extension Filter on Iterable<ArticleLine> {
-  ObservableList<ArticleLine> searchByTitleOrId(String queryString) {
-    return ObservableList<ArticleLine>.of(where((p) => p.title != '*')
+extension Filter on Iterable<ArticleCalibre> {
+  ObservableList<ArticleCalibre> searchByTitleOrId(String queryString) {
+    return ObservableList<ArticleCalibre>.of(where((p) => p.title != '*')
         .where((p) => p.isNotQuickSpend)
         .where((p) =>
             p.title
@@ -16,9 +16,9 @@ extension Filter on Iterable<ArticleLine> {
         .toList());
   }
 
-  ObservableList<ArticleLine> get notDeactivated =>
-      ObservableList<ArticleLine>.of(where((p) => p.status));
+  ObservableList<ArticleCalibre> get notDeactivated =>
+      ObservableList<ArticleCalibre>.of(where((p) => p.status));
 
-  ObservableList<ArticleLine> get palpables =>
-      ObservableList<ArticleLine>.of(where((p) => p.isPalpable ?? true));
+  ObservableList<ArticleCalibre> get palpables =>
+      ObservableList<ArticleCalibre>.of(where((p) => p.isPalpable ?? true));
 }

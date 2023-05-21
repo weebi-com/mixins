@@ -9,8 +9,8 @@ import 'package:models_weebi/weebi_models.dart';
 
 class StockNowArticleBasket<A extends ArticleAbstract>
     implements StockNowArticleBasketAbstract {
-  final List<ArticleLine<A>>
-      linesNoQuickspend; // used to identify articles in the basket
+  final List<ArticleCalibre<A>>
+      calibresNoQuickspend; // used to identify articles in the basket
   @override
   final ArticleBasket article;
   @override
@@ -23,7 +23,7 @@ class StockNowArticleBasket<A extends ArticleAbstract>
     this.article,
     this.ticketsInvoker,
     this.closingStockShopsInvoker,
-    this.linesNoQuickspend, // ? TODO make this invoker
+    this.calibresNoQuickspend, // ? TODO make this invoker
   )   : start = WeebiDates.defaultFirstDate,
         end = DateTime.now();
 
@@ -46,7 +46,7 @@ class StockNowArticleBasket<A extends ArticleAbstract>
 
   Iterable<BasketWrapper> get articleBasketWrapped {
     final articlesAndMinimQt =
-        linesNoQuickspend.articleBasketWrapThemExt(article, start, end);
+        calibresNoQuickspend.articleBasketWrapThemExt(article, start, end);
     final articlesAndRemainingStock = <BasketWrapper>[];
     for (final wrapper in articlesAndMinimQt) {
       final stockRemaining =

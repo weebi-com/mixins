@@ -6,9 +6,9 @@ import 'package:models_weebi/extensions.dart';
 import 'package:models_weebi/utils.dart' show DateRange;
 import 'package:models_weebi/weebi_models.dart';
 
-class ArticleLineRetailStock implements StockDiffLineRetailAbstract {
+class ArticleCalibreRetailStock implements StockDiffLineRetailAbstract {
   @override
-  final ArticleLine<ArticleRetail> line;
+  final ArticleCalibre<ArticleRetail> articleCalibreRetail;
   @override
   final TicketsInvoker ticketsInvoker;
   @override
@@ -17,20 +17,22 @@ class ArticleLineRetailStock implements StockDiffLineRetailAbstract {
   final DateTime start;
   @override
   final DateTime end;
-  ArticleLineRetailStock({
-    required this.line,
+  ArticleCalibreRetailStock({
+    required this.articleCalibreRetail,
     required this.ticketsInvoker,
     required this.closingStockShopsInvoker,
     required this.start,
     required this.end,
   });
 
-  bool get isSingleArticle => line.articles.length <= 1;
+  bool get isSingleArticle => articleCalibreRetail.articles.length <= 1;
 
   @override
   double get stockDiffOverTimeRange =>
-      closingStockShopsInvoker()
-          .stockShopProductDiffTimeRangeForWeebi(line, start, end) +
-      (ticketsInvoker().stockLineInput(line, range: DateRange(start, end)) -
-          ticketsInvoker().stockLineOutput(line, range: DateRange(start, end)));
+      closingStockShopsInvoker().stockShopProductDiffTimeRangeForWeebi(
+          articleCalibreRetail, start, end) +
+      (ticketsInvoker().stockLineInput(articleCalibreRetail,
+              range: DateRange(start, end)) -
+          ticketsInvoker().stockLineOutput(articleCalibreRetail,
+              range: DateRange(start, end)));
 }

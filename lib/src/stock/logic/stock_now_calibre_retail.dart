@@ -6,28 +6,30 @@ import 'package:models_weebi/extensions.dart';
 import 'package:models_weebi/utils.dart' show DateRange, WeebiDates;
 import 'package:models_weebi/weebi_models.dart';
 
-class ArticleLineRetailStock implements StockNowLineRetailAbstract {
+class ArticleCalibreRetailStock implements StockNowLineRetailAbstract {
   @override
-  final ArticleLine<ArticleRetail> line;
+  final ArticleCalibre<ArticleRetail> articleCalibreRetail;
   @override
   final TicketsInvoker ticketsInvoker;
   @override
   final ClosingStockShopsInvoker closingStockShopsInvoker;
   final DateTime start;
   final DateTime end;
-  ArticleLineRetailStock({
-    required this.line,
+  ArticleCalibreRetailStock({
+    required this.articleCalibreRetail,
     required this.ticketsInvoker,
     required this.closingStockShopsInvoker,
   })  : start = WeebiDates.defaultFirstDate,
         end = DateTime.now();
 
-  bool get isSingleArticle => line.articles.length <= 1;
+  bool get isSingleArticle => articleCalibreRetail.articles.length <= 1;
 
   @override
-  double get stockNow =>
-      (ticketsInvoker().stockLineInput(line, range: DateRange(start, end)) -
-          ticketsInvoker().stockLineOutput(line, range: DateRange(start, end)) +
-          closingStockShopsInvoker()
-              .stockShopLineFinalQuantityAbsoluteForWeebi(line, end: end));
+  double get stockNow => (ticketsInvoker()
+          .stockLineInput(articleCalibreRetail, range: DateRange(start, end)) -
+      ticketsInvoker()
+          .stockLineOutput(articleCalibreRetail, range: DateRange(start, end)) +
+      closingStockShopsInvoker().stockShopCaliberFinalQuantityAbsoluteForWeebi(
+          articleCalibreRetail,
+          end: end));
 }

@@ -6,30 +6,31 @@ part of 'articles.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, calibres_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
     on ArticlesStoreBase<S>, Store {
-  Computed<ObservableList<ArticleLine<ArticleAbstract>>>?
-      _$linesPalpableFilteredComputed;
+  Computed<ObservableList<ArticleCalibre<ArticleAbstract>>>?
+      _$calibresPalpableFilteredComputed;
 
   @override
-  ObservableList<ArticleLine<ArticleAbstract>> get linesPalpableFiltered =>
-      (_$linesPalpableFilteredComputed ??=
-              Computed<ObservableList<ArticleLine<ArticleAbstract>>>(
-                  () => super.linesPalpableFiltered,
-                  name: 'ArticlesStoreBase.linesPalpableFiltered'))
+  ObservableList<ArticleCalibre<ArticleAbstract>>
+      get calibresPalpableFiltered => (_$calibresPalpableFilteredComputed ??=
+              Computed<ObservableList<ArticleCalibre<ArticleAbstract>>>(
+                  () => super.calibresPalpableFiltered,
+                  name: 'ArticlesStoreBase.calibresPalpableFiltered'))
           .value;
-  Computed<ObservableList<ArticleLine<ArticleAbstract>>>?
-      _$linesNotQuikspendNotBasketComputed;
+  Computed<ObservableList<ArticleCalibre<ArticleAbstract>>>?
+      _$calibresNotQuikspendNotBasketComputed;
 
   @override
-  ObservableList<ArticleLine<ArticleAbstract>> get linesNotQuikspendNotBasket =>
-      (_$linesNotQuikspendNotBasketComputed ??=
-              Computed<ObservableList<ArticleLine<ArticleAbstract>>>(
-                  () => super.linesNotQuikspendNotBasket,
-                  name: 'ArticlesStoreBase.linesNotQuikspendNotBasket'))
-          .value;
+  ObservableList<ArticleCalibre<ArticleAbstract>>
+      get calibresNotQuikspendNotBasket =>
+          (_$calibresNotQuikspendNotBasketComputed ??=
+                  Computed<ObservableList<ArticleCalibre<ArticleAbstract>>>(
+                      () => super.calibresNotQuikspendNotBasket,
+                      name: 'ArticlesStoreBase.calibresNotQuikspendNotBasket'))
+              .value;
   Computed<ObservableList<ArticleRetail>>? _$articlesWeebiListComputed;
 
   @override
@@ -45,12 +46,12 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
           Computed<ObservableList<String>>(() => super.getSuggestions,
               name: 'ArticlesStoreBase.getSuggestions'))
       .value;
-  Computed<ObservableList<String>>? _$getLinesNamesComputed;
+  Computed<ObservableList<String>>? _$getCalibresNamesComputed;
 
   @override
-  ObservableList<String> get getLinesNames => (_$getLinesNamesComputed ??=
-          Computed<ObservableList<String>>(() => super.getLinesNames,
-              name: 'ArticlesStoreBase.getLinesNames'))
+  ObservableList<String> get getCalibresNames => (_$getCalibresNamesComputed ??=
+          Computed<ObservableList<String>>(() => super.getCalibresNames,
+              name: 'ArticlesStoreBase.getCalibresNames'))
       .value;
   Computed<ObservableList<String>>? _$getArticlesFullNamesComputed;
 
@@ -60,14 +61,15 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
               () => super.getArticlesFullNames,
               name: 'ArticlesStoreBase.getArticlesFullNames'))
           .value;
-  Computed<ObservableList<ArticleLine<ArticleAbstract>>>? _$linesInSellComputed;
+  Computed<ObservableList<ArticleCalibre<ArticleAbstract>>>?
+      _$calibresInSellComputed;
 
   @override
-  ObservableList<ArticleLine<ArticleAbstract>> get linesInSell =>
-      (_$linesInSellComputed ??=
-              Computed<ObservableList<ArticleLine<ArticleAbstract>>>(
-                  () => super.linesInSell,
-                  name: 'ArticlesStoreBase.linesInSell'))
+  ObservableList<ArticleCalibre<ArticleAbstract>> get calibresInSell =>
+      (_$calibresInSellComputed ??=
+              Computed<ObservableList<ArticleCalibre<ArticleAbstract>>>(
+                  () => super.calibresInSell,
+                  name: 'ArticlesStoreBase.calibresInSell'))
           .value;
 
   late final _$initialLoadingAtom =
@@ -134,35 +136,35 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
     });
   }
 
-  late final _$linesAtom =
-      Atom(name: 'ArticlesStoreBase.lines', context: context);
+  late final _$calibresAtom =
+      Atom(name: 'ArticlesStoreBase.calibres', context: context);
 
   @override
-  ObservableList<ArticleLine<ArticleAbstract>> get lines {
-    _$linesAtom.reportRead();
-    return super.lines;
+  ObservableList<ArticleCalibre<ArticleAbstract>> get calibres {
+    _$calibresAtom.reportRead();
+    return super.calibres;
   }
 
   @override
-  set lines(ObservableList<ArticleLine<ArticleAbstract>> value) {
-    _$linesAtom.reportWrite(value, super.lines, () {
-      super.lines = value;
+  set calibres(ObservableList<ArticleCalibre<ArticleAbstract>> value) {
+    _$calibresAtom.reportWrite(value, super.calibres, () {
+      super.calibres = value;
     });
   }
 
-  late final _$_linesFilteredAtom =
-      Atom(name: 'ArticlesStoreBase._linesFiltered', context: context);
+  late final _$_calibresFilteredAtom =
+      Atom(name: 'ArticlesStoreBase._calibresFiltered', context: context);
 
   @override
-  ObservableList<ArticleLine<ArticleAbstract>> get _linesFiltered {
-    _$_linesFilteredAtom.reportRead();
-    return super._linesFiltered;
+  ObservableList<ArticleCalibre<ArticleAbstract>> get _calibresFiltered {
+    _$_calibresFilteredAtom.reportRead();
+    return super._calibresFiltered;
   }
 
   @override
-  set _linesFiltered(ObservableList<ArticleLine<ArticleAbstract>> value) {
-    _$_linesFilteredAtom.reportWrite(value, super._linesFiltered, () {
-      super._linesFiltered = value;
+  set _calibresFiltered(ObservableList<ArticleCalibre<ArticleAbstract>> value) {
+    _$_calibresFilteredAtom.reportWrite(value, super._calibresFiltered, () {
+      super._calibresFiltered = value;
     });
   }
 
@@ -188,7 +190,7 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
       AsyncAction('ArticlesStoreBase.init', context: context);
 
   @override
-  Future<bool> init({List<ArticleLine<ArticleAbstract>>? data}) {
+  Future<bool> init({List<ArticleCalibre<ArticleAbstract>>? data}) {
     return _$initAsyncAction.run(() => super.init(data: data));
   }
 
@@ -200,14 +202,14 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
     return _$clearSearchAsyncAction.run(() => super.clearSearch());
   }
 
-  late final _$addAllArticleLineAsyncAction =
-      AsyncAction('ArticlesStoreBase.addAllArticleLine', context: context);
+  late final _$addAllArticleCalibreAsyncAction =
+      AsyncAction('ArticlesStoreBase.addAllArticleCalibre', context: context);
 
   @override
-  Future<int> addAllArticleLine(
-      List<ArticleLine<ArticleAbstract>> lineArticlesToSave) {
-    return _$addAllArticleLineAsyncAction
-        .run(() => super.addAllArticleLine(lineArticlesToSave));
+  Future<int> addAllArticleCalibre(
+      List<ArticleCalibre<ArticleAbstract>> lineArticlesToSave) {
+    return _$addAllArticleCalibreAsyncAction
+        .run(() => super.addAllArticleCalibre(lineArticlesToSave));
   }
 
   late final _$upsertAllBasedOnIdAsyncAction =
@@ -215,7 +217,7 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
 
   @override
   Future<int> upsertAllBasedOnId(
-      List<ArticleLine<ArticleAbstract>> articlesInTheBush) {
+      List<ArticleCalibre<ArticleAbstract>> articlesInTheBush) {
     return _$upsertAllBasedOnIdAsyncAction
         .run(() => super.upsertAllBasedOnId(articlesInTheBush));
   }
@@ -224,8 +226,8 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
       AsyncAction('ArticlesStoreBase.updateLineArticle', context: context);
 
   @override
-  Future<ArticleLine<A>> updateLineArticle<A extends ArticleAbstract>(
-      ArticleLine<A> line) {
+  Future<ArticleCalibre<A>> updateLineArticle<A extends ArticleAbstract>(
+      ArticleCalibre<A> line) {
     return _$updateLineArticleAsyncAction
         .run(() => super.updateLineArticle<A>(line));
   }
@@ -235,38 +237,38 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
       context: context);
 
   @override
-  Future<ObservableList<ArticleLine<ArticleAbstract>>> importCatalogueFromJson(
-      String json) {
+  Future<ObservableList<ArticleCalibre<ArticleAbstract>>>
+      importCatalogueFromJson(String json) {
     return _$importCatalogueFromJsonAsyncAction
         .run(() => super.importCatalogueFromJson(json));
   }
 
-  late final _$deleteAllArticlesAndLinesAsyncAction = AsyncAction(
-      'ArticlesStoreBase.deleteAllArticlesAndLines',
+  late final _$deleteAllArticlesAndCalibresAsyncAction = AsyncAction(
+      'ArticlesStoreBase.deleteAllArticlesAndCalibres',
       context: context);
 
   @override
-  Future<bool> deleteAllArticlesAndLines() {
-    return _$deleteAllArticlesAndLinesAsyncAction
-        .run(() => super.deleteAllArticlesAndLines());
+  Future<bool> deleteAllArticlesAndCalibres() {
+    return _$deleteAllArticlesAndCalibresAsyncAction
+        .run(() => super.deleteAllArticlesAndCalibres());
   }
 
   late final _$createLineArticleAsyncAction =
       AsyncAction('ArticlesStoreBase.createLineArticle', context: context);
 
   @override
-  Future<ArticleLine<A>> createLineArticle<A extends ArticleAbstract>(
-      ArticleLine<A> lineData) {
+  Future<ArticleCalibre<A>> createCalibrateArticle<A extends ArticleAbstract>(
+      ArticleCalibre<A> lineData) {
     return _$createLineArticleAsyncAction
-        .run(() => super.createLineArticle<A>(lineData));
+        .run(() => super.createCalibrateArticle<A>(lineData));
   }
 
   late final _$restoreLineArticleAsyncAction =
       AsyncAction('ArticlesStoreBase.restoreLineArticle', context: context);
 
   @override
-  Future<ArticleLine<ArticleAbstract>> restoreLineArticle(
-      ArticleLine<ArticleAbstract> line) {
+  Future<ArticleCalibre<ArticleAbstract>> restoreLineArticle(
+      ArticleCalibre<ArticleAbstract> line) {
     return _$restoreLineArticleAsyncAction
         .run(() => super.restoreLineArticle(line));
   }
@@ -276,8 +278,8 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
       context: context);
 
   @override
-  Future<ObservableList<ArticleLine<ArticleAbstract>>> deleteForeverLineArticle(
-      ArticleLine<ArticleAbstract> productData) {
+  Future<ObservableList<ArticleCalibre<ArticleAbstract>>>
+      deleteForeverLineArticle(ArticleCalibre<ArticleAbstract> productData) {
     return _$deleteForeverLineArticleAsyncAction
         .run(() => super.deleteForeverLineArticle(productData));
   }
@@ -286,7 +288,7 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
       AsyncAction('ArticlesStoreBase.deleteForeverArticle', context: context);
 
   @override
-  Future<ObservableList<ArticleLine<ArticleAbstract>>>
+  Future<ObservableList<ArticleCalibre<ArticleAbstract>>>
       deleteForeverArticle<A extends ArticleAbstract>(A articleData) {
     return _$deleteForeverArticleAsyncAction
         .run(() => super.deleteForeverArticle<A>(articleData));
@@ -392,7 +394,7 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
   }
 
   @override
-  ObservableList<ArticleLine<ArticleAbstract>> sortBy(SortedBy sortBy) {
+  ObservableList<ArticleCalibre<ArticleAbstract>> sortBy(SortedBy sortBy) {
     final _$actionInfo = _$ArticlesStoreBaseActionController.startAction(
         name: 'ArticlesStoreBase.sortBy');
     try {
@@ -418,15 +420,15 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
     return '''
 initialLoading: ${initialLoading},
 sortedBy: ${sortedBy},
-lines: ${lines},
+calibres: ${calibres},
 articlesSelectedForBasketMinQt: ${articlesSelectedForBasketMinQt},
-linesPalpableFiltered: ${linesPalpableFiltered},
-linesNotQuikspendNotBasket: ${linesNotQuikspendNotBasket},
+calibresPalpableFiltered: ${calibresPalpableFiltered},
+calibresNotQuikspendNotBasket: ${calibresNotQuikspendNotBasket},
 articlesWeebiList: ${articlesWeebiList},
 getSuggestions: ${getSuggestions},
-getLinesNames: ${getLinesNames},
+getCalibresNames: ${getCalibresNames},
 getArticlesFullNames: ${getArticlesFullNames},
-linesInSell: ${linesInSell}
+calibresInSell: ${calibresInSell}
     ''';
   }
 }

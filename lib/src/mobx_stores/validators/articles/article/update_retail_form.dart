@@ -18,7 +18,7 @@ abstract class _ArticleRetailUpdateFormStore with Store {
     price = _articleRetail.price.toString();
     cost = _articleRetail.cost.toString();
     unitsPerPiece = _articleRetail.unitsPerPiece.toString();
-    barcodeEAN = _articleRetail.barcodeEAN ?? '';
+    barcodeEAN = _articleRetail.barcodeEAN;
   }
   final FormErrorArticleRetailUpdateState errorStore =
       FormErrorArticleRetailUpdateState();
@@ -66,7 +66,7 @@ abstract class _ArticleRetailUpdateFormStore with Store {
       return;
     }
 
-    final isSameAsLineName = _articlesStore.getLinesNames
+    final isSameAsLineName = _articlesStore.getCalibresNames
         .contains(value.trim().withoutAccents.toLowerCase());
     if (isSameAsLineName) {
       errorStore.fullNameError =

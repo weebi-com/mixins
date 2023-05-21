@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'update_line_form.dart';
+part of 'update_calibre_form.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -8,17 +8,17 @@ part of 'update_line_form.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$ArticleLineUpdateFormStore on _ArticleLineUpdateFormStore, Store {
+mixin _$ArticleCalibreUpdateFormStore on _ArticleCalibreUpdateFormStore, Store {
   Computed<bool>? _$hasErrorsComputed;
 
   @override
   bool get hasErrors =>
       (_$hasErrorsComputed ??= Computed<bool>(() => super.hasErrors,
-              name: '_ArticleLineUpdateFormStore.hasErrors'))
+              name: '_ArticleCalibreUpdateFormStore.hasErrors'))
           .value;
 
   late final _$nameAtom =
-      Atom(name: '_ArticleLineUpdateFormStore.name', context: context);
+      Atom(name: '_ArticleCalibreUpdateFormStore.name', context: context);
 
   @override
   String get name {
@@ -34,7 +34,7 @@ mixin _$ArticleLineUpdateFormStore on _ArticleLineUpdateFormStore, Store {
   }
 
   late final _$stockUnitAtom =
-      Atom(name: '_ArticleLineUpdateFormStore.stockUnit', context: context);
+      Atom(name: '_ArticleCalibreUpdateFormStore.stockUnit', context: context);
 
   @override
   StockUnit get stockUnit {
@@ -49,18 +49,19 @@ mixin _$ArticleLineUpdateFormStore on _ArticleLineUpdateFormStore, Store {
     });
   }
 
-  late final _$_ArticleLineUpdateFormStoreActionController =
-      ActionController(name: '_ArticleLineUpdateFormStore', context: context);
+  late final _$_ArticleCalibreUpdateFormStoreActionController =
+      ActionController(
+          name: '_ArticleCalibreUpdateFormStore', context: context);
 
   @override
-  void validateArticleLineName(String value) {
+  void validateArticleCalibreName(String value) {
     final _$actionInfo =
-        _$_ArticleLineUpdateFormStoreActionController.startAction(
-            name: '_ArticleLineUpdateFormStore.validateArticleLineName');
+        _$_ArticleCalibreUpdateFormStoreActionController.startAction(
+            name: '_ArticleCalibreUpdateFormStore.validateArticleCalibreName');
     try {
-      return super.validateArticleLineName(value);
+      return super.validateArticleCalibreName(value);
     } finally {
-      _$_ArticleLineUpdateFormStoreActionController.endAction(_$actionInfo);
+      _$_ArticleCalibreUpdateFormStoreActionController.endAction(_$actionInfo);
     }
   }
 
@@ -74,18 +75,18 @@ hasErrors: ${hasErrors}
   }
 }
 
-mixin _$FormErrorArticleLineUpdateState
-    on _FormErrorArticleLineUpdateState, Store {
+mixin _$FormErrorArticleCalibreUpdateState
+    on _FormErrorArticleCalibreUpdateState, Store {
   Computed<bool>? _$hasErrorsComputed;
 
   @override
   bool get hasErrors =>
       (_$hasErrorsComputed ??= Computed<bool>(() => super.hasErrors,
-              name: '_FormErrorArticleLineUpdateState.hasErrors'))
+              name: '_FormErrorArticleCalibreUpdateState.hasErrors'))
           .value;
 
   late final _$nameErrorAtom = Atom(
-      name: '_FormErrorArticleLineUpdateState.nameError', context: context);
+      name: '_FormErrorArticleCalibreUpdateState.nameError', context: context);
 
   @override
   String get nameError {

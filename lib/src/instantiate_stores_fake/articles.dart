@@ -1,5 +1,5 @@
 import 'package:mixins_weebi/src/mobx_stores/articles.dart';
-import 'package:models_weebi/db.dart';
+import 'package:services_weebi/db_wrappers.dart';
 import 'package:services_weebi/rpc_articles.dart';
 import 'package:services_weebi/services_weebi.dart';
 
@@ -10,18 +10,19 @@ class ArticlesStoreInstantiater {
   }
 
   static ArticlesStore instArticlesStoreSembastTest(DbArticles dbArticles) {
-    final getLinesRpc = GetLinesRpc(dbArticles);
-    final saveAllProductsRpc = AddAllLineArticlesRpc(dbArticles);
+    final getCalibresRpc = GetArticleCalibersRpc(dbArticles);
+    final saveAllProductsRpc = AddAllArticleCalibresRpc(dbArticles);
     final updateProductRpc = UpdateLineArticleRpc(dbArticles);
-    final deleteForeverProductRpc = DeleteForeverLineArticleRpc(dbArticles);
+    final deleteForeverProductRpc =
+        DeleteForeverCalibreAndItsArticlesRpc(dbArticles);
     final updateArticleRpc = UpdateArticleRpc(dbArticles);
-    final createLineArticleRpc = CreateArticleLineRpc(dbArticles);
+    final createLineArticleRpc = CreateArticleCalibreRpc(dbArticles);
     final createArticleRpc = CreateArticleRpc(dbArticles);
     final deleteForeverArticleRpc = DeleteForeverArticleRpc(dbArticles);
-    final deleteAllProductsRpc = DeleteAllArticleLineRpc(dbArticles);
+    final deleteAllProductsRpc = DeleteAllArticleCalibreRpc(dbArticles);
 
     final ArticlesService articlesService = ArticlesService(
-      getLinesRpc,
+      getCalibresRpc,
       saveAllProductsRpc,
       updateProductRpc,
       deleteForeverProductRpc,
