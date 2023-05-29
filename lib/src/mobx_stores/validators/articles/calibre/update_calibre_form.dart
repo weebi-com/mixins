@@ -56,7 +56,7 @@ abstract class _ArticleCalibreUpdateFormStore with Store {
       return;
     }
 
-    errorStore.nameError = '';
+    errorStore.nameError = null;
     return;
   }
 
@@ -89,8 +89,8 @@ class FormErrorArticleCalibreUpdateState = _FormErrorArticleCalibreUpdateState
 
 abstract class _FormErrorArticleCalibreUpdateState with Store {
   @observable
-  String nameError = '';
+  String? nameError;
 
   @computed
-  bool get hasErrors => nameError.isNotEmpty;
+  bool get hasErrors => nameError != null;
 }

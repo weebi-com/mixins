@@ -5,25 +5,21 @@ import 'package:models_weebi/utils.dart' show DateRange, WeebiDates;
 import 'package:models_weebi/extensions.dart';
 import 'package:models_weebi/weebi_models.dart';
 
-class StockNowArticleRetail
-    implements StockNowArticleRetailAbstract<ArticleRetail> {
-  final List<ArticleCalibre>
-      linesNoQuickspend; // used to identify articles in the
-
+class ArticleRetailStockNow<AR extends ArticleRetail>
+    implements StockNowArticleRetailAbstract<AR> {
   @override
-  final ArticleRetail article;
+  final AR article;
   @override
   final TicketsInvoker ticketsInvoker;
   @override
   final ClosingStockShopsInvoker closingStockShopsInvoker;
   final DateTime start;
   final DateTime end;
-  StockNowArticleRetail(
-    this.article,
-    this.ticketsInvoker,
-    this.closingStockShopsInvoker,
-    this.linesNoQuickspend,
-  )   : start = WeebiDates.defaultFirstDate,
+  ArticleRetailStockNow({
+    required this.article,
+    required this.ticketsInvoker,
+    required this.closingStockShopsInvoker,
+  })  : start = WeebiDates.defaultFirstDate,
         end = DateTime.now();
 
   @override

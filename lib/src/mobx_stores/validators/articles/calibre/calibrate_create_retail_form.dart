@@ -24,13 +24,13 @@ abstract class _ArticleCalibreCreateFormStore with Store {
   String price = '';
 
   @observable
-  String cost = '';
+  String cost = '0';
 
   @observable
   StockUnit stockUnit = StockUnit.unit;
 
   @observable
-  String unitsPerPiece = '';
+  String unitsPerPiece = '1';
 
   @observable
   String barcodeEAN = '';
@@ -69,7 +69,7 @@ abstract class _ArticleCalibreCreateFormStore with Store {
       errorStore.nameError = 'Un article avec ce nom existe déjà';
       return;
     }
-    errorStore.nameError = '';
+    errorStore.nameError = null;
     return;
   }
 
@@ -80,7 +80,7 @@ abstract class _ArticleCalibreCreateFormStore with Store {
     } else if (int.tryParse(value) == null) {
       errorStore.priceError = 'erreur $value';
     } else {
-      errorStore.priceError = '';
+      errorStore.priceError = null;
     }
     return;
   }
@@ -90,7 +90,7 @@ abstract class _ArticleCalibreCreateFormStore with Store {
     if (value.isNotEmpty && int.tryParse(value) == null) {
       errorStore.costError = 'erreur $value';
     } else {
-      errorStore.costError = '';
+      errorStore.costError = null;
     }
     return;
   }
@@ -101,7 +101,7 @@ abstract class _ArticleCalibreCreateFormStore with Store {
       errorStore.unitsPerPieceError =
           'erreur $value, exemple : 1.5 et non pas 1,5';
     } else {
-      errorStore.unitsPerPieceError = '';
+      errorStore.unitsPerPieceError = null;
     }
     return;
   }
@@ -171,21 +171,21 @@ class FormErrorLineArticleCreateState = _FormErrorLineArticleCreateState
 
 abstract class _FormErrorLineArticleCreateState with Store {
   @observable
-  String nameError = '';
+  String? nameError;
 
   @observable
-  String unitsPerPieceError = '';
+  String? unitsPerPieceError;
 
   @observable
-  String priceError = '';
+  String? priceError;
 
   @observable
-  String costError = '';
+  String? costError;
 
   @computed
   bool get hasErrors =>
-      nameError.isNotEmpty ||
-      unitsPerPieceError.isNotEmpty ||
-      priceError.isNotEmpty ||
-      costError.isNotEmpty;
+      nameError != null ||
+      unitsPerPieceError != null ||
+      priceError != null ||
+      costError != null;
 }

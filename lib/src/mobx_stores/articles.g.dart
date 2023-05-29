@@ -20,6 +20,27 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
                   () => super.calibresPalpableFiltered,
                   name: 'ArticlesStoreBase.calibresPalpableFiltered'))
           .value;
+
+  Computed<ObservableList<ArticleCalibre<ArticleAbstract>>>?
+      _$notDeactivatedComputed;
+
+  @override
+  ObservableList<ArticleCalibre<ArticleAbstract>> get notDeactivated =>
+      (_$notDeactivatedComputed ??=
+              Computed<ObservableList<ArticleCalibre<ArticleAbstract>>>(
+                  () => super.notDeactivated,
+                  name: 'ArticlesStoreBase.notDeactivated'))
+          .value;
+  Computed<ObservableList<ArticleCalibre<ArticleAbstract>>>?
+      _$palpablesComputed;
+
+  @override
+  ObservableList<ArticleCalibre<ArticleAbstract>> get noQuickSpend =>
+      (_$palpablesComputed ??=
+              Computed<ObservableList<ArticleCalibre<ArticleAbstract>>>(
+                  () => super.noQuickSpend,
+                  name: 'ArticlesStoreBase.palpables'))
+          .value;
   Computed<ObservableList<ArticleCalibre<ArticleAbstract>>>?
       _$calibresNotQuikspendNotBasketComputed;
 

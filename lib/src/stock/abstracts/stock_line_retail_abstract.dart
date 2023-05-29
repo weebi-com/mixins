@@ -1,22 +1,22 @@
 import 'package:mixins_weebi/src/invokers.dart';
 import 'package:mixins_weebi/src/stock/abstracts/stock_abstract.dart';
-import 'package:models_weebi/base.dart';
+// import 'package:models_weebi/base.dart';
 import 'package:models_weebi/weebi_models.dart';
 
-abstract class StockLineRetailArticleAbstract<A extends ArticleAbstract>
+abstract class StockLineRetailArticleAbstract<AR extends ArticleRetail>
     extends StockAbstract {
-  final ArticleCalibre<ArticleRetail> articleCalibreRetail;
+  final ArticleCalibre<AR> calibreRetail;
   StockLineRetailArticleAbstract(
-      this.articleCalibreRetail,
+      this.calibreRetail,
       TicketsInvoker ticketsInvoker,
       ClosingStockShopsInvoker closingStockShopsInvoker)
       : super(ticketsInvoker, closingStockShopsInvoker);
 }
 
-abstract class StockNowLineRetailAbstract
-    extends StockLineRetailArticleAbstract {
+abstract class StockNowLineRetailAbstract<AR extends ArticleRetail>
+    extends StockLineRetailArticleAbstract<AR> {
   StockNowLineRetailAbstract(
-    ArticleCalibre<ArticleRetail> articleCalibreRetail,
+    ArticleCalibre<AR> articleCalibreRetail,
     TicketsInvoker ticketsInvoker,
     ClosingStockShopsInvoker closingStockShopsInvoker,
   ) : super(articleCalibreRetail, ticketsInvoker, closingStockShopsInvoker);

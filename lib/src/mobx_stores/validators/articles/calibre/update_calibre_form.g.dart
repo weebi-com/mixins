@@ -89,13 +89,13 @@ mixin _$FormErrorArticleCalibreUpdateState
       name: '_FormErrorArticleCalibreUpdateState.nameError', context: context);
 
   @override
-  String get nameError {
+  String? get nameError {
     _$nameErrorAtom.reportRead();
     return super.nameError;
   }
 
   @override
-  set nameError(String value) {
+  set nameError(String? value) {
     _$nameErrorAtom.reportWrite(value, super.nameError, () {
       super.nameError = value;
     });

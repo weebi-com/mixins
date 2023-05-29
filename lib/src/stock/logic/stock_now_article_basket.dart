@@ -7,7 +7,7 @@ import 'package:models_weebi/extensions.dart';
 import 'package:models_weebi/utils.dart' show DateRange, WeebiDates;
 import 'package:models_weebi/weebi_models.dart';
 
-class StockNowArticleBasket<A extends ArticleAbstract>
+class ArticleBasketRealizablekNow<A extends ArticleAbstract>
     implements StockNowArticleBasketAbstract {
   final List<ArticleCalibre<A>>
       calibresNoQuickspend; // used to identify articles in the basket
@@ -19,12 +19,13 @@ class StockNowArticleBasket<A extends ArticleAbstract>
   final ClosingStockShopsInvoker closingStockShopsInvoker;
   final DateTime start;
   final DateTime end;
-  StockNowArticleBasket(
-    this.article,
-    this.ticketsInvoker,
-    this.closingStockShopsInvoker,
-    this.calibresNoQuickspend, // ? TODO make this invoker
-  )   : start = WeebiDates.defaultFirstDate,
+  ArticleBasketRealizablekNow({
+    required this.article,
+    required this.ticketsInvoker,
+    required this.closingStockShopsInvoker,
+    required this.calibresNoQuickspend,
+  } // ? TODO make this invoker
+      )  : start = WeebiDates.defaultFirstDate,
         end = DateTime.now();
 
   @override

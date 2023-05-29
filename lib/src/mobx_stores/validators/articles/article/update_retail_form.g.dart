@@ -199,13 +199,13 @@ mixin _$FormErrorArticleRetailUpdateState
       context: context);
 
   @override
-  String get fullNameError {
+  String? get fullNameError {
     _$fullNameErrorAtom.reportRead();
     return super.fullNameError;
   }
 
   @override
-  set fullNameError(String value) {
+  set fullNameError(String? value) {
     _$fullNameErrorAtom.reportWrite(value, super.fullNameError, () {
       super.fullNameError = value;
     });
@@ -216,13 +216,13 @@ mixin _$FormErrorArticleRetailUpdateState
       context: context);
 
   @override
-  String get unitsPerPieceError {
+  String? get unitsPerPieceError {
     _$unitsPerPieceErrorAtom.reportRead();
     return super.unitsPerPieceError;
   }
 
   @override
-  set unitsPerPieceError(String value) {
+  set unitsPerPieceError(String? value) {
     _$unitsPerPieceErrorAtom.reportWrite(value, super.unitsPerPieceError, () {
       super.unitsPerPieceError = value;
     });
@@ -232,13 +232,13 @@ mixin _$FormErrorArticleRetailUpdateState
       name: '_FormErrorArticleRetailUpdateState.priceError', context: context);
 
   @override
-  String get priceError {
+  String? get priceError {
     _$priceErrorAtom.reportRead();
     return super.priceError;
   }
 
   @override
-  set priceError(String value) {
+  set priceError(String? value) {
     _$priceErrorAtom.reportWrite(value, super.priceError, () {
       super.priceError = value;
     });
@@ -248,13 +248,13 @@ mixin _$FormErrorArticleRetailUpdateState
       name: '_FormErrorArticleRetailUpdateState.costError', context: context);
 
   @override
-  String get costError {
+  String? get costError {
     _$costErrorAtom.reportRead();
     return super.costError;
   }
 
   @override
-  set costError(String value) {
+  set costError(String? value) {
     _$costErrorAtom.reportWrite(value, super.costError, () {
       super.costError = value;
     });

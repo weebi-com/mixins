@@ -83,7 +83,7 @@ abstract class _ArticleRetailUpdateFormStore with Store {
       errorStore.fullNameError = 'Un article avec ce nom existe déjà';
       return;
     }
-    errorStore.fullNameError = '';
+    errorStore.fullNameError = null;
     return;
   }
 
@@ -94,7 +94,7 @@ abstract class _ArticleRetailUpdateFormStore with Store {
     } else if (int.tryParse(value) == null) {
       errorStore.priceError = 'erreur $value';
     } else {
-      errorStore.priceError = '';
+      errorStore.priceError = null;
     }
     return;
   }
@@ -104,7 +104,7 @@ abstract class _ArticleRetailUpdateFormStore with Store {
     if (value.isNotEmpty && int.tryParse(value) == null) {
       errorStore.costError = 'erreur $value';
     } else {
-      errorStore.costError = '';
+      errorStore.costError = null;
     }
     return;
   }
@@ -115,7 +115,7 @@ abstract class _ArticleRetailUpdateFormStore with Store {
       errorStore.unitsPerPieceError =
           'erreur $value, exemple : 1.5 et non pas 1,5';
     } else {
-      errorStore.unitsPerPieceError = '';
+      errorStore.unitsPerPieceError = null;
     }
     return;
   }
@@ -166,21 +166,21 @@ class FormErrorArticleRetailUpdateState = _FormErrorArticleRetailUpdateState
 
 abstract class _FormErrorArticleRetailUpdateState with Store {
   @observable
-  String fullNameError = '';
+  String? fullNameError;
 
   @observable
-  String unitsPerPieceError = '';
+  String? unitsPerPieceError;
 
   @observable
-  String priceError = '';
+  String? priceError;
 
   @observable
-  String costError = '';
+  String? costError;
 
   @computed
   bool get hasErrors =>
-      fullNameError.isNotEmpty ||
-      unitsPerPieceError.isNotEmpty ||
-      priceError.isNotEmpty ||
-      costError.isNotEmpty;
+      fullNameError != null ||
+      unitsPerPieceError != null ||
+      priceError != null ||
+      costError != null;
 }

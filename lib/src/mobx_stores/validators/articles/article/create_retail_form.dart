@@ -10,9 +10,9 @@ class ArticleRetailCreateFormStore = _ArticleCreateFormStore
 
 abstract class _ArticleCreateFormStore with Store {
   final ArticlesStore _articlesStore;
-  final ArticleCalibre _line;
-  _ArticleCreateFormStore(this._articlesStore, this._line) {
-    fullName = _line.nameLine;
+  final ArticleCalibre _calibre;
+  _ArticleCreateFormStore(this._articlesStore, this._calibre) {
+    fullName = _calibre.nameLine;
   }
   final FormErrorArticleCreateState errorStore = FormErrorArticleCreateState();
   @observable
@@ -71,7 +71,7 @@ abstract class _ArticleCreateFormStore with Store {
       errorStore.fullNameError = 'Un article avec ce nom existe déjà';
       return;
     }
-    errorStore.fullNameError = '';
+    errorStore.fullNameError = null;
     return;
   }
 
@@ -82,7 +82,7 @@ abstract class _ArticleCreateFormStore with Store {
     } else if (int.tryParse(value) == null) {
       errorStore.priceError = 'erreur $value';
     } else {
-      errorStore.priceError = '';
+      errorStore.priceError = null;
     }
     return;
   }
@@ -92,7 +92,7 @@ abstract class _ArticleCreateFormStore with Store {
     if (value.isNotEmpty && int.tryParse(value) == null) {
       errorStore.costError = 'erreur $value';
     } else {
-      errorStore.costError = '';
+      errorStore.costError = null;
     }
     return;
   }
@@ -103,7 +103,7 @@ abstract class _ArticleCreateFormStore with Store {
       errorStore.unitsPerPieceError =
           'erreur $value, exemple : 1.5 et non pas 1,5';
     } else {
-      errorStore.unitsPerPieceError = '';
+      errorStore.unitsPerPieceError = null;
     }
     return;
   }
@@ -124,8 +124,8 @@ abstract class _ArticleCreateFormStore with Store {
   Future<ArticleRetail> createArticleRetailFromForm() async {
     final now = DateTime.now();
     ArticleRetail newArticleRetail = ArticleRetail(
-      calibreId: _line.id,
-      id: _line.articles.nextId,
+      calibreId: _calibre.id,
+      id: _calibre.articles.nextId,
       fullName: fullName.trim(),
       price: int.parse(price.trim()),
       cost: 0,
@@ -163,21 +163,21 @@ class FormErrorArticleCreateState = _FormErrorArticleCreateState
 
 abstract class _FormErrorArticleCreateState with Store {
   @observable
-  String fullNameError = '';
+  String? fullNameError;
 
   @observable
-  String unitsPerPieceError = '';
+  String? unitsPerPieceError;
 
   @observable
-  String priceError = '';
+  String? priceError;
 
   @observable
-  String costError = '';
+  String? costError;
 
   @computed
   bool get hasErrors =>
-      fullNameError.isNotEmpty ||
-      unitsPerPieceError.isNotEmpty ||
-      priceError.isNotEmpty ||
-      costError.isNotEmpty;
+      fullNameError != null ||
+      unitsPerPieceError != null ||
+      priceError != null ||
+      costError != null;
 }

@@ -106,6 +106,16 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   @observable
   ObservableList<ArticleWMinQt> articlesSelectedForBasketMinQt =
       ObservableList<ArticleWMinQt>();
+
+  @computed
+  ObservableList<ArticleCalibre> get notDeactivated =>
+      ObservableList<ArticleCalibre>.of(calibres.where((p) => p.status));
+
+  @computed
+  ObservableList<ArticleCalibre> get noQuickSpend =>
+      ObservableList<ArticleCalibre>.of(
+          calibres.where((p) => p.isNotQuickSpend));
+
   @action
   ArticleWMinQt findSingleArticleBasedOnFullName(String fullName) {
     if (articlesWeebiList.any((e) => e.fullName == fullName)) {
@@ -373,11 +383,11 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
 
   @action
   Future<ArticleCalibre<A>> createCalibrateArticle<A extends ArticleAbstract>(
-      ArticleCalibre<A> lineData) async {
+      ArticleCalibre<A> data) async {
     final lineArticle =
-        await _articlesService.createLineArticleRpc.request(lineData);
+        await _articlesService.createLineArticleRpc.request(data);
     calibres.add(lineArticle);
-    return lineData;
+    return data;
   }
 
   @action // not used at the moment
@@ -534,12 +544,12 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
       A articleData) async {
     final updatedArticle =
         await _articlesService.updateArticleRpc.request(articleData);
-    final lineArticle = calibres
-        .firstWhereOrNull((product) => product.id == updatedArticle.productId);
+    final lineArticle =
+        calibres.firstWhereOrNull((e) => e.id == updatedArticle.calibreId);
     final lineArticleIndex = calibres.indexOf(lineArticle);
 
-    if (lineArticle == null || lineArticle.articles.isNotEmpty) {
-      throw 'error in updateArticle';
+    if (lineArticle == null || lineArticle.articles.isEmpty) {
+      throw 'error in updateArticle lineArticle == null or lineArticle.articlesIsEmpty';
     }
     final article =
         lineArticle.articles.firstWhereOrNull((a) => a.id == updatedArticle.id);
