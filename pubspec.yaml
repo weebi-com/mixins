@@ -1,6 +1,6 @@
 name: mixins_weebi
 homepage: http://weebi.com
-version: 0.1.0
+version: 0.1.1
 #publish_to: none # https://onepub.dev/api/xnxpsdavuh/
 description: mixins and all about mobx stores
 
@@ -12,10 +12,10 @@ dependencies:
   mobx: ^2.2.0
   provider: ^6.0.5
 
-  models_weebi: #^1.0.13
-    path: ../models
-  services_weebi: #^1.0.4
-    path: ../services
+  models_weebi: ^1.0.14
+    #path: ../models
+  services_weebi: ^1.0.4
+    #path: ../services
 
 dev_dependencies:
   flutter_test:
