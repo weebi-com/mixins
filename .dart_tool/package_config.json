@@ -279,13 +279,13 @@
     },
     {
       "name": "models_base",
-      "rootUri": "../../models_base",
+      "rootUri": "file:///Users/mac/.pub-cache/hosted/pub.dev/models_base-1.4.3",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
     {
       "name": "models_weebi",
-      "rootUri": "../../models",
+      "rootUri": "file:///Users/mac/.pub-cache/hosted/pub.dev/models_weebi-1.0.14",
       "packageUri": "lib/",
       "languageVersion": "2.19"
     },
@@ -345,9 +345,9 @@
     },
     {
       "name": "services_weebi",
-      "rootUri": "../../services",
+      "rootUri": "file:///Users/mac/.pub-cache/hosted/pub.dev/services_weebi-1.0.4",
       "packageUri": "lib/",
-      "languageVersion": "2.19"
+      "languageVersion": "2.7"
     },
     {
       "name": "shelf",
@@ -512,7 +512,7 @@
       "languageVersion": "2.19"
     }
   ],
-  "generated": "2023-05-29T14:40:26.348729Z",
+  "generated": "2023-05-29T23:14:25.038321Z",
   "generator": "pub",
   "generatorVersion": "2.19.6"
 }
