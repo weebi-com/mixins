@@ -1,3 +1,10 @@
+## 0.1.3
+
+- photos & updated verifiers
+- added dedicated unit tests for articles and tickets
+- update semantics for article calibre instead of line
+- ++ models_weebi -> 1.0.15
+
 ## 0.1.0
 
 - null safety

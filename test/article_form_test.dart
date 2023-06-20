@@ -1,4 +1,4 @@
-import 'package:mixins_weebi/src/instantiate_stores_fake/articles.dart';
+import 'package:mixins_weebi/src/instantiate_stores/articles.dart';
 import 'package:mixins_weebi/src/mobx_stores/validators/articles/calibre/calibrate_create_retail_form.dart';
 import 'package:models_weebi/weebi_models.dart';
 import 'package:test/test.dart';

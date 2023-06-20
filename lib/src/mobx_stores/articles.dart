@@ -13,7 +13,12 @@ import 'package:services_weebi/services_weebi.dart';
 
 // Project imports:
 import 'package:models_weebi/weebi_models.dart'
-    show ArticleBasket, ArticleWMinQt, ArticleRetail, ArticleCalibre;
+    show
+        ArticleBasket,
+        ArticleCalibre,
+        ArticlePhoto,
+        ArticleRetail,
+        ArticleWMinQt;
 
 part 'articles.g.dart';
 
@@ -23,6 +28,21 @@ extension CoolExtension on ObservableList<ArticleCalibre> {
 
   ObservableList<ArticleCalibre> get notQuickSpend =>
       ObservableList<ArticleCalibre>.of(where((p) => p.isNotQuickSpend));
+
+  Map<String, ArticleAbstract> get articleFullNamesEpured {
+    final articleFullNamesEpuredMap = <String, ArticleAbstract>{};
+    for (final calibre in this) {
+      for (final article in calibre.articles) {
+        final epured = article.fullName
+            .replaceAll(RegExp(r' '), '')
+            .toLowerCase()
+            .trim()
+            .withoutAccents;
+        articleFullNamesEpuredMap[epured] = article;
+      }
+    }
+    return articleFullNamesEpuredMap;
+  }
 }
 
 class ResponseLight {
@@ -55,6 +75,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   ArticlesStoreBase(this._articlesService) {
     initialLoading = true;
     calibres = ObservableList<ArticleCalibre>();
+    photos = ObservableList<ArticlePhoto>();
     _calibresFiltered = ObservableList<ArticleCalibre>();
     sortedBy = Observable(SortedBy.id);
     sortBy(SortedBy.id);
@@ -90,6 +111,9 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
       ObservableList.of(<ArticleCalibre>[]);
 
   @observable
+  ObservableList<ArticlePhoto> photos = ObservableList.of(<ArticlePhoto>[]);
+
+  @observable
   ObservableList<ArticleCalibre> _calibresFiltered =
       ObservableList.of(<ArticleCalibre>[]);
 
@@ -118,8 +142,8 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
 
   @action
   ArticleWMinQt findSingleArticleBasedOnFullName(String fullName) {
-    if (articlesWeebiList.any((e) => e.fullName == fullName)) {
-      if (articlesWeebiList.where((e) => e.fullName == fullName).length > 1) {
+    if (articlesRetailList.any((e) => e.fullName == fullName)) {
+      if (articlesRetailList.where((e) => e.fullName == fullName).length > 1) {
         print('too many matches');
       } else if (articlesSelectedForBasketMinQt
           .any((e) => e.fullName == fullName)) {
@@ -128,7 +152,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
         // print(
         //     'found ${articlesWeebiList.firstWhereOrNull((e) => e.fullName == fullName).fullName}');
         final articleW =
-            articlesWeebiList.firstWhereOrNull((e) => e.fullName == fullName);
+            articlesRetailList.firstWhereOrNull((e) => e.fullName == fullName);
         if (articleW != null) {
           final articleMinQt = ArticleWMinQt(1, // by default set-up to 1
               calibreId: articleW.calibreId,
@@ -183,7 +207,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
       articlesSelectedForBasketMinQt = ObservableList<ArticleWMinQt>.of([]);
 
   @computed
-  ObservableList<ArticleRetail> get articlesWeebiList {
+  ObservableList<ArticleRetail> get articlesRetailList {
     final articlesWeebiList = ObservableList<ArticleRetail>.of([]);
     final filtered = calibres
         .where((element) => element.isBasket == false)
@@ -199,7 +223,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   @computed
   ObservableList<String> get getSuggestions {
     final strings = List<String>.of([]);
-    for (final a in articlesWeebiList) {
+    for (final a in articlesRetailList) {
       strings.add(a.fullName);
     }
     return ObservableList<String>.of(strings)
@@ -294,10 +318,14 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
                   .toList());
 
   @action
-  Future<bool> init({List<ArticleCalibre>? data}) async {
+  Future<bool> init(
+      {List<ArticleCalibre>? data, List<ArticlePhoto>? photosData}) async {
     if (data != null && data.isNotEmpty) {
       calibres = ObservableList.of(data);
       _calibresFiltered = data.palpables;
+      if (photosData != null && photosData.isNotEmpty) {
+        photos = ObservableList.of(photosData);
+      }
     } else {
       final calibresFromRpc =
           await _articlesService.getArticlesCalibresRpc.request(null);
@@ -326,9 +354,10 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @action
-  Future<int> addAllArticleCalibre(
+  Future<int> createAllArticleCalibre(
       List<ArticleCalibre> lineArticlesToSave) async {
-    await _articlesService.addAllArticleCalibreRpc.request(lineArticlesToSave);
+    await _articlesService.createAllArticleCalibreRpc
+        .request(lineArticlesToSave);
     calibres.addAll(lineArticlesToSave);
     return lineArticlesToSave.length;
   }
@@ -342,7 +371,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
       }
     }
     if (twoLists.noDups.isNotEmpty) {
-      await addAllArticleCalibre(twoLists.noDups);
+      await createAllArticleCalibre(twoLists.noDups);
     }
     return twoLists.dups.length + twoLists.noDups.length;
   }
@@ -369,29 +398,60 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
         .map((line) => ArticleCalibre.fromMap(line))
         .toList();
     calibres = ObservableList.of(lineArticles);
-    await _articlesService.addAllArticleCalibreRpc.request(calibres);
+    await _articlesService.createAllArticleCalibreRpc.request(calibres);
     return calibres;
   }
 
   // below is not different from above importCatalogue yet
   @action
-  Future<bool> deleteAllArticlesAndCalibres() async {
+  Future<bool> deleteAllArticlesAndPhotosAndCalibres() async {
     await _articlesService.deleteAllCalibresRpc.request([]);
+    if (photos.isNotEmpty) {
+      final temp = [];
+      temp.addAll(photos.map((e) => ArticlePhoto.fromMap(e.toMap())));
+      for (final photo in temp) {
+        await _articlesService.deleteForeverPhotoRpc.request(photo);
+      }
+    }
+    photos.clear();
     calibres.clear();
     return true;
   }
 
   @action
-  Future<ArticleCalibre<A>> createCalibrateArticle<A extends ArticleAbstract>(
-      ArticleCalibre<A> data) async {
-    final lineArticle =
-        await _articlesService.createLineArticleRpc.request(data);
-    calibres.add(lineArticle);
+  Future<ArticleCalibre<A>>
+      createAndCalibrateArticle<A extends ArticleAbstract>(
+          ArticleCalibre<A> data) async {
+    final calibre =
+        await _articlesService.createArticleCalibreRpc.request(data);
+    calibres.add(calibre);
     return data;
   }
 
+  @action
+  Future<ArticlePhoto> createPhoto(ArticlePhoto data) async {
+    // s'assurer que l'on ne crée pas des photos avec des ids identiques
+    if (photos.any((element) =>
+        element.calibreId == data.calibreId && element.id == data.id)) {
+      final isDeleted = await deletePhoto(data);
+      assert(isDeleted);
+    }
+    final photo = await _articlesService.createPhotoRpc.request(data);
+    photos.add(photo);
+    return data;
+  }
+
+  @action
+  Future<bool> deletePhoto(ArticlePhoto data) async {
+    await _articlesService.deleteForeverPhotoRpc.request(data);
+    final index = photos.indexWhere((element) =>
+        element.calibreId == data.calibreId && element.id == data.id);
+    photos.removeAt(index);
+    return true;
+  }
+
   @action // not used at the moment
-  Future<ArticleCalibre> restoreLineArticle(ArticleCalibre line) async {
+  Future<ArticleCalibre> restoreCalibre(ArticleCalibre line) async {
     final restoredLine =
         await _articlesService.updateArticleCalibreRpc.request(line);
     final productIndex = restoredLine.id;
@@ -400,8 +460,8 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @action
-  Future<ObservableList<ArticleCalibre>> deleteForeverLineArticle(
-      ArticleCalibre productData) async {
+  Future<ObservableList<ArticleCalibre>> deleteForeverCalibre(
+      ArticleCalibre calibreData) async {
     // first remove it from any basket
     bool isBasketToBeDeleted = false;
     bool isBasketSingle = true;
@@ -410,16 +470,16 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
 
     // checking on all existing articles if one is in the proxy
     // if the article being deleted is in a basket then remove it
-    if (productData.isBasket == false) {
+    if (calibreData.isBasket == false) {
       // TODO check and enforce that a basket cannot contain another basket
       for (final line in calibres.where((l) => (l.isBasket))) {
         for (final article in line.articles) {
           if ((article as ArticleBasket)
               .proxies
-              .any((element) => element.proxyCalibreId == productData.id)) {
+              .any((element) => element.proxyCalibreId == calibreData.id)) {
             if ((article).proxies.length > 1) {
               final index = (article).proxies.indexWhere(
-                  (element) => element.proxyCalibreId == productData.id);
+                  (element) => element.proxyCalibreId == calibreData.id);
               (article).proxies.removeAt(index);
               await _articlesService.updateArticleRpc.request(article);
               final lineIndex = calibres.indexOf(line);
@@ -442,7 +502,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
       // easy one basket only
       if (isBasketToBeDeleted) {
         if (isBasketSingle) {
-          await _articlesService.deleteForeverLineRpc.request(lineToDelete);
+          await _articlesService.deleteForeverCalibreRpc.request(lineToDelete);
           calibres.remove(lineToDelete);
         } else {
           // complexy many baskets concerned
@@ -457,9 +517,16 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
         }
       }
     }
-    await _articlesService.deleteForeverLineRpc.request(productData);
+    if (photos.any((p) => p.calibreId == calibreData.id)) {
+      final temp = [];
+      temp.addAll(photos
+          .where((p) => p.calibreId == calibreData.id)
+          .map((e) => ArticlePhoto.fromMap(e.toMap())));
+      for (final photo in temp) await deletePhoto(photo);
+    }
+    await _articlesService.deleteForeverCalibreRpc.request(calibreData);
     final index =
-        calibres.indexWhere((element) => element.id == productData.id);
+        calibres.indexWhere((element) => element.id == calibreData.id);
     calibres.removeAt(index);
     return calibres;
   }
@@ -502,7 +569,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
     // easy one basket only
     if (isBasketToBeDeleted) {
       if (isBasketSingle) {
-        await _articlesService.deleteForeverLineRpc.request(lineToDelete);
+        await _articlesService.deleteForeverCalibreRpc.request(lineToDelete);
         calibres.remove(lineToDelete);
       } else {
         // complexy many baskets concerned
@@ -515,13 +582,29 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
         }
       }
     }
+
+    if (photos.any((p) =>
+        p.calibreId == articleData.calibreId && p.id == articleData.id)) {
+      final temp = [];
+      temp.addAll(photos
+          .where((p) =>
+              p.calibreId == articleData.calibreId && p.id == articleData.id)
+          .map((e) => ArticlePhoto.fromMap(e.toMap())));
+      for (final photo in temp) {
+        await deletePhoto(photo);
+      }
+    }
+
     await _articlesService.deleteForeverArticleRpc.request(articleData);
-    final lineArticle =
-        calibres.firstWhereOrNull((p) => p.id == articleData.productId);
-    if (lineArticle != null && lineArticle.articles.isNotEmpty) {
+    final calibre =
+        calibres.firstWhereOrNull((c) => c.id == articleData.calibreId);
+    if (calibre != null && calibre.articles.isNotEmpty) {
       final articleCool =
-          lineArticle.articles.firstWhereOrNull((a) => a.id == articleData.id);
-      lineArticle.articles.remove(articleCool);
+          calibre.articles.firstWhereOrNull((a) => a.id == articleData.id);
+      calibre.articles.remove(articleCool);
+      if (calibre.articles.isEmpty) {
+        await deleteForeverCalibre(calibre);
+      }
     }
     return calibres;
   }
@@ -540,8 +623,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @action
-  Future<A> updateArticleRetail<A extends ArticleAbstract>(
-      A articleData) async {
+  Future<A> updateArticle<A extends ArticleAbstract>(A articleData) async {
     final updatedArticle =
         await _articlesService.updateArticleRpc.request(articleData);
     final lineArticle =

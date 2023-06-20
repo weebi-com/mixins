@@ -1,5 +1,6 @@
 import 'package:mixins_weebi/mobx_store_article.dart';
 import 'package:mobx/mobx.dart';
+import 'package:models_weebi/common.dart';
 import 'package:models_weebi/extensions.dart';
 import 'package:models_weebi/weebi_models.dart';
 
@@ -23,12 +24,14 @@ abstract class _ArticleCreateFormStore with Store {
 
   @observable
   String cost = '';
-
   @observable
   String unitsPerPiece = '';
 
   @observable
   String barcodeEAN = '';
+
+  @observable
+  String photoPath = '';
 
   @observable
   ObservableFuture<bool> isArticleCreated = ObservableFuture.value(false);
@@ -130,7 +133,6 @@ abstract class _ArticleCreateFormStore with Store {
       price: int.parse(price.trim()),
       cost: 0,
       weight: 1,
-      photo: '',
       barcodeEAN: barcodeEAN.trim(),
       articleCode: _articlesStore.calibres.nextId * 10 + 1,
       creationDate: now,
@@ -138,7 +140,14 @@ abstract class _ArticleCreateFormStore with Store {
       status: true,
       statusUpdateDate: now,
     );
-
+    if (photoPath.isNotEmpty) {
+      final photo = ArticlePhoto(
+          calibreId: _articlesStore.calibres.nextId,
+          id: 1,
+          path: photoPath,
+          source: PhotoSource.file);
+      await _articlesStore.createPhoto(photo);
+    }
     if ((cost.isNotEmpty)) {
       newArticleRetail =
           newArticleRetail.copyWith(cost: int.parse(cost.trim()));

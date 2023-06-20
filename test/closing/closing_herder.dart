@@ -1,4 +1,4 @@
-import 'package:mixins_weebi/mobx_store_closing.dart';
+import 'package:mixins_weebi/src/instantiate_stores/closings.dart';
 import 'package:models_weebi/closings.dart';
 import 'package:test/test.dart';
 

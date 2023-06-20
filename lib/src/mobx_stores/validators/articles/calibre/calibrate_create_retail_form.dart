@@ -27,6 +27,9 @@ abstract class _ArticleCalibreCreateFormStore with Store {
   String cost = '0';
 
   @observable
+  String photoPath = '';
+
+  @observable
   StockUnit stockUnit = StockUnit.unit;
 
   @observable
@@ -130,13 +133,21 @@ abstract class _ArticleCalibreCreateFormStore with Store {
       cost: 0,
       weight: 1,
       barcodeEAN: barcodeEAN.trim(),
-      photo: '',
       articleCode: _articlesStore.calibres.nextId * 10 + 1,
       creationDate: now,
       updateDate: now,
-      status: true,
       statusUpdateDate: now,
+      status: true,
     );
+
+    if (photoPath.isNotEmpty) {
+      final photo = ArticlePhoto(
+          calibreId: _articlesStore.calibres.nextId,
+          id: 1,
+          path: photoPath,
+          source: PhotoSource.file);
+      await _articlesStore.createPhoto(photo);
+    }
 
     if ((cost.isNotEmpty)) {
       newArticle = newArticle.copyWith(cost: int.parse(cost.trim()));
@@ -161,7 +172,7 @@ abstract class _ArticleCalibreCreateFormStore with Store {
         articles: [newArticle]);
 
     final articleLine =
-        await _articlesStore.createCalibrateArticle<ArticleRetail>(newLine);
+        await _articlesStore.createAndCalibrateArticle<ArticleRetail>(newLine);
     return articleLine;
   }
 }

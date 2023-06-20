@@ -56,6 +56,38 @@ mixin _$ArticleRetailUpdateFormStore on _ArticleRetailUpdateFormStore, Store {
     });
   }
 
+  late final _$photoPathAtom =
+      Atom(name: '_ArticleRetailUpdateFormStore.photoPath', context: context);
+
+  @override
+  String get photoPath {
+    _$photoPathAtom.reportRead();
+    return super.photoPath;
+  }
+
+  @override
+  set photoPath(String value) {
+    _$photoPathAtom.reportWrite(value, super.photoPath, () {
+      super.photoPath = value;
+    });
+  }
+
+  late final _$photoSourceAtom =
+      Atom(name: '_ArticleRetailUpdateFormStore.photoSource', context: context);
+
+  @override
+  PhotoSource get photoSource {
+    _$photoSourceAtom.reportRead();
+    return super.photoSource;
+  }
+
+  @override
+  set photoSource(PhotoSource value) {
+    _$photoSourceAtom.reportWrite(value, super.photoSource, () {
+      super.photoSource = value;
+    });
+  }
+
   late final _$costAtom =
       Atom(name: '_ArticleRetailUpdateFormStore.cost', context: context);
 

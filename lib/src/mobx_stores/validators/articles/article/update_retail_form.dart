@@ -1,5 +1,6 @@
 import 'package:mixins_weebi/mobx_store_article.dart';
 import 'package:mobx/mobx.dart';
+import 'package:models_weebi/common.dart';
 import 'package:models_weebi/extensions.dart';
 import 'package:models_weebi/weebi_models.dart';
 
@@ -19,6 +20,16 @@ abstract class _ArticleRetailUpdateFormStore with Store {
     cost = _articleRetail.cost.toString();
     unitsPerPiece = _articleRetail.unitsPerPiece.toString();
     barcodeEAN = _articleRetail.barcodeEAN;
+    if (_articlesStore.photos.any((element) =>
+        element.calibreId == _articleRetail.calibreId &&
+        element.id == _articleRetail.id)) {
+      final photo = _articlesStore.photos.firstWhere((element) =>
+          element.calibreId == _articleRetail.calibreId &&
+          element.id == _articleRetail.id);
+
+      photoPath = photo.path;
+      photoSource = photo.source;
+    }
   }
   final FormErrorArticleRetailUpdateState errorStore =
       FormErrorArticleRetailUpdateState();
@@ -37,6 +48,12 @@ abstract class _ArticleRetailUpdateFormStore with Store {
 
   @observable
   String barcodeEAN = '';
+
+  @observable
+  String photoPath = '';
+
+  @observable
+  PhotoSource photoSource = PhotoSource.unknown;
 
   @observable
   ObservableFuture<bool> isArticleCreated = ObservableFuture.value(false);
@@ -142,6 +159,14 @@ abstract class _ArticleRetailUpdateFormStore with Store {
       updateDate: now,
     );
 
+    if (photoPath.isNotEmpty) {
+      final photo = ArticlePhoto(
+          calibreId: _articlesStore.calibres.nextId,
+          id: 1,
+          path: photoPath,
+          source: PhotoSource.file);
+      await _articlesStore.createPhoto(photo);
+    }
     if ((cost.isNotEmpty)) {
       newArticleRetail =
           newArticleRetail.copyWith(cost: int.parse(cost.trim()));
@@ -155,8 +180,8 @@ abstract class _ArticleRetailUpdateFormStore with Store {
           newArticleRetail.copyWith(barcodeEAN: barcodeEAN.trim());
     }
 
-    final articleRetailUpdated = await _articlesStore
-        .updateArticleRetail<ArticleRetail>(newArticleRetail);
+    final articleRetailUpdated =
+        await _articlesStore.updateArticle<ArticleRetail>(newArticleRetail);
     return articleRetailUpdated;
   }
 }

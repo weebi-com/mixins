@@ -56,6 +56,22 @@ mixin _$ArticleCalibreCreateFormStore on _ArticleCalibreCreateFormStore, Store {
     });
   }
 
+  late final _$photoPathAtom =
+      Atom(name: '_ArticleCalibreCreateFormStore.photoPath', context: context);
+
+  @override
+  String get photoPath {
+    _$photoPathAtom.reportRead();
+    return super.photoPath;
+  }
+
+  @override
+  set photoPath(String value) {
+    _$photoPathAtom.reportWrite(value, super.photoPath, () {
+      super.photoPath = value;
+    });
+  }
+
   late final _$costAtom =
       Atom(name: '_ArticleCalibreCreateFormStore.cost', context: context);
 

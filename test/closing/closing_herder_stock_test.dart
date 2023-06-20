@@ -1,4 +1,5 @@
-import 'package:mixins_weebi/src/instantiate_stores_fake/closings.dart';
+import 'package:mixins_weebi/src/instantiate_stores/closings.dart';
+
 import 'package:models_weebi/closings.dart';
 import 'package:models_weebi/utils.dart';
 import 'package:test/test.dart';

@@ -177,14 +177,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.1"
-  fake_async:
-    dependency: transitive
-    description:
-      name: fake_async
-      sha256: "511392330127add0b769b75a987850d136345d9227c6b94c96a04cf4a391bf78"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.1"
   file:
     dependency: transitive
     description:
@@ -203,19 +195,6 @@ packages:
     version: "1.1.0"
   flutter:
     dependency: transitive
-    description: flutter
-    source: sdk
-    version: "0.0.0"
-  flutter_lints:
-    dependency: "direct dev"
-    description:
-      name: flutter_lints
-      sha256: b543301ad291598523947dc534aaddc5aaad597b709d2426d3a0e0d44c5cb493
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.4"
-  flutter_test:
-    dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -299,14 +278,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.8.1"
-  lints:
-    dependency: transitive
-    description:
-      name: lints
-      sha256: a2c3d198cb5ea2e179926622d433331d8b58374ab8f29cdda6e863bd62fd369c
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.1"
   logging:
     dependency: transitive
     description:
@@ -367,18 +338,18 @@ packages:
     dependency: transitive
     description:
       name: models_base
-      sha256: "1fd5c0b052081c95417e212c4d3cd12d017b2fdd007035317ebf2accb037781a"
+      sha256: ecee55cd1c52afb6ba75f83fb372ddc7ec00b296d30f04e34de9915e17a8d28c
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.3"
+    version: "1.4.4"
   models_weebi:
     dependency: "direct main"
     description:
       name: models_weebi
-      sha256: "7bf19b80354bb35a34eeaa2fdca558c9e0e734bcbb58bdaf6a755cfe7ebe5f8d"
+      sha256: "7f4c7bc6c487058d6a79d6f050c885452e102b13e49a127f7d3784a5e7d960c4"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.14"
+    version: "1.0.15"
   nested:
     dependency: transitive
     description:
@@ -455,10 +426,10 @@ packages:
     dependency: "direct main"
     description:
       name: services_weebi
-      sha256: cf33a1422170b4af311bb9b342f4da548f49b2c9e6308d91f41d119bf1a024c4
+      sha256: "841429ec4ffb44b80be521b18c6906aa922f0bec0646d45e397ee584fe791bea"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.6"
   shelf:
     dependency: transitive
     description:
