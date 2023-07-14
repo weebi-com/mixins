@@ -4,36 +4,39 @@ import 'package:models_weebi/common.dart';
 import 'package:models_weebi/extensions.dart';
 import 'package:models_weebi/weebi_models.dart';
 // ignore: import_of_legacy_library_into_null_safe
-
+import 'package:mixins_weebi/src/mobx_stores/validators/articles/article/abstract.dart';
 part 'calibrate_create_retail_form.g.dart';
 
 class ArticleCalibreCreateFormStore = _ArticleCalibreCreateFormStore
     with _$ArticleCalibreCreateFormStore;
 
-abstract class _ArticleCalibreCreateFormStore with Store {
+abstract class _ArticleCalibreCreateFormStore
+    extends FormStoreAbstractArticleRetail with Store, Validators {
   final ArticlesStore _articlesStore;
-  _ArticleCalibreCreateFormStore(this._articlesStore) {
-//
-  }
-  final FormErrorLineArticleCreateState errorStore =
-      FormErrorLineArticleCreateState();
+  _ArticleCalibreCreateFormStore(this._articlesStore) {}
+  @override
+  FormErrorArticleRetailAbstract errorStore = FormErrorLineArticleCreateState();
   @observable
+  @override
   String name = '';
 
   @observable
+  @override
   String price = '';
 
   @observable
+  @override
   String cost = '0';
+
+  @observable
+  @override
+  String unitsPerPiece = '1';
 
   @observable
   String photoPath = '';
 
   @observable
   StockUnit stockUnit = StockUnit.unit;
-
-  @observable
-  String unitsPerPiece = '1';
 
   @observable
   String barcodeEAN = '';
@@ -62,50 +65,17 @@ abstract class _ArticleCalibreCreateFormStore with Store {
   @action
   void validateArticleCalibreName(String value) {
     if (value.isEmpty) {
-      errorStore.nameError = 'Saisir le nom de l\'article';
+      errorStore.fullNameError = 'Saisir le nom de l\'article';
       return;
     }
 
     final isAlreadyTaken = _articlesStore.getCalibresNames
         .contains(value.trim().withoutAccents.toLowerCase());
     if (isAlreadyTaken) {
-      errorStore.nameError = 'Un article avec ce nom existe déjà';
+      errorStore.fullNameError = 'Un article avec ce nom existe déjà';
       return;
     }
-    errorStore.nameError = null;
-    return;
-  }
-
-  @action
-  void validatePrice(String value) {
-    if (value.isEmpty) {
-      errorStore.priceError = 'Saisir le prix de vente';
-    } else if (int.tryParse(value) == null) {
-      errorStore.priceError = 'erreur $value';
-    } else {
-      errorStore.priceError = null;
-    }
-    return;
-  }
-
-  @action
-  void validateCost(String value) {
-    if (value.isNotEmpty && int.tryParse(value) == null) {
-      errorStore.costError = 'erreur $value';
-    } else {
-      errorStore.costError = null;
-    }
-    return;
-  }
-
-  @action
-  void validateUnitsPerPiece(String value) {
-    if (value.isNotEmpty && double.tryParse(value) == null) {
-      errorStore.unitsPerPieceError =
-          'erreur $value, exemple : 1.5 et non pas 1,5';
-    } else {
-      errorStore.unitsPerPieceError = null;
-    }
+    errorStore.fullNameError = null;
     return;
   }
 
@@ -129,7 +99,7 @@ abstract class _ArticleCalibreCreateFormStore with Store {
       calibreId: _articlesStore.calibres.nextId,
       id: 1,
       fullName: name.trim(),
-      price: int.parse(price.trim()),
+      price: num.parse(price.trim()),
       cost: 0,
       weight: 1,
       barcodeEAN: barcodeEAN.trim(),
@@ -150,7 +120,7 @@ abstract class _ArticleCalibreCreateFormStore with Store {
     }
 
     if ((cost.isNotEmpty)) {
-      newArticle = newArticle.copyWith(cost: int.parse(cost.trim()));
+      newArticle = newArticle.copyWith(cost: num.parse(cost.trim()));
     }
     if ((unitsPerPiece.isNotEmpty)) {
       newArticle =
@@ -180,9 +150,10 @@ abstract class _ArticleCalibreCreateFormStore with Store {
 class FormErrorLineArticleCreateState = _FormErrorLineArticleCreateState
     with _$FormErrorLineArticleCreateState;
 
-abstract class _FormErrorLineArticleCreateState with Store {
+abstract class _FormErrorLineArticleCreateState
+    extends FormErrorArticleRetailAbstract with Store {
   @observable
-  String? nameError;
+  String? fullNameError;
 
   @observable
   String? unitsPerPieceError;
@@ -195,7 +166,7 @@ abstract class _FormErrorLineArticleCreateState with Store {
 
   @computed
   bool get hasErrors =>
-      nameError != null ||
+      fullNameError != null ||
       unitsPerPieceError != null ||
       priceError != null ||
       costError != null;

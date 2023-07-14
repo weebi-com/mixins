@@ -3,27 +3,37 @@ import 'package:mobx/mobx.dart';
 import 'package:models_weebi/common.dart';
 import 'package:models_weebi/extensions.dart';
 import 'package:models_weebi/weebi_models.dart';
+import 'package:mixins_weebi/src/mobx_stores/validators/articles/article/abstract.dart';
 
 part 'create_retail_form.g.dart';
 
 class ArticleRetailCreateFormStore = _ArticleCreateFormStore
     with _$ArticleRetailCreateFormStore;
 
-abstract class _ArticleCreateFormStore with Store {
+abstract class _ArticleCreateFormStore extends FormStoreAbstractArticleRetail
+    with Store, Validators {
   final ArticlesStore _articlesStore;
   final ArticleCalibre _calibre;
   _ArticleCreateFormStore(this._articlesStore, this._calibre) {
-    fullName = _calibre.nameLine;
+    name = _calibre.nameLine;
   }
-  final FormErrorArticleCreateState errorStore = FormErrorArticleCreateState();
-  @observable
-  String fullName = '';
 
+  @override
+  FormErrorArticleRetailAbstract errorStore = FormErrorArticleCreateState();
+
+  @override
+  @observable
+  String name = '';
+
+  @override
   @observable
   String price = '';
 
+  @override
   @observable
   String cost = '';
+
+  @override
   @observable
   String unitsPerPiece = '';
 
@@ -47,27 +57,33 @@ abstract class _ArticleCreateFormStore with Store {
 
   void setupValidations() {
     _disposers = [
-      reaction((_) => fullName, validateArticleFullName),
+      reaction((_) => name, validateArticleFullNameOnCreation),
       reaction((_) => price, validatePrice),
       reaction((_) => cost, validateCost),
       reaction((_) => unitsPerPiece, validateUnitsPerPiece)
     ];
   }
 
+  void validateAll() {
+    validateArticleFullNameOnCreation(name);
+    validatePrice(price);
+    validateCost(cost);
+    validateUnitsPerPiece(unitsPerPiece);
+  }
+
+  void dispose() {
+    for (final d in _disposers) {
+      d();
+    }
+  }
+
   @action
-  void validateArticleFullName(String value) {
+  void validateArticleFullNameOnCreation(String value) {
     if (value.isEmpty) {
       errorStore.fullNameError = 'Saisir le nom de l\'article';
       return;
     }
 
-    final isSameAsLineName = _articlesStore.getCalibresNames
-        .contains(value.trim().withoutAccents.toLowerCase());
-    if (isSameAsLineName) {
-      errorStore.fullNameError =
-          'Le nom doit être différent de l\'article, ex : Cola x1 au lieu de Cola';
-      return;
-    }
     final isAlreadyTaken = _articlesStore.getArticlesFullNames
         .contains(value.trim().withoutAccents.toLowerCase());
     if (isAlreadyTaken) {
@@ -78,59 +94,13 @@ abstract class _ArticleCreateFormStore with Store {
     return;
   }
 
-  @action
-  void validatePrice(String value) {
-    if (value.isEmpty) {
-      errorStore.priceError = 'Saisir le prix de vente';
-    } else if (int.tryParse(value) == null) {
-      errorStore.priceError = 'erreur $value';
-    } else {
-      errorStore.priceError = null;
-    }
-    return;
-  }
-
-  @action
-  void validateCost(String value) {
-    if (value.isNotEmpty && int.tryParse(value) == null) {
-      errorStore.costError = 'erreur $value';
-    } else {
-      errorStore.costError = null;
-    }
-    return;
-  }
-
-  @action
-  void validateUnitsPerPiece(String value) {
-    if (value.isNotEmpty && double.tryParse(value) == null) {
-      errorStore.unitsPerPieceError =
-          'erreur $value, exemple : 1.5 et non pas 1,5';
-    } else {
-      errorStore.unitsPerPieceError = null;
-    }
-    return;
-  }
-
-  void dispose() {
-    for (final d in _disposers) {
-      d();
-    }
-  }
-
-  void validateAll() {
-    validateArticleFullName(fullName);
-    validatePrice(price);
-    validateCost(cost);
-    validateUnitsPerPiece(unitsPerPiece);
-  }
-
   Future<ArticleRetail> createArticleRetailFromForm() async {
     final now = DateTime.now();
     ArticleRetail newArticleRetail = ArticleRetail(
       calibreId: _calibre.id,
       id: _calibre.articles.nextId,
-      fullName: fullName.trim(),
-      price: int.parse(price.trim()),
+      fullName: name.trim(),
+      price: num.parse(price.trim()),
       cost: 0,
       weight: 1,
       barcodeEAN: barcodeEAN.trim(),
@@ -150,13 +120,13 @@ abstract class _ArticleCreateFormStore with Store {
     }
     if ((cost.isNotEmpty)) {
       newArticleRetail =
-          newArticleRetail.copyWith(cost: int.parse(cost.trim()));
+          newArticleRetail.copyWith(cost: num.parse(cost.trim()));
     }
     if ((unitsPerPiece.isNotEmpty)) {
       newArticleRetail =
           newArticleRetail.copyWith(weight: double.parse(unitsPerPiece.trim()));
     }
-    if (int.tryParse(barcodeEAN.trim()) != null) {
+    if (barcodeEAN.isNotEmpty && int.tryParse(barcodeEAN.trim()) != null) {
       newArticleRetail =
           newArticleRetail.copyWith(barcodeEAN: barcodeEAN.trim());
     }
@@ -170,7 +140,9 @@ abstract class _ArticleCreateFormStore with Store {
 class FormErrorArticleCreateState = _FormErrorArticleCreateState
     with _$FormErrorArticleCreateState;
 
-abstract class _FormErrorArticleCreateState with Store {
+abstract class _FormErrorArticleCreateState
+    with Store
+    implements FormErrorArticleRetailAbstract {
   @observable
   String? fullNameError;
 
@@ -178,6 +150,7 @@ abstract class _FormErrorArticleCreateState with Store {
   String? unitsPerPieceError;
 
   @observable
+  @override
   String? priceError;
 
   @observable

@@ -6,7 +6,7 @@ part of 'articles.dart';
 // StoreGenerator
 // **************************************************************************
 
-// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, calibres_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
     on ArticlesStoreBase<S>, Store {
@@ -20,27 +20,6 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
                   () => super.calibresPalpableFiltered,
                   name: 'ArticlesStoreBase.calibresPalpableFiltered'))
           .value;
-
-  Computed<ObservableList<ArticleCalibre<ArticleAbstract>>>?
-      _$notDeactivatedComputed;
-
-  @override
-  ObservableList<ArticleCalibre<ArticleAbstract>> get notDeactivated =>
-      (_$notDeactivatedComputed ??=
-              Computed<ObservableList<ArticleCalibre<ArticleAbstract>>>(
-                  () => super.notDeactivated,
-                  name: 'ArticlesStoreBase.notDeactivated'))
-          .value;
-  Computed<ObservableList<ArticleCalibre<ArticleAbstract>>>?
-      _$palpablesComputed;
-
-  @override
-  ObservableList<ArticleCalibre<ArticleAbstract>> get noQuickSpend =>
-      (_$palpablesComputed ??=
-              Computed<ObservableList<ArticleCalibre<ArticleAbstract>>>(
-                  () => super.noQuickSpend,
-                  name: 'ArticlesStoreBase.palpables'))
-          .value;
   Computed<ObservableList<ArticleCalibre<ArticleAbstract>>>?
       _$calibresNotQuikspendNotBasketComputed;
 
@@ -52,13 +31,33 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
                       () => super.calibresNotQuikspendNotBasket,
                       name: 'ArticlesStoreBase.calibresNotQuikspendNotBasket'))
               .value;
-  Computed<ObservableList<ArticleRetail>>? _$articlesWeebiListComputed;
+  Computed<ObservableList<ArticleCalibre<ArticleAbstract>>>?
+      _$notDeactivatedComputed;
+
+  @override
+  ObservableList<ArticleCalibre<ArticleAbstract>> get notDeactivated =>
+      (_$notDeactivatedComputed ??=
+              Computed<ObservableList<ArticleCalibre<ArticleAbstract>>>(
+                  () => super.notDeactivated,
+                  name: 'ArticlesStoreBase.notDeactivated'))
+          .value;
+  Computed<ObservableList<ArticleCalibre<ArticleAbstract>>>?
+      _$noQuickSpendComputed;
+
+  @override
+  ObservableList<ArticleCalibre<ArticleAbstract>> get noQuickSpend =>
+      (_$noQuickSpendComputed ??=
+              Computed<ObservableList<ArticleCalibre<ArticleAbstract>>>(
+                  () => super.noQuickSpend,
+                  name: 'ArticlesStoreBase.noQuickSpend'))
+          .value;
+  Computed<ObservableList<ArticleRetail>>? _$articlesRetailListComputed;
 
   @override
   ObservableList<ArticleRetail> get articlesRetailList =>
-      (_$articlesWeebiListComputed ??= Computed<ObservableList<ArticleRetail>>(
+      (_$articlesRetailListComputed ??= Computed<ObservableList<ArticleRetail>>(
               () => super.articlesRetailList,
-              name: 'ArticlesStoreBase.articlesWeebiList'))
+              name: 'ArticlesStoreBase.articlesRetailList'))
           .value;
   Computed<ObservableList<String>>? _$getSuggestionsComputed;
 
@@ -227,10 +226,9 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
       AsyncAction('ArticlesStoreBase.init', context: context);
 
   @override
-  Future<bool> init({
-    List<ArticleCalibre<ArticleAbstract>>? data,
-    List<ArticlePhoto>? photosData,
-  }) {
+  Future<bool> init(
+      {List<ArticleCalibre<ArticleAbstract>>? data,
+      List<ArticlePhoto>? photosData}) {
     return _$initAsyncAction
         .run(() => super.init(data: data, photosData: photosData));
   }
@@ -243,13 +241,14 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
     return _$clearSearchAsyncAction.run(() => super.clearSearch());
   }
 
-  late final _$addAllArticleCalibreAsyncAction =
-      AsyncAction('ArticlesStoreBase.addAllArticleCalibre', context: context);
+  late final _$createAllArticleCalibreAsyncAction = AsyncAction(
+      'ArticlesStoreBase.createAllArticleCalibre',
+      context: context);
 
   @override
   Future<int> createAllArticleCalibre(
       List<ArticleCalibre<ArticleAbstract>> lineArticlesToSave) {
-    return _$addAllArticleCalibreAsyncAction
+    return _$createAllArticleCalibreAsyncAction
         .run(() => super.createAllArticleCalibre(lineArticlesToSave));
   }
 
@@ -284,25 +283,26 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
         .run(() => super.importCatalogueFromJson(json));
   }
 
-  late final _$deleteAllArticlesAndCalibresAsyncAction = AsyncAction(
-      'ArticlesStoreBase.deleteAllArticlesAndCalibres',
+  late final _$deleteAllArticlesAndPhotosAndCalibresAsyncAction = AsyncAction(
+      'ArticlesStoreBase.deleteAllArticlesAndPhotosAndCalibres',
       context: context);
 
   @override
   Future<bool> deleteAllArticlesAndPhotosAndCalibres() {
-    return _$deleteAllArticlesAndCalibresAsyncAction
+    return _$deleteAllArticlesAndPhotosAndCalibresAsyncAction
         .run(() => super.deleteAllArticlesAndPhotosAndCalibres());
   }
 
-  late final _$createCalibrateArticleAsyncAction =
-      AsyncAction('ArticlesStoreBase.createCalibrateArticle', context: context);
+  late final _$createAndCalibrateArticleAsyncAction = AsyncAction(
+      'ArticlesStoreBase.createAndCalibrateArticle',
+      context: context);
 
   @override
   Future<ArticleCalibre<A>>
       createAndCalibrateArticle<A extends ArticleAbstract>(
-          ArticleCalibre<A> lineData) {
-    return _$createCalibrateArticleAsyncAction
-        .run(() => super.createAndCalibrateArticle<A>(lineData));
+          ArticleCalibre<A> data) {
+    return _$createAndCalibrateArticleAsyncAction
+        .run(() => super.createAndCalibrateArticle<A>(data));
   }
 
   late final _$createPhotoAsyncAction =
@@ -321,25 +321,23 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
     return _$deletePhotoAsyncAction.run(() => super.deletePhoto(data));
   }
 
-  late final _$restoreLineArticleAsyncAction =
-      AsyncAction('ArticlesStoreBase.restoreLineArticle', context: context);
+  late final _$restoreCalibreAsyncAction =
+      AsyncAction('ArticlesStoreBase.restoreCalibre', context: context);
 
   @override
   Future<ArticleCalibre<ArticleAbstract>> restoreCalibre(
       ArticleCalibre<ArticleAbstract> line) {
-    return _$restoreLineArticleAsyncAction
-        .run(() => super.restoreCalibre(line));
+    return _$restoreCalibreAsyncAction.run(() => super.restoreCalibre(line));
   }
 
-  late final _$deleteForeverLineArticleAsyncAction = AsyncAction(
-      'ArticlesStoreBase.deleteForeverLineArticle',
-      context: context);
+  late final _$deleteForeverCalibreAsyncAction =
+      AsyncAction('ArticlesStoreBase.deleteForeverCalibre', context: context);
 
   @override
   Future<ObservableList<ArticleCalibre<ArticleAbstract>>> deleteForeverCalibre(
-      ArticleCalibre<ArticleAbstract> productData) {
-    return _$deleteForeverLineArticleAsyncAction
-        .run(() => super.deleteForeverCalibre(productData));
+      ArticleCalibre<ArticleAbstract> calibreData) {
+    return _$deleteForeverCalibreAsyncAction
+        .run(() => super.deleteForeverCalibre(calibreData));
   }
 
   late final _$deleteForeverArticleAsyncAction =
@@ -362,12 +360,12 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
         .run(() => super.createArticleRetail<A>(articleData, isTest: isTest));
   }
 
-  late final _$updateArticleRetailAsyncAction =
-      AsyncAction('ArticlesStoreBase.updateArticleRetail', context: context);
+  late final _$updateArticleAsyncAction =
+      AsyncAction('ArticlesStoreBase.updateArticle', context: context);
 
   @override
   Future<A> updateArticle<A extends ArticleAbstract>(A articleData) {
-    return _$updateArticleRetailAsyncAction
+    return _$updateArticleAsyncAction
         .run(() => super.updateArticle<A>(articleData));
   }
 
@@ -479,10 +477,13 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
 initialLoading: ${initialLoading},
 sortedBy: ${sortedBy},
 calibres: ${calibres},
+photos: ${photos},
 articlesSelectedForBasketMinQt: ${articlesSelectedForBasketMinQt},
 calibresPalpableFiltered: ${calibresPalpableFiltered},
 calibresNotQuikspendNotBasket: ${calibresNotQuikspendNotBasket},
-articlesWeebiList: ${articlesRetailList},
+notDeactivated: ${notDeactivated},
+noQuickSpend: ${noQuickSpend},
+articlesRetailList: ${articlesRetailList},
 getSuggestions: ${getSuggestions},
 getCalibresNames: ${getCalibresNames},
 getArticlesFullNames: ${getArticlesFullNames},

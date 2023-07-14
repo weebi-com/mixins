@@ -280,7 +280,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
       0;
 
   @action
-  int todaySellCash(DateTime date) {
+  num todaySellCash(DateTime date) {
     var sellCash = tickets
         .where((t) => t.status == true)
         .where((t) =>
@@ -291,14 +291,14 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
         .where((t) => t.paiementType == PaiementType.cash)
         .fold(
             0,
-            (int prev, element) =>
+            (num prev, element) =>
                 prev + element.totalPriceTaxAndPromoIncluded);
 
     return sellCash;
   }
 
   @action
-  int todaySellCoverCash(DateTime date) {
+  num todaySellCoverCash(DateTime date) {
     var sellCover = tickets
         .where((t) => t.status == true)
         .where((t) =>
@@ -307,13 +307,13 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
             t.date.day == date.day)
         .where((t) => t.paiementType == PaiementType.cash)
         .where((t) => t.ticketType == TicketType.sellCovered)
-        .fold(0, (int prev, element) => prev + element.received);
+        .fold(0, (num prev, element) => prev + element.received);
 
     return sellCover;
   }
 
   @action
-  int todaySellDeferred(DateTime date) {
+  num todaySellDeferred(DateTime date) {
     var sellDeferredToday = tickets
         .where((t) => t.status == true)
         .where((t) =>
@@ -324,14 +324,14 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
         .where((t) => t.ticketType == TicketType.sellDeferred)
         .fold(
             0,
-            (int prev, element) =>
+            (num prev, element) =>
                 prev + element.totalPriceTaxAndPromoIncluded);
 
     return sellDeferredToday.round();
   }
 
   @action
-  int todaySpendDeferred(DateTime date) {
+  num todaySpendDeferred(DateTime date) {
     var spendDeferredToday = tickets
         .where((t) => t.status == true)
         .where((t) =>
@@ -341,13 +341,13 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
         .where((t) => t.paiementType == PaiementType.nope)
         .where((t) => t.ticketType == TicketType.spendDeferred)
         .fold(0,
-            (int prev, element) => prev + element.totalCostTaxAndPromoIncluded);
+            (num prev, element) => prev + element.totalCostTaxAndPromoIncluded);
 
     return spendDeferredToday.round();
   }
 
   @action
-  int todaySellMMoney(DateTime date) => tickets
+  num todaySellMMoney(DateTime date) => tickets
       .where((t) => t.status == true)
       .where((t) => t.date.year == date.year)
       .where((t) => t.date.month == date.month)
@@ -357,7 +357,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
       .fold(0, (prev, element) => prev + element.totalPriceTaxAndPromoIncluded);
 
   @action
-  int todaySpendCash(DateTime date) {
+  num todaySpendCash(DateTime date) {
     var spendCash = tickets
         .where((t) => t.status == true)
         .where((t) =>
@@ -367,13 +367,13 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
         .where((t) => t.ticketType == TicketType.spend)
         .where((t) => t.paiementType == PaiementType.cash)
         .fold(0,
-            (int prev, element) => prev + element.totalCostTaxAndPromoIncluded);
+            (num prev, element) => prev + element.totalCostTaxAndPromoIncluded);
 
     return spendCash;
   }
 
   @action
-  int todaySpendCoverCash(DateTime date) {
+  num todaySpendCoverCash(DateTime date) {
     var spendCoverCash = tickets
         .where((t) => t.status == true)
         .where((t) => t.date.year == date.year)
@@ -381,13 +381,13 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
         .where((t) => t.date.day == date.day)
         .where((t) => t.ticketType == TicketType.spendCovered)
         .where((t) => t.paiementType == PaiementType.cash)
-        .fold(0, (int prev, element) => prev + element.received);
+        .fold(0, (num prev, element) => prev + element.received);
 
     return spendCoverCash;
   }
 
   @action
-  int todaySpendMMoney(DateTime date) => tickets
+  num todaySpendMMoney(DateTime date) => tickets
       .where((t) => t.status == true)
       .where((t) => t.date.year == date.year)
       .where((t) => t.date.month == date.month)
@@ -418,7 +418,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
       0;
 
   @action
-  int monthSellCash(DateTime date) {
+  num monthSellCash(DateTime date) {
     var sellCash = tickets
         .where((t) => t.status == true)
         .where((t) => t.date.year == date.year && t.date.month == date.month)
@@ -426,27 +426,27 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
         .where((t) => t.paiementType == PaiementType.cash)
         .fold(
             0,
-            (int prev, element) =>
+            (num prev, element) =>
                 prev + element.totalPriceTaxAndPromoIncluded);
 
     return sellCash;
   }
 
   @action
-  int monthSellCoverCash(DateTime date) {
+  num monthSellCoverCash(DateTime date) {
     var sellCover = tickets
         .where((t) => t.status == true)
         .where((t) => t.date.year == date.year)
         .where((t) => t.date.month == date.month)
         .where((t) => t.paiementType == PaiementType.cash)
         .where((t) => t.ticketType == TicketType.sellCovered)
-        .fold(0, (int prev, element) => prev + element.received);
+        .fold(0, (num prev, element) => prev + element.received);
 
     return sellCover;
   }
 
   @action
-  int monthSellMMoney(DateTime date) => tickets
+  num monthSellMMoney(DateTime date) => tickets
       .where((t) => t.status == true)
       .where((t) => t.date.year == date.year)
       .where((t) => t.date.month == date.month)
@@ -455,7 +455,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
       .fold(0, (prev, element) => prev + element.totalPriceTaxAndPromoIncluded);
 
   @action
-  int monthSellDeferred(DateTime date) {
+  num monthSellDeferred(DateTime date) {
     var sellDeferredMonth = tickets
         .where((t) => t.status == true)
         .where((t) => t.date.year == date.year && t.date.month == date.month)
@@ -463,38 +463,38 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
         .where((t) => t.ticketType == TicketType.sellDeferred)
         .fold(
             0,
-            (int prev, element) =>
+            (num prev, element) =>
                 prev + element.totalPriceTaxAndPromoIncluded);
 
     return sellDeferredMonth.round();
   }
 
   @action
-  int monthSpendCash(DateTime date) {
+  num monthSpendCash(DateTime date) {
     var spendCash = tickets
         .where((t) => t.status == true)
         .where((t) => t.date.year == date.year && t.date.month == date.month)
         .where((t) => t.ticketType == TicketType.spend)
         .where((t) => t.paiementType == PaiementType.cash)
         .fold(0,
-            (int prev, element) => prev + element.totalCostTaxAndPromoIncluded);
+            (num prev, element) => prev + element.totalCostTaxAndPromoIncluded);
     return spendCash;
   }
 
   @action
-  int monthSpendCoverCash(DateTime date) {
+  num monthSpendCoverCash(DateTime date) {
     var spendCover = tickets
         .where((t) => t.status == true)
         .where((t) => t.date.year == date.year && t.date.month == date.month)
         .where((t) => t.paiementType == PaiementType.cash)
         .where((t) => t.ticketType == TicketType.spendCovered)
-        .fold(0, (int prev, element) => prev + element.received);
+        .fold(0, (num prev, element) => prev + element.received);
 
     return spendCover;
   }
 
   @action
-  int monthSpendMMoney(DateTime date) => tickets
+  num monthSpendMMoney(DateTime date) => tickets
       .where((t) => t.status == true)
       .where((t) => t.date.year == date.year)
       .where((t) => t.date.month == date.month)
@@ -510,7 +510,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
         .where((t) => t.paiementType == PaiementType.nope)
         .where((t) => t.ticketType == TicketType.spendDeferred)
         .fold(0,
-            (int prev, element) => prev + element.totalCostTaxAndPromoIncluded);
+            (num prev, element) => prev + element.totalCostTaxAndPromoIncluded);
 
     return spendDeferredMonth.round();
   }
@@ -538,7 +538,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
       0;
 
   @action
-  int rangeSellCash(DateTime firstDate, DateTime lastDate) => tickets
+  num rangeSellCash(DateTime firstDate, DateTime lastDate) => tickets
       .where((t) => t.status == true)
       .where((t) => t.date.isAfter(firstDate) && t.date.isBefore(lastDate))
       .where((t) => t.ticketType == TicketType.sell)
@@ -546,7 +546,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
       .fold(0, (prev, element) => prev + element.totalPriceTaxAndPromoIncluded);
 
   @action
-  int rangeSellCoverCash(DateTime firstDate, DateTime lastDate) => tickets
+  num rangeSellCoverCash(DateTime firstDate, DateTime lastDate) => tickets
       .where((t) => t.status == true)
       .where((t) => t.date.isAfter(firstDate) && t.date.isBefore(lastDate))
       .where((t) => t.paiementType == PaiementType.cash)
@@ -554,7 +554,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
       .fold(0, (prev, element) => prev + element.received);
 
   @action
-  int rangeSellMMoney(DateTime firstDate, DateTime lastDate) => tickets
+  num rangeSellMMoney(DateTime firstDate, DateTime lastDate) => tickets
       .where((t) => t.status == true)
       .where((t) => t.date.isAfter(firstDate) && t.date.isBefore(lastDate))
       .where((t) => t.ticketType == TicketType.sell)
@@ -562,7 +562,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
       .fold(0, (prev, element) => prev + element.totalPriceTaxAndPromoIncluded);
 
   @action
-  int rangeSellDeferred(DateTime firstDate, DateTime lastDate) {
+  num rangeSellDeferred(DateTime firstDate, DateTime lastDate) {
     var rangeSellDeferred = tickets
         .where((t) => t.status == true)
         .where((t) => t.date.isAfter(firstDate) && t.date.isBefore(lastDate))
@@ -570,14 +570,14 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
         .where((t) => t.ticketType == TicketType.sellDeferred)
         .fold(
             0,
-            (int prev, element) =>
+            (num prev, element) =>
                 prev + element.totalPriceTaxAndPromoIncluded);
 
-    return rangeSellDeferred.round();
+    return rangeSellDeferred;
   }
 
   @action
-  int rangeSpendCash(DateTime firstDate, DateTime lastDate) => tickets
+  num rangeSpendCash(DateTime firstDate, DateTime lastDate) => tickets
       .where((t) => t.status == true)
       .where((t) => t.date.isAfter(firstDate) && t.date.isBefore(lastDate))
       .where((t) => t.paiementType == PaiementType.cash)
@@ -585,7 +585,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
       .fold(0, (prev, element) => prev + element.totalCostTaxAndPromoIncluded);
 
   @action
-  int rangeSpendCoverCash(DateTime firstDate, DateTime lastDate) => tickets
+  num rangeSpendCoverCash(DateTime firstDate, DateTime lastDate) => tickets
       .where((t) => t.status == true)
       .where((t) => t.date.isAfter(firstDate) && t.date.isBefore(lastDate))
       .where((t) => t.paiementType == PaiementType.cash)
@@ -593,7 +593,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
       .fold(0, (prev, element) => prev + element.received);
 
   @action
-  int rangeSpendMMoney(DateTime firstDate, DateTime lastDate) => tickets
+  num rangeSpendMMoney(DateTime firstDate, DateTime lastDate) => tickets
       .where((t) => t.status == true)
       .where((t) => t.date.isAfter(firstDate) && t.date.isBefore(lastDate))
       .where((t) => t.ticketType == TicketType.spend)
@@ -601,21 +601,21 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
       .fold(0, (prev, element) => prev + element.totalCostTaxAndPromoIncluded);
 
   @action
-  int rangeSpendDeferred(DateTime firstDate, DateTime lastDate) {
+  num rangeSpendDeferred(DateTime firstDate, DateTime lastDate) {
     var rangespendDeferred = tickets
         .where((t) => t.status == true)
         .where((t) => t.date.isAfter(firstDate) && t.date.isBefore(lastDate))
         .where((t) => t.paiementType == PaiementType.nope)
         .where((t) => t.ticketType == TicketType.spendDeferred)
         .fold(0,
-            (int prev, element) => prev + element.totalCostTaxAndPromoIncluded);
+            (num prev, element) => prev + element.totalCostTaxAndPromoIncluded);
 
     return rangespendDeferred.round();
   }
 
 //
   @action
-  int supplierCredit(int herderId, DateTime date) => tickets.isEmpty
+  num supplierCredit(int herderId, DateTime date) => tickets.isEmpty
       ? 0
       : tickets
           .where((t) => t.contactInfo == herderId.toString())
@@ -637,7 +637,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
           .fold(0, (prev, e) => prev + e.totalCostTaxAndPromoIncluded);
 
   @action
-  int clientCredit(int herderId, DateTime date) => tickets.isEmpty
+  num clientCredit(int herderId, DateTime date) => tickets.isEmpty
       ? 0
       : tickets
           .where((t) => t.contactInfo == herderId.toString())
@@ -672,7 +672,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
           .where((t) => t.contactInfo == herder.id.toString())
           .fold(
               0,
-              (int prev, element) =>
+              (num prev, element) =>
                   prev + element.totalPriceTaxAndPromoIncluded);
 
       map[soldPerClient.toString()] = herder;
@@ -695,7 +695,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
           .where((t) => t.contactInfo == herder.id.toString())
           .fold(
               0,
-              (int prev, element) =>
+              (num prev, element) =>
                   prev + element.totalPriceTaxAndPromoIncluded);
 
       map[soldPerClient.toString()] = herder;
@@ -719,7 +719,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
           .where((t) => t.contactInfo == herder.id.toString())
           .fold(
               0,
-              (int prev, element) =>
+              (num prev, element) =>
                   prev + element.totalPriceTaxAndPromoIncluded);
 
       map[soldPerClient.toString()] = herder;
@@ -742,7 +742,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
           .where((t) => t.contactInfo == herder.id.toString())
           .fold(
               0,
-              (int prev, element) =>
+              (num prev, element) =>
                   prev + element.totalPriceTaxAndPromoIncluded);
 
       map[soldPerClient.toString()] = herder;
@@ -767,7 +767,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
           .where((t) => t.contactInfo == herder.id.toString())
           .fold(
               0,
-              (int prev, element) =>
+              (num prev, element) =>
                   prev + element.totalPriceTaxAndPromoIncluded);
 
       map[soldPerClient.toString()] = herder;
@@ -777,8 +777,8 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
 
 // wages in the making
   @action
-  int todayWages(DateTime date) {
-    int wages = tickets
+  num todayWages(DateTime date) {
+    return tickets
         .where((t) => t.status == true)
         .where((t) =>
             t.date.year == date.year &&
@@ -786,29 +786,23 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
             t.date.day == date.day)
         .where((t) => t.ticketType == TicketType.wage)
         .fold(0, (prev, element) => prev + element.received);
-
-    return wages;
   }
 
   @action
-  int monthWages(DateTime date) {
-    int wages = tickets
+  num monthWages(DateTime date) {
+    return tickets
         .where((t) => t.status == true)
         .where((t) => t.date.year == date.year && t.date.month == date.month)
         .where((t) => t.ticketType == TicketType.wage)
         .fold(0, (prev, element) => prev + element.received);
-
-    return wages;
   }
 
   @action
-  int rangeWage(DateTime firstDate, DateTime lastDate) {
-    int wages = tickets
+  num rangeWage(DateTime firstDate, DateTime lastDate) {
+    return tickets
         .where((t) => t.status == true)
         .where((t) => t.date.isAfter(firstDate) && t.date.isBefore(lastDate))
         .where((t) => t.ticketType == TicketType.wage)
         .fold(0, (prev, element) => prev + element.received);
-
-    return wages;
   }
 }

@@ -28,15 +28,15 @@ mixin _$ArticleRetailCreateFormStore on _ArticleCreateFormStore, Store {
       Atom(name: '_ArticleCreateFormStore.fullName', context: context);
 
   @override
-  String get fullName {
+  String get name {
     _$fullNameAtom.reportRead();
-    return super.fullName;
+    return super.name;
   }
 
   @override
-  set fullName(String value) {
-    _$fullNameAtom.reportWrite(value, super.fullName, () {
-      super.fullName = value;
+  set name(String value) {
+    _$fullNameAtom.reportWrite(value, super.name, () {
+      super.name = value;
     });
   }
 
@@ -53,22 +53,6 @@ mixin _$ArticleRetailCreateFormStore on _ArticleCreateFormStore, Store {
   set price(String value) {
     _$priceAtom.reportWrite(value, super.price, () {
       super.price = value;
-    });
-  }
-
-  late final _$photoPathAtom =
-      Atom(name: '_ArticleCreateFormStore.photoPath', context: context);
-
-  @override
-  String get photoPath {
-    _$photoPathAtom.reportRead();
-    return super.photoPath;
-  }
-
-  @override
-  set photoPath(String value) {
-    _$photoPathAtom.reportWrite(value, super.photoPath, () {
-      super.photoPath = value;
     });
   }
 
@@ -120,6 +104,22 @@ mixin _$ArticleRetailCreateFormStore on _ArticleCreateFormStore, Store {
     });
   }
 
+  late final _$photoPathAtom =
+      Atom(name: '_ArticleCreateFormStore.photoPath', context: context);
+
+  @override
+  String get photoPath {
+    _$photoPathAtom.reportRead();
+    return super.photoPath;
+  }
+
+  @override
+  set photoPath(String value) {
+    _$photoPathAtom.reportWrite(value, super.photoPath, () {
+      super.photoPath = value;
+    });
+  }
+
   late final _$isArticleCreatedAtom =
       Atom(name: '_ArticleCreateFormStore.isArticleCreated', context: context);
 
@@ -140,11 +140,11 @@ mixin _$ArticleRetailCreateFormStore on _ArticleCreateFormStore, Store {
       ActionController(name: '_ArticleCreateFormStore', context: context);
 
   @override
-  void validateArticleFullName(String value) {
+  void validateArticleFullNameOnCreation(String value) {
     final _$actionInfo = _$_ArticleCreateFormStoreActionController.startAction(
         name: '_ArticleCreateFormStore.validateArticleFullName');
     try {
-      return super.validateArticleFullName(value);
+      return super.validateArticleFullNameOnCreation(value);
     } finally {
       _$_ArticleCreateFormStoreActionController.endAction(_$actionInfo);
     }
@@ -186,11 +186,12 @@ mixin _$ArticleRetailCreateFormStore on _ArticleCreateFormStore, Store {
   @override
   String toString() {
     return '''
-fullName: ${fullName},
+fullName: ${name},
 price: ${price},
 cost: ${cost},
 unitsPerPiece: ${unitsPerPiece},
 barcodeEAN: ${barcodeEAN},
+photoPath: ${photoPath},
 isArticleCreated: ${isArticleCreated},
 isArticleCreationPending: ${isArticleCreationPending},
 hasErrors: ${hasErrors}

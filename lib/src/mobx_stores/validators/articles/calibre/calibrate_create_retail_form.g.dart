@@ -56,22 +56,6 @@ mixin _$ArticleCalibreCreateFormStore on _ArticleCalibreCreateFormStore, Store {
     });
   }
 
-  late final _$photoPathAtom =
-      Atom(name: '_ArticleCalibreCreateFormStore.photoPath', context: context);
-
-  @override
-  String get photoPath {
-    _$photoPathAtom.reportRead();
-    return super.photoPath;
-  }
-
-  @override
-  set photoPath(String value) {
-    _$photoPathAtom.reportWrite(value, super.photoPath, () {
-      super.photoPath = value;
-    });
-  }
-
   late final _$costAtom =
       Atom(name: '_ArticleCalibreCreateFormStore.cost', context: context);
 
@@ -85,6 +69,22 @@ mixin _$ArticleCalibreCreateFormStore on _ArticleCalibreCreateFormStore, Store {
   set cost(String value) {
     _$costAtom.reportWrite(value, super.cost, () {
       super.cost = value;
+    });
+  }
+
+  late final _$photoPathAtom =
+      Atom(name: '_ArticleCalibreCreateFormStore.photoPath', context: context);
+
+  @override
+  String get photoPath {
+    _$photoPathAtom.reportRead();
+    return super.photoPath;
+  }
+
+  @override
+  set photoPath(String value) {
+    _$photoPathAtom.reportWrite(value, super.photoPath, () {
+      super.photoPath = value;
     });
   }
 
@@ -209,6 +209,7 @@ mixin _$ArticleCalibreCreateFormStore on _ArticleCalibreCreateFormStore, Store {
 name: ${name},
 price: ${price},
 cost: ${cost},
+photoPath: ${photoPath},
 stockUnit: ${stockUnit},
 unitsPerPiece: ${unitsPerPiece},
 barcodeEAN: ${barcodeEAN},
@@ -233,15 +234,15 @@ mixin _$FormErrorLineArticleCreateState
       name: '_FormErrorLineArticleCreateState.nameError', context: context);
 
   @override
-  String? get nameError {
+  String? get fullNameError {
     _$nameErrorAtom.reportRead();
-    return super.nameError;
+    return super.fullNameError;
   }
 
   @override
-  set nameError(String? value) {
-    _$nameErrorAtom.reportWrite(value, super.nameError, () {
-      super.nameError = value;
+  set fullNameError(String? value) {
+    _$nameErrorAtom.reportWrite(value, super.fullNameError, () {
+      super.fullNameError = value;
     });
   }
 
@@ -297,7 +298,7 @@ mixin _$FormErrorLineArticleCreateState
   @override
   String toString() {
     return '''
-nameError: ${nameError},
+nameError: ${fullNameError},
 unitsPerPieceError: ${unitsPerPieceError},
 priceError: ${priceError},
 costError: ${costError},

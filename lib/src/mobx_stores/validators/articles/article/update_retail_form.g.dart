@@ -28,15 +28,15 @@ mixin _$ArticleRetailUpdateFormStore on _ArticleRetailUpdateFormStore, Store {
       Atom(name: '_ArticleRetailUpdateFormStore.fullName', context: context);
 
   @override
-  String get fullName {
+  String get name {
     _$fullNameAtom.reportRead();
-    return super.fullName;
+    return super.name;
   }
 
   @override
-  set fullName(String value) {
-    _$fullNameAtom.reportWrite(value, super.fullName, () {
-      super.fullName = value;
+  set name(String value) {
+    _$fullNameAtom.reportWrite(value, super.name, () {
+      super.name = value;
     });
   }
 
@@ -53,38 +53,6 @@ mixin _$ArticleRetailUpdateFormStore on _ArticleRetailUpdateFormStore, Store {
   set price(String value) {
     _$priceAtom.reportWrite(value, super.price, () {
       super.price = value;
-    });
-  }
-
-  late final _$photoPathAtom =
-      Atom(name: '_ArticleRetailUpdateFormStore.photoPath', context: context);
-
-  @override
-  String get photoPath {
-    _$photoPathAtom.reportRead();
-    return super.photoPath;
-  }
-
-  @override
-  set photoPath(String value) {
-    _$photoPathAtom.reportWrite(value, super.photoPath, () {
-      super.photoPath = value;
-    });
-  }
-
-  late final _$photoSourceAtom =
-      Atom(name: '_ArticleRetailUpdateFormStore.photoSource', context: context);
-
-  @override
-  PhotoSource get photoSource {
-    _$photoSourceAtom.reportRead();
-    return super.photoSource;
-  }
-
-  @override
-  set photoSource(PhotoSource value) {
-    _$photoSourceAtom.reportWrite(value, super.photoSource, () {
-      super.photoSource = value;
     });
   }
 
@@ -136,6 +104,38 @@ mixin _$ArticleRetailUpdateFormStore on _ArticleRetailUpdateFormStore, Store {
     });
   }
 
+  late final _$photoPathAtom =
+      Atom(name: '_ArticleRetailUpdateFormStore.photoPath', context: context);
+
+  @override
+  String get photoPath {
+    _$photoPathAtom.reportRead();
+    return super.photoPath;
+  }
+
+  @override
+  set photoPath(String value) {
+    _$photoPathAtom.reportWrite(value, super.photoPath, () {
+      super.photoPath = value;
+    });
+  }
+
+  late final _$photoSourceAtom =
+      Atom(name: '_ArticleRetailUpdateFormStore.photoSource', context: context);
+
+  @override
+  PhotoSource get photoSource {
+    _$photoSourceAtom.reportRead();
+    return super.photoSource;
+  }
+
+  @override
+  set photoSource(PhotoSource value) {
+    _$photoSourceAtom.reportWrite(value, super.photoSource, () {
+      super.photoSource = value;
+    });
+  }
+
   late final _$isArticleCreatedAtom = Atom(
       name: '_ArticleRetailUpdateFormStore.isArticleCreated', context: context);
 
@@ -156,12 +156,13 @@ mixin _$ArticleRetailUpdateFormStore on _ArticleRetailUpdateFormStore, Store {
       ActionController(name: '_ArticleRetailUpdateFormStore', context: context);
 
   @override
-  void validateArticleFullName(String value) {
+  void validateArticleFullNameOnUpdate(String value) {
     final _$actionInfo =
         _$_ArticleRetailUpdateFormStoreActionController.startAction(
-            name: '_ArticleRetailUpdateFormStore.validateArticleFullName');
+            name:
+                '_ArticleRetailUpdateFormStore.validateArticleFullNameOnUpdate');
     try {
-      return super.validateArticleFullName(value);
+      return super.validateArticleFullNameOnUpdate(value);
     } finally {
       _$_ArticleRetailUpdateFormStoreActionController.endAction(_$actionInfo);
     }
@@ -204,11 +205,13 @@ mixin _$ArticleRetailUpdateFormStore on _ArticleRetailUpdateFormStore, Store {
   @override
   String toString() {
     return '''
-fullName: ${fullName},
+fullName: ${name},
 price: ${price},
 cost: ${cost},
 unitsPerPiece: ${unitsPerPiece},
 barcodeEAN: ${barcodeEAN},
+photoPath: ${photoPath},
+photoSource: ${photoSource},
 isArticleCreated: ${isArticleCreated},
 isArticleCreationPending: ${isArticleCreationPending},
 hasErrors: ${hasErrors}

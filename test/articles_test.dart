@@ -46,6 +46,9 @@ void main() {
 
   group('test articles store', () {
     test('create calibre & article', () async {
+      final isDeleted =
+          await articlesStoreTest.deleteAllArticlesAndPhotosAndCalibres();
+      expect(isDeleted, isTrue);
       final createdCalibre1 = await articlesStoreTest
           .createAndCalibrateArticle<ArticleRetail>(ArticleCalibre.dummyRetail);
       expect(createdCalibre1 == ArticleCalibre.dummyRetail, isTrue);
@@ -54,8 +57,12 @@ void main() {
               ArticleCalibre.dummyRetail.articles.first,
           isTrue);
       expect(createdCalibre1.articles.first.id, 1);
+      expect(articlesStoreTest.calibres.length, 1);
     });
     test('add_article', () async {
+      final isDeleted =
+          await articlesStoreTest.deleteAllArticlesAndPhotosAndCalibres();
+      expect(isDeleted, isTrue);
       await articlesStoreTest
           .createAndCalibrateArticle<ArticleRetail>(ArticleCalibre.dummyRetail);
       final calibre2AWeebiArticle2 = ArticleRetail(
@@ -141,9 +148,15 @@ void main() {
           await articlesStoreTest.updateLineArticle<ArticleRetail>(testTitle);
       print(dd.title);
       expect(dd.title, 'poupoupidou');
-      expect(articlesStoreTest.calibres.first.title, 'poupoupidou');
+      expect(
+          articlesStoreTest.calibres
+              .any((element) => element.title == 'poupoupidou'),
+          isTrue);
     });
     test('delete forever retail', () async {
+      final isDeleted =
+          await articlesStoreTest.deleteAllArticlesAndPhotosAndCalibres();
+      expect(isDeleted, isTrue);
       expect(articlesStoreTest.calibres.isEmpty, true);
       await articlesStoreTest
           .createAndCalibrateArticle<ArticleRetail>(ArticleCalibre.dummyRetail);
@@ -157,6 +170,9 @@ void main() {
 
   group('test basket', () {
     test('create basket & article basket', () async {
+      final isDeleted =
+          await articlesStoreTest.deleteAllArticlesAndPhotosAndCalibres();
+      expect(isDeleted, isTrue);
       final createdCalibre1 = await articlesStoreTest
           .createAndCalibrateArticle<ArticleBasket>(ArticleCalibre.dummyBasket);
 
@@ -178,10 +194,10 @@ void main() {
       final calibreBasket = await articlesStoreTest
           .createAndCalibrateArticle<ArticleBasket>(ArticleCalibre.dummyBasket);
       expect(calibreBasket, ArticleCalibre.dummyBasket);
-      final _articleBasketLine = ArticleCalibre.dummyBasket.articles.first
+      final _articleBasket = ArticleCalibre.dummyBasket.articles.first
           .copyWith(fullName: 'ouais ouais');
-      final updated = await articlesStoreTest
-          .updateArticle<ArticleBasket>(_articleBasketLine);
+      final updated =
+          await articlesStoreTest.updateArticle<ArticleBasket>(_articleBasket);
       expect(updated.fullName, 'ouais ouais');
     });
     test('update calibre basket', () async {
@@ -190,8 +206,11 @@ void main() {
       final temp = await articlesStoreTest
           .updateLineArticle<ArticleBasket>(updatedCBasket);
       expect(temp.title, 'poupoupidou');
+      await articlesStoreTest.deleteAllArticlesAndPhotosAndCalibres();
     });
     test('delete forever calibre basket', () async {
+      await articlesStoreTest
+          .createAndCalibrateArticle<ArticleBasket>(ArticleCalibre.dummyBasket);
       expect(articlesStoreTest.calibres.length, 1);
       print('length ok');
       await articlesStoreTest.deleteForeverCalibre(ArticleCalibre.dummyBasket);

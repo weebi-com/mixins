@@ -299,7 +299,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int todaySellCash(DateTime date) {
+  num todaySellCash(DateTime date) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.todaySellCash');
     try {
@@ -310,7 +310,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int todaySellCoverCash(DateTime date) {
+  num todaySellCoverCash(DateTime date) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.todaySellCoverCash');
     try {
@@ -321,7 +321,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int todaySellDeferred(DateTime date) {
+  num todaySellDeferred(DateTime date) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.todaySellDeferred');
     try {
@@ -332,7 +332,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int todaySpendDeferred(DateTime date) {
+  num todaySpendDeferred(DateTime date) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.todaySpendDeferred');
     try {
@@ -343,7 +343,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int todaySellMMoney(DateTime date) {
+  num todaySellMMoney(DateTime date) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.todaySellMMoney');
     try {
@@ -354,7 +354,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int todaySpendCash(DateTime date) {
+  num todaySpendCash(DateTime date) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.todaySpendCash');
     try {
@@ -365,7 +365,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int todaySpendCoverCash(DateTime date) {
+  num todaySpendCoverCash(DateTime date) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.todaySpendCoverCash');
     try {
@@ -376,7 +376,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int todaySpendMMoney(DateTime date) {
+  num todaySpendMMoney(DateTime date) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.todaySpendMMoney');
     try {
@@ -420,7 +420,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int monthSellCash(DateTime date) {
+  num monthSellCash(DateTime date) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.monthSellCash');
     try {
@@ -431,7 +431,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int monthSellCoverCash(DateTime date) {
+  num monthSellCoverCash(DateTime date) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.monthSellCoverCash');
     try {
@@ -442,7 +442,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int monthSellMMoney(DateTime date) {
+  num monthSellMMoney(DateTime date) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.monthSellMMoney');
     try {
@@ -453,7 +453,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int monthSellDeferred(DateTime date) {
+  num monthSellDeferred(DateTime date) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.monthSellDeferred');
     try {
@@ -464,7 +464,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int monthSpendCash(DateTime date) {
+  num monthSpendCash(DateTime date) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.monthSpendCash');
     try {
@@ -475,7 +475,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int monthSpendCoverCash(DateTime date) {
+  num monthSpendCoverCash(DateTime date) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.monthSpendCoverCash');
     try {
@@ -486,7 +486,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int monthSpendMMoney(DateTime date) {
+  num monthSpendMMoney(DateTime date) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.monthSpendMMoney');
     try {
@@ -541,7 +541,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int rangeSellCash(DateTime firstDate, DateTime lastDate) {
+  num rangeSellCash(DateTime firstDate, DateTime lastDate) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.rangeSellCash');
     try {
@@ -552,7 +552,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int rangeSellCoverCash(DateTime firstDate, DateTime lastDate) {
+  num rangeSellCoverCash(DateTime firstDate, DateTime lastDate) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.rangeSellCoverCash');
     try {
@@ -563,7 +563,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int rangeSellMMoney(DateTime firstDate, DateTime lastDate) {
+  num rangeSellMMoney(DateTime firstDate, DateTime lastDate) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.rangeSellMMoney');
     try {
@@ -574,7 +574,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int rangeSellDeferred(DateTime firstDate, DateTime lastDate) {
+  num rangeSellDeferred(DateTime firstDate, DateTime lastDate) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.rangeSellDeferred');
     try {
@@ -585,7 +585,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int rangeSpendCash(DateTime firstDate, DateTime lastDate) {
+  num rangeSpendCash(DateTime firstDate, DateTime lastDate) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.rangeSpendCash');
     try {
@@ -596,7 +596,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int rangeSpendCoverCash(DateTime firstDate, DateTime lastDate) {
+  num rangeSpendCoverCash(DateTime firstDate, DateTime lastDate) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.rangeSpendCoverCash');
     try {
@@ -607,7 +607,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int rangeSpendMMoney(DateTime firstDate, DateTime lastDate) {
+  num rangeSpendMMoney(DateTime firstDate, DateTime lastDate) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.rangeSpendMMoney');
     try {
@@ -618,7 +618,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int rangeSpendDeferred(DateTime firstDate, DateTime lastDate) {
+  num rangeSpendDeferred(DateTime firstDate, DateTime lastDate) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.rangeSpendDeferred');
     try {
@@ -629,7 +629,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int supplierCredit(int herderId, DateTime date) {
+  num supplierCredit(int herderId, DateTime date) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.supplierCredit');
     try {
@@ -651,7 +651,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int clientCredit(int herderId, DateTime date) {
+  num clientCredit(int herderId, DateTime date) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.clientCredit');
     try {
@@ -733,7 +733,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int todayWages(DateTime date) {
+  num todayWages(DateTime date) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.todayWages');
     try {
@@ -744,7 +744,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int monthWages(DateTime date) {
+  num monthWages(DateTime date) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.monthWages');
     try {
@@ -755,7 +755,7 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  int rangeWage(DateTime firstDate, DateTime lastDate) {
+  num rangeWage(DateTime firstDate, DateTime lastDate) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.rangeWage');
     try {
