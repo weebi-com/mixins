@@ -1,3 +1,7 @@
+## 0.1.4
+
+- money as num
+
 ## 0.1.3
 
 - photos & updated verifiers

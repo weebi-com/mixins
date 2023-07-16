@@ -340,14 +340,14 @@ packages:
       path: "../models_base"
       relative: true
     source: path
-    version: "1.4.4"
+    version: "1.4.5"
   models_weebi:
     dependency: "direct main"
     description:
       path: "../models"
       relative: true
     source: path
-    version: "1.0.16+1"
+    version: "1.0.17"
   nested:
     dependency: transitive
     description:
@@ -426,7 +426,7 @@ packages:
       path: "../services"
       relative: true
     source: path
-    version: "1.0.6"
+    version: "1.0.7"
   shelf:
     dependency: transitive
     description:
