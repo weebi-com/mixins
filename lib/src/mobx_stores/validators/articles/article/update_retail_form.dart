@@ -133,7 +133,7 @@ abstract class _ArticleRetailUpdateFormStore
           id: 1,
           path: photoPath,
           source: PhotoSource.file);
-      await _articlesStore.createPhoto(photo);
+      await _articlesStore.upsertPhoto(photo);
     }
     if ((cost.isNotEmpty)) {
       newArticleRetail =

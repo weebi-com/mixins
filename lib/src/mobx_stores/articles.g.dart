@@ -309,8 +309,8 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
       AsyncAction('ArticlesStoreBase.createPhoto', context: context);
 
   @override
-  Future<ArticlePhoto> createPhoto(ArticlePhoto data) {
-    return _$createPhotoAsyncAction.run(() => super.createPhoto(data));
+  Future<ArticlePhoto> upsertPhoto(ArticlePhoto data) {
+    return _$createPhotoAsyncAction.run(() => super.upsertPhoto(data));
   }
 
   late final _$deletePhotoAsyncAction =

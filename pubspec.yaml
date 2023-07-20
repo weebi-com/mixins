@@ -1,6 +1,6 @@
 name: mixins_weebi
 homepage: http://weebi.com
-version: 0.1.4
+version: 0.1.5
 #publish_to: none # https://onepub.dev/api/xnxpsdavuh/
 description: mixins and all about mobx stores
 

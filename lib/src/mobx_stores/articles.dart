@@ -331,6 +331,9 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
           await _articlesService.getArticlesCalibresRpc.request(null);
       calibres = ObservableList.of(calibresFromRpc);
       _calibresFiltered = calibresFromRpc.palpables;
+      final photosFromRpc =
+          await _articlesService.getPhotosAbstractRpc.request(null);
+      photos = ObservableList.of(photosFromRpc);
     }
     initialLoading = false;
 
@@ -429,7 +432,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @action
-  Future<ArticlePhoto> createPhoto(ArticlePhoto data) async {
+  Future<ArticlePhoto> upsertPhoto(ArticlePhoto data) async {
     // s'assurer que l'on ne crée pas des photos avec des ids identiques
     if (photos.any((element) =>
         element.calibreId == data.calibreId && element.id == data.id)) {
