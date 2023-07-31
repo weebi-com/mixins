@@ -128,12 +128,12 @@ abstract class _ArticleRetailUpdateFormStore
     );
 
     if (photoPath.isNotEmpty) {
-      final photo = ArticlePhoto(
-          calibreId: _articlesStore.calibres.nextId,
-          id: 1,
+      final newPhoto = ArticlePhoto(
+          calibreId: newArticleRetail.calibreId,
+          id: newArticleRetail.id,
           path: photoPath,
           source: PhotoSource.file);
-      await _articlesStore.upsertPhoto(photo);
+      await _articlesStore.upsertPhoto(newPhoto);
     }
     if ((cost.isNotEmpty)) {
       newArticleRetail =

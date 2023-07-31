@@ -112,8 +112,8 @@ abstract class _ArticleCreateFormStore extends FormStoreAbstractArticleRetail
     );
     if (photoPath.isNotEmpty) {
       final photo = ArticlePhoto(
-          calibreId: _articlesStore.calibres.nextId,
-          id: 1,
+          calibreId: newArticleRetail.calibreId,
+          id: newArticleRetail.id,
           path: photoPath,
           source: PhotoSource.file);
       await _articlesStore.upsertPhoto(photo);

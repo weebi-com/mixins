@@ -112,8 +112,8 @@ abstract class _ArticleCalibreCreateFormStore
 
     if (photoPath.isNotEmpty) {
       final photo = ArticlePhoto(
-          calibreId: _articlesStore.calibres.nextId,
-          id: 1,
+          calibreId: newArticle.calibreId,
+          id: newArticle.id,
           path: photoPath,
           source: PhotoSource.file);
       await _articlesStore.upsertPhoto(photo);
