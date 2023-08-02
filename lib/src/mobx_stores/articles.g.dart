@@ -428,7 +428,7 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
   }
 
   @override
-  void updateArticleMinQtInSelected(ArticleWMinQt article, double minQt) {
+  void updateArticleMinQtInSelected(ArticleWMinQt article, num minQt) {
     final _$actionInfo = _$ArticlesStoreBaseActionController.startAction(
         name: 'ArticlesStoreBase.updateArticleMinQtInSelected');
     try {

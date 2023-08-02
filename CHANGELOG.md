@@ -1,3 +1,7 @@
+## 0.1.6
+
+- fix num issue + bump models version
+
 ## 0.1.5
 
 - upsert photos

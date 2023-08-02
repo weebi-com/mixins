@@ -187,13 +187,13 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @action
-  void updateArticleMinQtInSelected(ArticleWMinQt article, double minQt) {
+  void updateArticleMinQtInSelected(ArticleWMinQt article, num minQt) {
     if (articlesSelectedForBasketMinQt
         .any((e) => e.calibreId == article.calibreId && e.id == article.id)) {
       final index = articlesSelectedForBasketMinQt.indexWhere(
           (e) => e.calibreId == article.calibreId && e.id == article.id);
       //print('minQt $minQt');
-      articlesSelectedForBasketMinQt[index].minQt = minQt;
+      articlesSelectedForBasketMinQt[index].minQt = minQt.toDouble();
       //print('articlesWSelected[index].minQt ${articlesWSelected[index].minQt}');
       articlesSelectedForBasketMinQt =
           articlesSelectedForBasketMinQt; //trigger mobx
