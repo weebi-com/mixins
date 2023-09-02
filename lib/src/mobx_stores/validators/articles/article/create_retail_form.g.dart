@@ -9,13 +9,6 @@ part of 'create_retail_form.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$ArticleRetailCreateFormStore on _ArticleCreateFormStore, Store {
-  Computed<bool>? _$isArticleCreationPendingComputed;
-
-  @override
-  bool get isArticleCreationPending => (_$isArticleCreationPendingComputed ??=
-          Computed<bool>(() => super.isArticleCreationPending,
-              name: '_ArticleCreateFormStore.isArticleCreationPending'))
-      .value;
   Computed<bool>? _$hasErrorsComputed;
 
   @override
@@ -120,22 +113,6 @@ mixin _$ArticleRetailCreateFormStore on _ArticleCreateFormStore, Store {
     });
   }
 
-  late final _$isArticleCreatedAtom =
-      Atom(name: '_ArticleCreateFormStore.isArticleCreated', context: context);
-
-  @override
-  ObservableFuture<bool> get isArticleCreated {
-    _$isArticleCreatedAtom.reportRead();
-    return super.isArticleCreated;
-  }
-
-  @override
-  set isArticleCreated(ObservableFuture<bool> value) {
-    _$isArticleCreatedAtom.reportWrite(value, super.isArticleCreated, () {
-      super.isArticleCreated = value;
-    });
-  }
-
   late final _$_ArticleCreateFormStoreActionController =
       ActionController(name: '_ArticleCreateFormStore', context: context);
 
@@ -192,8 +169,6 @@ cost: ${cost},
 unitsPerPiece: ${unitsPerPiece},
 barcodeEAN: ${barcodeEAN},
 photoPath: ${photoPath},
-isArticleCreated: ${isArticleCreated},
-isArticleCreationPending: ${isArticleCreationPending},
 hasErrors: ${hasErrors}
     ''';
   }

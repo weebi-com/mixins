@@ -43,13 +43,6 @@ abstract class _ArticleCreateFormStore extends FormStoreAbstractArticleRetail
   @observable
   String photoPath = '';
 
-  @observable
-  ObservableFuture<bool> isArticleCreated = ObservableFuture.value(false);
-
-  @computed
-  bool get isArticleCreationPending =>
-      isArticleCreated.status == FutureStatus.pending;
-
   @computed
   bool get hasErrors => errorStore.hasErrors;
 

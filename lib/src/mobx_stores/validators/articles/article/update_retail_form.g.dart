@@ -12,8 +12,8 @@ mixin _$ArticleRetailUpdateFormStore on _ArticleRetailUpdateFormStore, Store {
   Computed<bool>? _$isArticleCreationPendingComputed;
 
   @override
-  bool get isArticleCreationPending => (_$isArticleCreationPendingComputed ??=
-          Computed<bool>(() => super.isArticleCreationPending,
+  bool get isArticleUpdatePending => (_$isArticleCreationPendingComputed ??=
+          Computed<bool>(() => super.isArticleUpdatePending,
               name: '_ArticleRetailUpdateFormStore.isArticleCreationPending'))
       .value;
   Computed<bool>? _$hasErrorsComputed;
@@ -213,7 +213,7 @@ barcodeEAN: ${barcodeEAN},
 photoPath: ${photoPath},
 photoSource: ${photoSource},
 isArticleCreated: ${isArticleCreated},
-isArticleCreationPending: ${isArticleCreationPending},
+isArticleCreationPending: ${isArticleUpdatePending},
 hasErrors: ${hasErrors}
     ''';
   }

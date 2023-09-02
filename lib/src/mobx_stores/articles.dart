@@ -329,14 +329,17 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
     } else {
       final calibresFromRpc =
           await _articlesService.getArticlesCalibresRpc.request(null);
-      calibres = ObservableList.of(calibresFromRpc);
-      _calibresFiltered = calibresFromRpc.palpables;
-      final photosFromRpc =
-          await _articlesService.getPhotosAbstractRpc.request(null);
-      photos = ObservableList.of(photosFromRpc);
+      if (calibresFromRpc.isNotEmpty) {
+        calibres = ObservableList.of(calibresFromRpc);
+        _calibresFiltered = calibresFromRpc.palpables;
+        final photosFromRpc =
+            await _articlesService.getPhotosAbstractRpc.request(null);
+        if (photosFromRpc.isNotEmpty) {
+          photos = ObservableList.of(photosFromRpc);
+        }
+      }
     }
     initialLoading = false;
-
     return initialLoading;
   }
 
@@ -408,16 +411,17 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   // below is not different from above importCatalogue yet
   @action
   Future<bool> deleteAllArticlesAndPhotosAndCalibres() async {
-    await _articlesService.deleteAllCalibresRpc.request([]);
+    if (calibres.isNotEmpty) {
+      await _articlesService.deleteAllCalibresRpc.request([]);
+      calibres.clear();
+    }
     if (photos.isNotEmpty) {
-      final temp = [];
-      temp.addAll(photos.map((e) => ArticlePhoto.fromMap(e.toMap())));
+      final temp = photos.map((e) => ArticlePhoto.fromMap(e.toMap())).toList();
       for (final photo in temp) {
         await _articlesService.deleteForeverPhotoRpc.request(photo);
       }
+      photos.clear();
     }
-    photos.clear();
-    calibres.clear();
     return true;
   }
 

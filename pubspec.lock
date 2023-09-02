@@ -340,7 +340,7 @@ packages:
       path: "../models_base"
       relative: true
     source: path
-    version: "1.4.5"
+    version: "1.4.6"
   models_weebi:
     dependency: "direct main"
     description:

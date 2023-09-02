@@ -39,6 +39,9 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
   Observable<bool> isChange = Observable(false);
 
   @observable
+  ObservableSet<int> filteredIds = ObservableSet<int>();
+
+  @observable
   Observable<DateRangeW> range = Observable(
     DateRangeW(
       start: WeebiDates.defaultFirstDate,
@@ -49,6 +52,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
   TicketsStoreBase(this._ticketsService) {
     initialLoading = true;
     tickets = ObservableSet<TicketWeebi>();
+    filteredIds = ObservableSet<int>();
     isChange = Observable(false);
     listOfTicketsByTimeFrame = ObservableList<TicketsGroupedByTimeFrame>();
     range = Observable(
@@ -66,7 +70,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
   @action // spark a setState in the view
   void setChange() => isChange = Observable(!isChange.value);
 
-  @computed
+  @computed // consider merging this to tickets filters store
   ObservableList<TicketWeebi> get selected => ObservableList.of(
         tickets
             .where((e) =>
@@ -114,11 +118,25 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
           ? TimeFrame.week
           : TimeFrame.month;
 
+  @computed
+  ObservableSet<TicketWeebi> get filteredTickets =>
+      ObservableSet.of(tickets.idsToTickets(filteredIds));
+
+  // for dashboards
+
   @action
   Future<void> init() async {
     final ticketsFromRpc = await _ticketsService.getAllTicketsRpc.request(null);
     tickets = ticketsFromRpc.asObservable();
+
+    // for dashboards
+    filteredIds.clear();
+    for (final ticket in tickets) {
+      filteredIds.add(ticket.id);
+    }
+
     initialLoading = false;
+    return;
   }
 
   @action
@@ -618,7 +636,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
   num supplierCredit(int herderId, DateTime date) => tickets.isEmpty
       ? 0
       : tickets
-          .where((t) => t.contactInfo == herderId.toString())
+          .where((t) => t.contactId == herderId)
           .where((t) => t.status == true)
           .where((t) => t.date.isBefore(date))
           .where((t) =>
@@ -630,7 +648,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
   double supplierDebit(int herderId, DateTime date) => tickets.isEmpty
       ? 0
       : tickets
-          .where((t) => t.contactInfo == herderId.toString())
+          .where((t) => t.contactId == herderId)
           .where((t) => t.status == true)
           .where((t) => t.date.isBefore(date))
           .where((t) => t.ticketType == TicketType.spendDeferred)
@@ -640,7 +658,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
   num clientCredit(int herderId, DateTime date) => tickets.isEmpty
       ? 0
       : tickets
-          .where((t) => t.contactInfo == herderId.toString())
+          .where((t) => t.contactId == herderId)
           .where((t) => t.status == true)
           .where((t) => t.date.isBefore(date))
           .where((t) => t.ticketType == TicketType.sellCovered)
@@ -650,7 +668,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
   double clientDebit(int herderId, DateTime date) => tickets.isEmpty
       ? 0
       : tickets
-          .where((t) => t.contactInfo == herderId.toString())
+          .where((t) => t.contactId == herderId)
           .where((t) => t.status == true)
           .where((t) => t.date.isBefore(date))
           .where((t) => t.ticketType == TicketType.sellDeferred)
@@ -669,7 +687,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
           .where((t) => t.date.month == date.month)
           .where((t) => t.ticketType == TicketType.sell)
           .where((t) => t.paiementType == PaiementType.cash)
-          .where((t) => t.contactInfo == herder.id.toString())
+          .where((t) => t.contactId == herder.id)
           .fold(
               0,
               (num prev, element) =>
@@ -692,7 +710,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
           .where((t) =>
               t.ticketType == TicketType.sellDeferred ||
               t.ticketType == TicketType.sell)
-          .where((t) => t.contactInfo == herder.id.toString())
+          .where((t) => t.contactId == herder.id)
           .fold(
               0,
               (num prev, element) =>
@@ -716,7 +734,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
               t.date.day == date.day)
           .where((t) => t.ticketType == TicketType.sell)
           .where((t) => t.paiementType == PaiementType.cash)
-          .where((t) => t.contactInfo == herder.id.toString())
+          .where((t) => t.contactId == herder.id)
           .fold(
               0,
               (num prev, element) =>
@@ -739,7 +757,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
               t.date.month == date.month &&
               t.date.day == date.day)
           .where((t) => t.ticketType == TicketType.sellDeferred)
-          .where((t) => t.contactInfo == herder.id.toString())
+          .where((t) => t.contactId == herder.id)
           .fold(
               0,
               (num prev, element) =>
@@ -764,7 +782,7 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
           .where((t) =>
               t.ticketType == TicketType.sell &&
               t.ticketType == TicketType.sellDeferred)
-          .where((t) => t.contactInfo == herder.id.toString())
+          .where((t) => t.contactId == herder.id)
           .fold(
               0,
               (num prev, element) =>

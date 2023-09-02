@@ -41,13 +41,6 @@ abstract class _ArticleCalibreCreateFormStore
   @observable
   String barcodeEAN = '';
 
-  @observable
-  ObservableFuture<bool> isArticleCreated = ObservableFuture.value(false);
-
-  @computed
-  bool get isArticleCreationPending =>
-      isArticleCreated.status == FutureStatus.pending;
-
   @computed
   bool get hasErrors => errorStore.hasErrors;
 

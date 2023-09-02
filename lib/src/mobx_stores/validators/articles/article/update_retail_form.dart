@@ -68,7 +68,7 @@ abstract class _ArticleRetailUpdateFormStore
   ObservableFuture<bool> isArticleCreated = ObservableFuture.value(false);
 
   @computed
-  bool get isArticleCreationPending =>
+  bool get isArticleUpdatePending =>
       isArticleCreated.status == FutureStatus.pending;
 
   @computed
