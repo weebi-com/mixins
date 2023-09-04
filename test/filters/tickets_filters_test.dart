@@ -14,7 +14,9 @@ void main() {
     expect(added.isNotEmpty, isTrue);
     final ticketsFilterStore =
         TicketsFilterStore(testTicketsStore, herders.toSet());
+    ticketsFilterStore.setupFilters();
     ticketsFilterStore.contactNameOrTel = 'john';
-    // ticketsFilterStore.filterTickets();
+    ticketsFilterStore.filteredTickets.length;
+    print(ticketsFilterStore.filteredTickets.length);
   });
 }

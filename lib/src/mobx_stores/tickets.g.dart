@@ -233,17 +233,6 @@ mixin _$TicketsStore<T extends TicketsServiceAbstract>
   }
 
   @override
-  ObservableSet<TicketWeebi> searchTicketById(String queryString) {
-    final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
-        name: 'TicketsStoreBase.searchTicketById');
-    try {
-      return super.searchTicketById(queryString);
-    } finally {
-      _$TicketsStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   int todayTicketCount(DateTime date) {
     final _$actionInfo = _$TicketsStoreBaseActionController.startAction(
         name: 'TicketsStoreBase.todayTicketCount');

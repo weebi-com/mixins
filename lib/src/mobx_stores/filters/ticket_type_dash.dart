@@ -20,6 +20,18 @@ class TicketTypeDash {
     TicketTypeDash(TicketType.wage, true),
   ];
 
+  static List<TicketTypeDash> setTicketTypesDashFalse = [
+    TicketTypeDash(TicketType.sell, false),
+    TicketTypeDash(TicketType.sellDeferred, false),
+    TicketTypeDash(TicketType.sellCovered, false),
+    TicketTypeDash(TicketType.spend, false),
+    TicketTypeDash(TicketType.spendDeferred, false),
+    TicketTypeDash(TicketType.spendCovered, false),
+    TicketTypeDash(TicketType.stockIn, false),
+    TicketTypeDash(TicketType.stockOut, false),
+    TicketTypeDash(TicketType.wage, false),
+  ];
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

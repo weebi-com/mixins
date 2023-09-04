@@ -17,18 +17,18 @@ mixin _$ArticleRetailCreateFormStore on _ArticleCreateFormStore, Store {
               name: '_ArticleCreateFormStore.hasErrors'))
           .value;
 
-  late final _$fullNameAtom =
-      Atom(name: '_ArticleCreateFormStore.fullName', context: context);
+  late final _$nameAtom =
+      Atom(name: '_ArticleCreateFormStore.name', context: context);
 
   @override
   String get name {
-    _$fullNameAtom.reportRead();
+    _$nameAtom.reportRead();
     return super.name;
   }
 
   @override
   set name(String value) {
-    _$fullNameAtom.reportWrite(value, super.name, () {
+    _$nameAtom.reportWrite(value, super.name, () {
       super.name = value;
     });
   }
@@ -119,7 +119,7 @@ mixin _$ArticleRetailCreateFormStore on _ArticleCreateFormStore, Store {
   @override
   void validateArticleFullNameOnCreation(String value) {
     final _$actionInfo = _$_ArticleCreateFormStoreActionController.startAction(
-        name: '_ArticleCreateFormStore.validateArticleFullName');
+        name: '_ArticleCreateFormStore.validateArticleFullNameOnCreation');
     try {
       return super.validateArticleFullNameOnCreation(value);
     } finally {
@@ -128,42 +128,9 @@ mixin _$ArticleRetailCreateFormStore on _ArticleCreateFormStore, Store {
   }
 
   @override
-  void validatePrice(String value) {
-    final _$actionInfo = _$_ArticleCreateFormStoreActionController.startAction(
-        name: '_ArticleCreateFormStore.validatePrice');
-    try {
-      return super.validatePrice(value);
-    } finally {
-      _$_ArticleCreateFormStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void validateCost(String value) {
-    final _$actionInfo = _$_ArticleCreateFormStoreActionController.startAction(
-        name: '_ArticleCreateFormStore.validateCost');
-    try {
-      return super.validateCost(value);
-    } finally {
-      _$_ArticleCreateFormStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void validateUnitsPerPiece(String value) {
-    final _$actionInfo = _$_ArticleCreateFormStoreActionController.startAction(
-        name: '_ArticleCreateFormStore.validateUnitsPerPiece');
-    try {
-      return super.validateUnitsPerPiece(value);
-    } finally {
-      _$_ArticleCreateFormStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   String toString() {
     return '''
-fullName: ${name},
+name: ${name},
 price: ${price},
 cost: ${cost},
 unitsPerPiece: ${unitsPerPiece},

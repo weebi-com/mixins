@@ -9,12 +9,12 @@ part of 'update_retail_form.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$ArticleRetailUpdateFormStore on _ArticleRetailUpdateFormStore, Store {
-  Computed<bool>? _$isArticleCreationPendingComputed;
+  Computed<bool>? _$isArticleUpdatePendingComputed;
 
   @override
-  bool get isArticleUpdatePending => (_$isArticleCreationPendingComputed ??=
+  bool get isArticleUpdatePending => (_$isArticleUpdatePendingComputed ??=
           Computed<bool>(() => super.isArticleUpdatePending,
-              name: '_ArticleRetailUpdateFormStore.isArticleCreationPending'))
+              name: '_ArticleRetailUpdateFormStore.isArticleUpdatePending'))
       .value;
   Computed<bool>? _$hasErrorsComputed;
 
@@ -24,18 +24,18 @@ mixin _$ArticleRetailUpdateFormStore on _ArticleRetailUpdateFormStore, Store {
               name: '_ArticleRetailUpdateFormStore.hasErrors'))
           .value;
 
-  late final _$fullNameAtom =
-      Atom(name: '_ArticleRetailUpdateFormStore.fullName', context: context);
+  late final _$nameAtom =
+      Atom(name: '_ArticleRetailUpdateFormStore.name', context: context);
 
   @override
   String get name {
-    _$fullNameAtom.reportRead();
+    _$nameAtom.reportRead();
     return super.name;
   }
 
   @override
   set name(String value) {
-    _$fullNameAtom.reportWrite(value, super.name, () {
+    _$nameAtom.reportWrite(value, super.name, () {
       super.name = value;
     });
   }
@@ -169,43 +169,9 @@ mixin _$ArticleRetailUpdateFormStore on _ArticleRetailUpdateFormStore, Store {
   }
 
   @override
-  void validatePrice(String value) {
-    final _$actionInfo = _$_ArticleRetailUpdateFormStoreActionController
-        .startAction(name: '_ArticleRetailUpdateFormStore.validatePrice');
-    try {
-      return super.validatePrice(value);
-    } finally {
-      _$_ArticleRetailUpdateFormStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void validateCost(String value) {
-    final _$actionInfo = _$_ArticleRetailUpdateFormStoreActionController
-        .startAction(name: '_ArticleRetailUpdateFormStore.validateCost');
-    try {
-      return super.validateCost(value);
-    } finally {
-      _$_ArticleRetailUpdateFormStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void validateUnitsPerPiece(String value) {
-    final _$actionInfo =
-        _$_ArticleRetailUpdateFormStoreActionController.startAction(
-            name: '_ArticleRetailUpdateFormStore.validateUnitsPerPiece');
-    try {
-      return super.validateUnitsPerPiece(value);
-    } finally {
-      _$_ArticleRetailUpdateFormStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   String toString() {
     return '''
-fullName: ${name},
+name: ${name},
 price: ${price},
 cost: ${cost},
 unitsPerPiece: ${unitsPerPiece},
@@ -213,7 +179,7 @@ barcodeEAN: ${barcodeEAN},
 photoPath: ${photoPath},
 photoSource: ${photoSource},
 isArticleCreated: ${isArticleCreated},
-isArticleCreationPending: ${isArticleUpdatePending},
+isArticleUpdatePending: ${isArticleUpdatePending},
 hasErrors: ${hasErrors}
     ''';
   }
@@ -263,22 +229,6 @@ mixin _$FormErrorArticleRetailUpdateState
     });
   }
 
-  late final _$priceErrorAtom = Atom(
-      name: '_FormErrorArticleRetailUpdateState.priceError', context: context);
-
-  @override
-  String? get priceError {
-    _$priceErrorAtom.reportRead();
-    return super.priceError;
-  }
-
-  @override
-  set priceError(String? value) {
-    _$priceErrorAtom.reportWrite(value, super.priceError, () {
-      super.priceError = value;
-    });
-  }
-
   late final _$costErrorAtom = Atom(
       name: '_FormErrorArticleRetailUpdateState.costError', context: context);
 
@@ -300,7 +250,6 @@ mixin _$FormErrorArticleRetailUpdateState
     return '''
 fullNameError: ${fullNameError},
 unitsPerPieceError: ${unitsPerPieceError},
-priceError: ${priceError},
 costError: ${costError},
 hasErrors: ${hasErrors}
     ''';

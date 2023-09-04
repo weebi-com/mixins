@@ -1,13 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/src/material/time.dart';
 
-import 'package:mixins_weebi/mobx_store_article.dart';
 import 'package:mixins_weebi/mobx_store_ticket.dart';
 import 'package:mixins_weebi/src/mobx_stores/filters/paiement_type_dash.dart';
 import 'package:mixins_weebi/src/mobx_stores/filters/ticket_type_dash.dart';
 import 'package:mixins_weebi/src/mobx_stores/filters/timespan.dart';
 import 'package:mobx/mobx.dart';
-import 'package:models_weebi/common.dart';
 import 'package:models_weebi/extensions.dart';
 import 'package:models_weebi/utils.dart';
 import 'package:models_weebi/weebi_models.dart';
@@ -19,99 +17,306 @@ class TicketsFilterStore = _TicketsFilterStore with _$TicketsFilterStore;
 abstract class _TicketsFilterStore with Store {
   final TicketsStore _ticketsStore;
   final Set<Herder> herders;
-  // final ArticleCalibre _calibre;
   _TicketsFilterStore(this._ticketsStore, this.herders) {
-    ticketTypes = ObservableSet.of(TicketTypeDash.setTicketTypesDash);
-    paiementTypes = ObservableSet.of(PaiementTypeDash.setPaiementTypesDash);
+    ticketTypesDash = ObservableSet.of(TicketTypeDash.setTicketTypesDash);
+    paiementTypesDash = ObservableSet.of(PaiementTypeDash.setPaiementTypesDash);
   }
 
-  SearchFieldFormError errorStore = SearchFieldFormError();
+  @observable
+  DateRangeW dateRange = DateRangeW.defaultDateRange;
 
   @observable
-  DateRangeW dateRange = DateRangeW(
-      start: WeebiDates.defaultFirstDate, end: WeebiDates.defaultLastDate);
+  ObservableSet<PaiementTypeDash> paiementTypesDash = ObservableSet();
 
   @observable
-  ObservableSet<PaiementTypeDash> paiementTypes = ObservableSet();
+  ObservableSet<TicketTypeDash> ticketTypesDash = ObservableSet();
+
+  // using a tristate is a slight hack to avoid filtering tickets when user want to see both
+  // Tristate.unknown means no status filtered
+  // Tristate.no means status == false only
+  // Tristate.yes means status == true only
 
   @observable
-  ObservableSet<TicketTypeDash> ticketTypes = ObservableSet();
+  Tristate ticketsStatus = Tristate.unknown;
 
   @observable
-  Observable<bool> ticketsStatus = Observable(false);
-
-  @observable
-  String ticketsId = '';
+  String ticketsIdFromTextField = '';
 
   @observable
   String contactNameOrTel = '';
 
   // loading while filtering
+
   @observable
   ObservableFuture<bool> isfilteringCompleted = ObservableFuture.value(true);
 
   @computed
   bool get isSearchPending =>
       isfilteringCompleted.status == FutureStatus.pending;
-  // validator
-  @computed
-  bool get hasErrors => errorStore.hasErrors;
 
   List<ReactionDisposer> _disposers = [];
 
   void setupFilters() {
     _disposers = [
-      autorun((_) => runLoader),
-      reaction((_) => dateRange, filterByDateRange),
+      reaction((_) => ticketsIdFromTextField, filterById),
       reaction((_) => contactNameOrTel, filterByContact),
-      autorun((_) {
-        _ticketsStore.filteredIds.clear();
-        for (final id in idsDateRange) {
-          _ticketsStore.filteredIds.add(id);
-        }
-        for (final id in idsContact) {
-          _ticketsStore.filteredIds.add(id);
-        }
-      }),
+      reaction((_) => dateRange, filterByDateRange),
+      reaction((_) => selectedTicketTypeDash, filterByTicketTypes),
+      reaction((_) => selectedPaiementTypeDash, filterByPaiementTypes),
+      reaction((_) => ticketsStatus, filterByTicketStatus),
     ];
   }
 
-  @action
-  Observable<bool> switchStatus(bool _status) =>
-      ticketsStatus = Observable(!_status);
+  @computed
+  ObservableSet<TicketTypeDash> get selectedTicketTypeDash =>
+      ObservableSet.of(ticketTypesDash.where((e) => e.status).toList());
 
-  Future<void> runLoader() async {
-    // for demo purpose only
-    // TODO remove once ticket filter store finished
-    print(contactNameOrTel);
-    print(ticketsStatus);
-    print(ticketTypes);
-    print(paiementTypes);
-    isfilteringCompleted = ObservableFuture.value(false);
-    await Future.delayed(const Duration(seconds: 1));
-    isfilteringCompleted = ObservableFuture.value(true);
-    return;
-  }
+  @computed
+  ObservableSet<PaiementTypeDash> get selectedPaiementTypeDash =>
+      ObservableSet.of(paiementTypesDash.where((e) => e.status).toList());
 
-  void validateContactField(String text) {
-    if (text.isNotEmpty) {
-// TODO search by contactid, name or tel or mail
+  @computed
+  ObservableSet<int> get filteredIds {
+    ObservableSet<int> filteredIds = ObservableSet<int>();
+    filteredIds.clear();
+    final ticketTypesEquals = const DeepCollectionEquality().equals;
+    final paiementTypesEquals = const DeepCollectionEquality().equals;
+    if (ticketsIdFromTextField.isEmpty &&
+        contactNameOrTel.isEmpty &&
+        dateRange == DateRangeW.defaultDateRange &&
+        ticketsStatus == Tristate.unknown &&
+        ticketTypesEquals(selectedTicketTypeDash,
+            ObservableSet.of(TicketTypeDash.setTicketTypesDash)) &&
+        paiementTypesEquals(selectedPaiementTypeDash,
+            ObservableSet.of(PaiementTypeDash.setPaiementTypesDash))) {
+      // nothing done yet
+      for (final ticket in _ticketsStore.tickets) {
+        filteredIds.add(ticket.id);
+      }
+      return filteredIds;
     } else {
-      errorStore.contactNameOrTelError = null;
+      if (idsFromTicketIdTextField.isEmpty &&
+          idsContact.isEmpty &&
+          idsDateRange.isEmpty &&
+          idsTicketTypes.isEmpty &&
+          idsPaiementTypes.isEmpty &&
+          idsStatus.isEmpty) {
+        return filteredIds;
+      } else {
+        isfilteringCompleted = ObservableFuture.value(false);
+        if (idsFromTicketIdTextField.isNotEmpty) {
+          for (final id in idsFromTicketIdTextField) {
+            filteredIds.add(id);
+            if (idsContact.isNotEmpty && idsContact.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsDateRange.isNotEmpty && idsDateRange.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsTicketTypes.isNotEmpty &&
+                idsTicketTypes.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsPaiementTypes.isNotEmpty &&
+                idsPaiementTypes.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsStatus.isNotEmpty && idsStatus.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+          }
+        }
+        if (idsContact.isNotEmpty) {
+          for (final id in idsContact) {
+            filteredIds.add(id);
+            if (idsFromTicketIdTextField.isNotEmpty &&
+                idsFromTicketIdTextField.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsDateRange.isNotEmpty && idsDateRange.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsTicketTypes.isNotEmpty &&
+                idsTicketTypes.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsPaiementTypes.isNotEmpty &&
+                idsPaiementTypes.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsStatus.isNotEmpty && idsStatus.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+          }
+        }
+        if (idsDateRange.isNotEmpty) {
+          for (final id in idsDateRange) {
+            filteredIds.add(id);
+            if (idsFromTicketIdTextField.isNotEmpty &&
+                idsFromTicketIdTextField.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsContact.isNotEmpty && idsContact.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsTicketTypes.isNotEmpty &&
+                idsTicketTypes.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsPaiementTypes.isNotEmpty &&
+                idsPaiementTypes.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsStatus.isNotEmpty && idsStatus.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+          }
+        }
+        if (idsTicketTypes.isNotEmpty) {
+          for (final id in idsTicketTypes) {
+            filteredIds.add(id);
+            if (idsFromTicketIdTextField.isNotEmpty &&
+                idsFromTicketIdTextField.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsContact.isNotEmpty && idsContact.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsDateRange.isNotEmpty && idsDateRange.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsPaiementTypes.isNotEmpty &&
+                idsPaiementTypes.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsStatus.isNotEmpty && idsStatus.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+          }
+        }
+        if (idsPaiementTypes.isNotEmpty) {
+          for (final id in idsPaiementTypes) {
+            filteredIds.add(id);
+            if (idsFromTicketIdTextField.isNotEmpty &&
+                idsFromTicketIdTextField.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsContact.isNotEmpty && idsContact.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsDateRange.isNotEmpty && idsDateRange.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsTicketTypes.isNotEmpty &&
+                idsTicketTypes.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsStatus.isNotEmpty && idsStatus.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+          }
+        }
+        if (idsStatus.isNotEmpty) {
+          for (final id in idsStatus) {
+            filteredIds.add(id);
+            if (idsFromTicketIdTextField.isNotEmpty &&
+                idsFromTicketIdTextField.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsContact.isNotEmpty && idsContact.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsDateRange.isNotEmpty && idsDateRange.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsTicketTypes.isNotEmpty &&
+                idsTicketTypes.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsPaiementTypes.isNotEmpty &&
+                idsPaiementTypes.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+          }
+        }
+
+        isfilteringCompleted = ObservableFuture.value(true);
+        return filteredIds;
+      }
     }
-    return;
   }
+
+  @computed
+  ObservableSet<TicketWeebi> get filteredTickets {
+    return ObservableSet.of(_ticketsStore.tickets
+        .idsToTickets(filteredIds)
+        .sorted((a, b) => b.id.compareTo(a.id)));
+  }
+
+  @action
+  Tristate switchStatus(Tristate _state) => ticketsStatus = _state;
 
   @action
   void filterByDateRange(DateRangeW dateRange) {
     idsDateRange.clear();
     final temp = _ticketsStore.tickets
         .where((e) =>
-            e.date.isAfter(startDate) || e.date.isAtSameMomentAs(startDate))
+            e.date.isAfter(dateRange.start) ||
+            e.date.isAtSameMomentAs(dateRange.start))
         .where((e) =>
-            e.date.isBefore(endDate) || e.date.isAtSameMomentAs(endDate));
+            e.date.isBefore(dateRange.end) ||
+            e.date.isAtSameMomentAs(dateRange.end));
     for (final t in temp) {
       idsDateRange.add(t.id);
+    }
+
+    return;
+  }
+
+  @action
+  void filterByTicketTypes(
+      ObservableSet<TicketTypeDash> ticketTypesDashFromReaction) {
+    idsTicketTypes.clear();
+    for (final ticket in _ticketsStore.tickets) {
+      for (final ticketTypeDash
+          in ticketTypesDashFromReaction.where((ttd) => ttd.status == true)) {
+        if (ticket.ticketType == ticketTypeDash.ticketType) {
+          idsTicketTypes.add(ticket.id);
+        }
+      }
+    }
+
+    return;
+  }
+
+  @action
+  void filterByPaiementTypes(
+      ObservableSet<PaiementTypeDash> paiementTypesDashFromReaction) {
+    idsPaiementTypes.clear();
+    for (final ticket in _ticketsStore.tickets) {
+      for (final paiementTypeDash
+          in paiementTypesDashFromReaction.where((ptd) => ptd.status == true)) {
+        if (ticket.paiementType == paiementTypeDash.paiementType) {
+          idsPaiementTypes.add(ticket.id);
+        }
+      }
+    }
+    print('idsPaiementTypes');
+    print(idsPaiementTypes.length);
+    return;
+  }
+
+  @action
+  void filterByTicketStatus(Tristate ticketsStatusFromReaction) {
+    idsStatus.clear();
+    if (ticketsStatusFromReaction == Tristate.unknown) {
+      return;
+    }
+    final status = ticketsStatusFromReaction == Tristate.yes;
+    for (final ticket in _ticketsStore.tickets) {
+      if (ticket.status == status) {
+        idsStatus.add(ticket.id);
+      }
     }
     return;
   }
@@ -119,18 +324,42 @@ abstract class _TicketsFilterStore with Store {
   @action
   void filterByContact(String queryString) {
     idsContact.clear();
-    final temp = _ticketsStore.tickets
+    final tempIds = _ticketsStore.tickets
         .findTicketsWithHerderNameOrTel(queryString, herders);
-    for (final t in temp) {
-      idsContact.add(t);
+    for (final id in tempIds) {
+      idsContact.add(id);
+    }
+    print(idsContact.length);
+    return;
+  }
+
+  @action
+  void filterById(String queryString) {
+    idsFromTicketIdTextField.clear();
+    final tempIds = _ticketsStore.tickets.findTicketsById(queryString);
+    for (final id in tempIds) {
+      idsFromTicketIdTextField.add(id);
     }
     return;
   }
 
   @observable
   ObservableSet<int> idsDateRange = ObservableSet<int>();
+
   @observable
   ObservableSet<int> idsContact = ObservableSet<int>();
+
+  @observable
+  ObservableSet<int> idsFromTicketIdTextField = ObservableSet<int>();
+
+  @observable
+  ObservableSet<int> idsTicketTypes = ObservableSet<int>();
+
+  @observable
+  ObservableSet<int> idsPaiementTypes = ObservableSet<int>();
+
+  @observable
+  ObservableSet<int> idsStatus = ObservableSet<int>();
 
   //--------------DATE-TIME TOUT CA//----------------------------------------
   @observable
@@ -140,48 +369,50 @@ abstract class _TicketsFilterStore with Store {
   TimeOfDay startTime = TimeOfDay(hour: 0, minute: 0),
       endTime = TimeOfDay(hour: 23, minute: 59);
 
-  @observable
-  DateTime startDate = WeebiDates.defaultFirstDate;
-  @observable
-  DateTime endDate = WeebiDates.defaultLastDate;
+  // @observable
+  // DateTime startDate = WeebiDates.defaultFirstDate;
+  // @observable
+  // DateTime endDate = WeebiDates.defaultLastDate;
   @action
   void setTimespan(Timespan t) {
     switch (t) {
       case Timespan.day:
         final n = DateTime.now();
-        setFirstDate(DateTime(
-            n.year,
-            n.month,
-            n.day,
-            WeebiDates.defaultFirstDate.hour,
-            WeebiDates.defaultFirstDate.minute,
-            WeebiDates.defaultFirstDate.second,
-            WeebiDates.defaultFirstDate.millisecond,
-            WeebiDates.defaultFirstDate.microsecond));
-        setLastDate(DateTime(
-            n.year,
-            n.month,
-            n.day,
-            WeebiDates.defaultLastDate.hour,
-            WeebiDates.defaultLastDate.minute,
-            WeebiDates.defaultLastDate.second,
-            WeebiDates.defaultLastDate.millisecond,
-            WeebiDates.defaultLastDate.microsecond));
+        dateRange = DateRangeW(
+            start: DateTime(
+                n.year,
+                n.month,
+                n.day,
+                WeebiDates.defaultFirstDate.hour,
+                WeebiDates.defaultFirstDate.minute,
+                WeebiDates.defaultFirstDate.second,
+                WeebiDates.defaultFirstDate.millisecond,
+                WeebiDates.defaultFirstDate.microsecond),
+            end: (DateTime(
+                n.year,
+                n.month,
+                n.day,
+                WeebiDates.defaultLastDate.hour,
+                WeebiDates.defaultLastDate.minute,
+                WeebiDates.defaultLastDate.second,
+                WeebiDates.defaultLastDate.millisecond,
+                WeebiDates.defaultLastDate.microsecond)));
         timespan = Timespan.day;
         break;
       case Timespan.month:
-        setFirstDate(DateTime(0).nowMonthFirstDay());
-        setLastDate(DateTime(0).nowMonthLastDay());
+        dateRange = DateRangeW(
+            start: DateTime(0).nowMonthFirstDay(),
+            end: DateTime(0).nowMonthLastDay());
         timespan = Timespan.month;
         break;
       case Timespan.range:
-        setFirstDate(startDate);
-        setLastDate(endDate);
+        dateRange = DateRangeW(start: dateRange.start, end: dateRange.end);
         timespan = Timespan.range;
         break;
       case Timespan.full:
-        setFirstDate(WeebiDates.defaultFirstDate);
-        setLastDate(WeebiDates.defaultLastDate);
+        dateRange = DateRangeW(
+            start: WeebiDates.defaultFirstDate,
+            end: WeebiDates.defaultLastDate);
         timespan = Timespan.full;
         break;
 
@@ -190,35 +421,19 @@ abstract class _TicketsFilterStore with Store {
   }
 
   @action
-  setFirstDate(DateTime _date) => startDate = DateTime(
-      _date.year,
-      _date.month,
-      _date.day,
-      startTime.hour,
-      startTime.minute,
-      WeebiDates.defaultFirstDate.second,
-      WeebiDates.defaultFirstDate.millisecond,
-      WeebiDates.defaultFirstDate.microsecond);
-  @action
-  setLastDate(DateTime _dd) => endDate = DateTime(
-      _dd.year,
-      _dd.month,
-      _dd.day,
-      endTime.hour,
-      endTime.minute,
-      WeebiDates.defaultLastDate.second,
-      WeebiDates.defaultLastDate.millisecond,
-      WeebiDates.defaultLastDate.microsecond);
-  @action
   setStartTime(TimeOfDay _time) {
     startTime = _time;
-    setFirstDate(startDate);
+    final newStart = DateTime(dateRange.start.year, dateRange.start.month,
+        dateRange.start.day, startTime.hour, startTime.minute);
+    dateRange = DateRangeW(start: newStart, end: dateRange.end);
   }
 
   @action
   setEndTime(TimeOfDay _time) {
     endTime = _time;
-    setLastDate(endDate);
+    final newEnd = DateTime(dateRange.end.year, dateRange.end.month,
+        dateRange.end.day, endTime.hour, endTime.minute);
+    dateRange = DateRangeW(start: dateRange.start, end: newEnd);
   }
 
   ///----------------------------------------
@@ -226,8 +441,8 @@ abstract class _TicketsFilterStore with Store {
   ///----------------------------------------
   @computed
   bool? get areTicketTypesSelected {
-    final isAnyTrue = ticketTypes.any((e) => e.status);
-    final isAnyFalse = ticketTypes.any((e) => !e.status);
+    final isAnyTrue = ticketTypesDash.any((e) => e.status);
+    final isAnyFalse = ticketTypesDash.any((e) => !e.status);
     return (isAnyTrue && !isAnyFalse)
         ? true
         : (!isAnyTrue && isAnyFalse)
@@ -237,22 +452,19 @@ abstract class _TicketsFilterStore with Store {
 
   @action
   TicketTypeDash switchTicketType(TicketTypeDash data, bool _status) {
-    ticketTypes.removeWhere((e) => e.ticketType == data.ticketType);
+    ticketTypesDash.removeWhere((e) => e.ticketType == data.ticketType);
     data.status = _status;
-    ticketTypes.add(data);
+    ticketTypesDash.add(data);
     return data;
   }
 
   @action
   ObservableSet<TicketTypeDash> switchAllTicketTypes(bool _status) {
-    Set<TicketTypeDash> set = {};
-    for (final t in ticketTypes) {
-      t.status = _status;
-      set.add(t);
-    }
-    ticketTypes.clear();
-    ticketTypes.addAll(set);
-    return ticketTypes;
+    ticketTypesDash.clear();
+    ticketTypesDash.addAll(_status
+        ? TicketTypeDash.setTicketTypesDash.toSet().asObservable()
+        : TicketTypeDash.setTicketTypesDashFalse.toSet().asObservable());
+    return ticketTypesDash;
   }
 
   ///----------------------------------------
@@ -260,8 +472,8 @@ abstract class _TicketsFilterStore with Store {
   ///----------------------------------------
   @computed
   bool? get arePaiementTypesSelected {
-    final isAnyTrue = paiementTypes.any((e) => e.status);
-    final isAnyFalse = paiementTypes.any((e) => !e.status);
+    final isAnyTrue = paiementTypesDash.any((e) => e.status);
+    final isAnyFalse = paiementTypesDash.any((e) => !e.status);
     return (isAnyTrue && !isAnyFalse)
         ? true
         : (!isAnyTrue && isAnyFalse)
@@ -271,22 +483,19 @@ abstract class _TicketsFilterStore with Store {
 
   @action
   PaiementTypeDash switchPaiementTypes(PaiementTypeDash data, bool _status) {
-    paiementTypes.removeWhere((e) => e.paiementType == data.paiementType);
+    paiementTypesDash.removeWhere((e) => e.paiementType == data.paiementType);
     data.status = _status;
-    paiementTypes.add(data);
+    paiementTypesDash.add(data);
     return data;
   }
 
   @action
   ObservableSet<PaiementTypeDash> switchAllPaiementTypes(bool _status) {
-    Set<PaiementTypeDash> set = {};
-    for (final p in paiementTypes) {
-      p.status = _status;
-      set.add(p);
-    }
-    paiementTypes.clear();
-    paiementTypes.addAll(set);
-    return paiementTypes;
+    paiementTypesDash.clear();
+    paiementTypesDash.addAll(_status
+        ? PaiementTypeDash.setPaiementTypesDash.toSet().asObservable()
+        : PaiementTypeDash.setPaiementTypesDashFalse.toSet().asObservable());
+    return paiementTypesDash;
   }
 
   void dispose() {
@@ -294,18 +503,4 @@ abstract class _TicketsFilterStore with Store {
       disposer();
     }
   }
-}
-
-class SearchFieldFormError = _SearchFieldFormErrorCreateState
-    with _$SearchFieldFormErrorCreateState;
-
-abstract class _SearchFieldFormErrorCreateState with Store {
-  @observable
-  String? dateRangeError;
-
-  @observable
-  String? contactNameOrTelError;
-
-  @computed
-  bool get hasErrors => dateRangeError != null;
 }

@@ -305,12 +305,12 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
         .run(() => super.createAndCalibrateArticle<A>(data));
   }
 
-  late final _$createPhotoAsyncAction =
-      AsyncAction('ArticlesStoreBase.createPhoto', context: context);
+  late final _$upsertPhotoAsyncAction =
+      AsyncAction('ArticlesStoreBase.upsertPhoto', context: context);
 
   @override
   Future<ArticlePhoto> upsertPhoto(ArticlePhoto data) {
-    return _$createPhotoAsyncAction.run(() => super.upsertPhoto(data));
+    return _$upsertPhotoAsyncAction.run(() => super.upsertPhoto(data));
   }
 
   late final _$deletePhotoAsyncAction =

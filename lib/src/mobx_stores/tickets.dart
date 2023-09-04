@@ -39,9 +39,6 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
   Observable<bool> isChange = Observable(false);
 
   @observable
-  ObservableSet<int> filteredIds = ObservableSet<int>();
-
-  @observable
   Observable<DateRangeW> range = Observable(
     DateRangeW(
       start: WeebiDates.defaultFirstDate,
@@ -52,7 +49,6 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
   TicketsStoreBase(this._ticketsService) {
     initialLoading = true;
     tickets = ObservableSet<TicketWeebi>();
-    filteredIds = ObservableSet<int>();
     isChange = Observable(false);
     listOfTicketsByTimeFrame = ObservableList<TicketsGroupedByTimeFrame>();
     range = Observable(
@@ -118,9 +114,12 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
           ? TimeFrame.week
           : TimeFrame.month;
 
-  @computed
-  ObservableSet<TicketWeebi> get filteredTickets =>
-      ObservableSet.of(tickets.idsToTickets(filteredIds));
+  // @computed
+  // ObservableSet<TicketWeebi> get filteredTickets {
+  //   print('filteredIds');
+  //   print(filteredIds.length);
+  //   return ObservableSet.of(tickets.idsToTickets(filteredIds));
+  // }
 
   // for dashboards
 
@@ -128,12 +127,6 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
   Future<void> init() async {
     final ticketsFromRpc = await _ticketsService.getAllTicketsRpc.request(null);
     tickets = ticketsFromRpc.asObservable();
-
-    // for dashboards
-    filteredIds.clear();
-    for (final ticket in tickets) {
-      filteredIds.add(ticket.id);
-    }
 
     initialLoading = false;
     return;
@@ -220,12 +213,6 @@ abstract class TicketsStoreBase<T extends TicketsServiceAbstract> with Store {
     tickets = ObservableSet.of([]);
     return true;
   }
-
-  @action
-  ObservableSet<TicketWeebi> searchTicketById(String queryString) => tickets
-      .where((t) => t.id.toString() == queryString)
-      .toSet()
-      .asObservable();
 
   @action
   int todayTicketCount(DateTime date) => tickets

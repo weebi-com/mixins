@@ -65,6 +65,22 @@ mixin _$ArticleCalibreCreateFormStore on _ArticleCalibreCreateFormStore, Store {
     });
   }
 
+  late final _$unitsPerPieceAtom = Atom(
+      name: '_ArticleCalibreCreateFormStore.unitsPerPiece', context: context);
+
+  @override
+  String get unitsPerPiece {
+    _$unitsPerPieceAtom.reportRead();
+    return super.unitsPerPiece;
+  }
+
+  @override
+  set unitsPerPiece(String value) {
+    _$unitsPerPieceAtom.reportWrite(value, super.unitsPerPiece, () {
+      super.unitsPerPiece = value;
+    });
+  }
+
   late final _$photoPathAtom =
       Atom(name: '_ArticleCalibreCreateFormStore.photoPath', context: context);
 
@@ -94,22 +110,6 @@ mixin _$ArticleCalibreCreateFormStore on _ArticleCalibreCreateFormStore, Store {
   set stockUnit(StockUnit value) {
     _$stockUnitAtom.reportWrite(value, super.stockUnit, () {
       super.stockUnit = value;
-    });
-  }
-
-  late final _$unitsPerPieceAtom = Atom(
-      name: '_ArticleCalibreCreateFormStore.unitsPerPiece', context: context);
-
-  @override
-  String get unitsPerPiece {
-    _$unitsPerPieceAtom.reportRead();
-    return super.unitsPerPiece;
-  }
-
-  @override
-  set unitsPerPiece(String value) {
-    _$unitsPerPieceAtom.reportWrite(value, super.unitsPerPiece, () {
-      super.unitsPerPiece = value;
     });
   }
 
@@ -146,48 +146,14 @@ mixin _$ArticleCalibreCreateFormStore on _ArticleCalibreCreateFormStore, Store {
   }
 
   @override
-  void validatePrice(String value) {
-    final _$actionInfo = _$_ArticleCalibreCreateFormStoreActionController
-        .startAction(name: '_ArticleCalibreCreateFormStore.validatePrice');
-    try {
-      return super.validatePrice(value);
-    } finally {
-      _$_ArticleCalibreCreateFormStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void validateCost(String value) {
-    final _$actionInfo = _$_ArticleCalibreCreateFormStoreActionController
-        .startAction(name: '_ArticleCalibreCreateFormStore.validateCost');
-    try {
-      return super.validateCost(value);
-    } finally {
-      _$_ArticleCalibreCreateFormStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void validateUnitsPerPiece(String value) {
-    final _$actionInfo =
-        _$_ArticleCalibreCreateFormStoreActionController.startAction(
-            name: '_ArticleCalibreCreateFormStore.validateUnitsPerPiece');
-    try {
-      return super.validateUnitsPerPiece(value);
-    } finally {
-      _$_ArticleCalibreCreateFormStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   String toString() {
     return '''
 name: ${name},
 price: ${price},
 cost: ${cost},
+unitsPerPiece: ${unitsPerPiece},
 photoPath: ${photoPath},
 stockUnit: ${stockUnit},
-unitsPerPiece: ${unitsPerPiece},
 barcodeEAN: ${barcodeEAN},
 hasErrors: ${hasErrors}
     ''';
@@ -204,18 +170,18 @@ mixin _$FormErrorLineArticleCreateState
               name: '_FormErrorLineArticleCreateState.hasErrors'))
           .value;
 
-  late final _$nameErrorAtom = Atom(
-      name: '_FormErrorLineArticleCreateState.nameError', context: context);
+  late final _$fullNameErrorAtom = Atom(
+      name: '_FormErrorLineArticleCreateState.fullNameError', context: context);
 
   @override
   String? get fullNameError {
-    _$nameErrorAtom.reportRead();
+    _$fullNameErrorAtom.reportRead();
     return super.fullNameError;
   }
 
   @override
   set fullNameError(String? value) {
-    _$nameErrorAtom.reportWrite(value, super.fullNameError, () {
+    _$fullNameErrorAtom.reportWrite(value, super.fullNameError, () {
       super.fullNameError = value;
     });
   }
@@ -272,7 +238,7 @@ mixin _$FormErrorLineArticleCreateState
   @override
   String toString() {
     return '''
-nameError: ${fullNameError},
+fullNameError: ${fullNameError},
 unitsPerPieceError: ${unitsPerPieceError},
 priceError: ${priceError},
 costError: ${costError},

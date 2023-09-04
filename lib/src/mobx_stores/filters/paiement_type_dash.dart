@@ -10,10 +10,19 @@ class PaiementTypeDash {
 
   static List<PaiementTypeDash> setPaiementTypesDash = [
     PaiementTypeDash(PaiementType.cash, true),
-    PaiementTypeDash(PaiementType.cb, true),
-    PaiementTypeDash(PaiementType.cheque, true),
-    PaiementTypeDash(PaiementType.mobileMoney, true),
     PaiementTypeDash(PaiementType.nope, true),
+    PaiementTypeDash(PaiementType.mobileMoney, true),
+    // * not visibile yet
+    // PaiementTypeDash(PaiementType.cb, true),
+    // PaiementTypeDash(PaiementType.cheque, true),
+  ];
+  static List<PaiementTypeDash> setPaiementTypesDashFalse = [
+    PaiementTypeDash(PaiementType.cash, false),
+    PaiementTypeDash(PaiementType.nope, false),
+    PaiementTypeDash(PaiementType.mobileMoney, false),
+    // * not visibile yet
+    // PaiementTypeDash(PaiementType.cb, false),
+    // PaiementTypeDash(PaiementType.cheque, false),
   ];
 
   @override
