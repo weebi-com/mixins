@@ -395,11 +395,23 @@ mixin _$ArticlesStore<S extends ArticlesServiceAbstract>
   }
 
   @override
-  ArticleWMinQt findSingleArticleBasedOnFullName(String fullName) {
+  ArticleWMinQt _findSingleArticleBasedOnFullName(String fullName) {
     final _$actionInfo = _$ArticlesStoreBaseActionController.startAction(
         name: 'ArticlesStoreBase.findSingleArticleBasedOnFullName');
     try {
-      return super.findSingleArticleBasedOnFullName(fullName);
+      return super._findSingleArticleBasedOnFullName(fullName);
+    } finally {
+      _$ArticlesStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  bool findAndAddInSelectedSingleArticleBasedOnFullName(String fullName) {
+    final _$actionInfo = _$ArticlesStoreBaseActionController.startAction(
+        name:
+            'ArticlesStoreBase.findAndAddInSelectedSingleArticleBasedOnFullName');
+    try {
+      return super.findAndAddInSelectedSingleArticleBasedOnFullName(fullName);
     } finally {
       _$ArticlesStoreBaseActionController.endAction(_$actionInfo);
     }

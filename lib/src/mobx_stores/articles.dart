@@ -140,9 +140,12 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
       ObservableList<ArticleCalibre>.of(
           calibres.where((p) => p.isNotQuickSpend));
 
+  /// used for type_ahead not for user search
   @action
-  ArticleWMinQt findSingleArticleBasedOnFullName(String fullName) {
-    if (articlesRetailList.any((e) => e.fullName == fullName)) {
+  ArticleWMinQt _findSingleArticleBasedOnFullName(String fullName) {
+    if (articlesRetailList.any((e) => e.fullName == fullName) == false) {
+      print('no match love sorry');
+    } else {
       if (articlesRetailList.where((e) => e.fullName == fullName).length > 1) {
         print('too many matches');
       } else if (articlesSelectedForBasketMinQt
@@ -153,7 +156,9 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
         //     'found ${articlesWeebiList.firstWhereOrNull((e) => e.fullName == fullName).fullName}');
         final articleW =
             articlesRetailList.firstWhereOrNull((e) => e.fullName == fullName);
-        if (articleW != null) {
+        if (articleW == null) {
+          throw 'articleW in weebilist is null';
+        } else {
           final articleMinQt = ArticleWMinQt(1, // by default set-up to 1
               calibreId: articleW.calibreId,
               id: articleW.id,
@@ -162,12 +167,22 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
               creationDate: articleW.creationDate,
               updateDate: articleW.updateDate);
           return articleMinQt;
-        } else {
-          throw 'articleW in weebilist is null';
         }
       }
     }
     return ArticleWMinQt.dummy;
+  }
+
+  @action
+  bool findAndAddInSelectedSingleArticleBasedOnFullName(String fullName) {
+    final aWeebi = _findSingleArticleBasedOnFullName(fullName);
+    if (aWeebi != ArticleWMinQt.dummy) {
+      // prefer dummy other null
+      addArticleWInSelected(aWeebi);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @action

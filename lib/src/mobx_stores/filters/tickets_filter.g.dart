@@ -161,6 +161,22 @@ mixin _$TicketsFilterStore on _TicketsFilterStore, Store {
     });
   }
 
+  late final _$articleNameAtom =
+      Atom(name: '_TicketsFilterStore.articleName', context: context);
+
+  @override
+  String get articleName {
+    _$articleNameAtom.reportRead();
+    return super.articleName;
+  }
+
+  @override
+  set articleName(String value) {
+    _$articleNameAtom.reportWrite(value, super.articleName, () {
+      super.articleName = value;
+    });
+  }
+
   late final _$isfilteringCompletedAtom =
       Atom(name: '_TicketsFilterStore.isfilteringCompleted', context: context);
 
@@ -388,6 +404,17 @@ mixin _$TicketsFilterStore on _TicketsFilterStore, Store {
         name: '_TicketsFilterStore.filterByContact');
     try {
       return super.filterByContact(queryString);
+    } finally {
+      _$_TicketsFilterStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void filterByArticleName(String queryString) {
+    final _$actionInfo = _$_TicketsFilterStoreActionController.startAction(
+        name: '_TicketsFilterStore.filterByArticleName');
+    try {
+      return super.filterByArticleName(queryString);
     } finally {
       _$_TicketsFilterStoreActionController.endAction(_$actionInfo);
     }

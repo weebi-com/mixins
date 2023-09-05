@@ -12,6 +12,14 @@ import 'package:models_weebi/weebi_models.dart';
 
 part 'tickets_filter.g.dart';
 
+// note that iterating over and over tickets will lead eventually to performance issue
+// but only when tickets reach more than 100 000
+// so doubt shops will reach it before 2030
+// by then we will have rolled out closings which allow archiving tickets
+// so no need to rework perf here, better focus elsewhere
+// if really needed, e.g. for a specific use case,
+// another version of this store iterating only once over ticket could be dug
+
 class TicketsFilterStore = _TicketsFilterStore with _$TicketsFilterStore;
 
 abstract class _TicketsFilterStore with Store {
@@ -45,7 +53,8 @@ abstract class _TicketsFilterStore with Store {
   @observable
   String contactNameOrTel = '';
 
-  // loading while filtering
+  @observable
+  String articleName = '';
 
   @observable
   ObservableFuture<bool> isfilteringCompleted = ObservableFuture.value(true);
@@ -60,6 +69,7 @@ abstract class _TicketsFilterStore with Store {
     _disposers = [
       reaction((_) => ticketsIdFromTextField, filterById),
       reaction((_) => contactNameOrTel, filterByContact),
+      reaction((_) => articleName, filterByContact),
       reaction((_) => dateRange, filterByDateRange),
       reaction((_) => selectedTicketTypeDash, filterByTicketTypes),
       reaction((_) => selectedPaiementTypeDash, filterByPaiementTypes),
@@ -329,7 +339,17 @@ abstract class _TicketsFilterStore with Store {
     for (final id in tempIds) {
       idsContact.add(id);
     }
-    print(idsContact.length);
+    return;
+  }
+
+  @action
+  void filterByArticleName(String queryString) {
+    idsArticle.clear();
+    final tempIds = _ticketsStore.tickets
+        .findTicketsWithHerderNameOrTel(queryString, herders);
+    for (final id in tempIds) {
+      idsArticle.add(id);
+    }
     return;
   }
 
@@ -348,6 +368,9 @@ abstract class _TicketsFilterStore with Store {
 
   @observable
   ObservableSet<int> idsContact = ObservableSet<int>();
+
+  @observable
+  ObservableSet<int> idsArticle = ObservableSet<int>();
 
   @observable
   ObservableSet<int> idsFromTicketIdTextField = ObservableSet<int>();
