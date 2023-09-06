@@ -9,31 +9,23 @@ part of 'tickets_filter.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$TicketsFilterStore on _TicketsFilterStore, Store {
-  Computed<bool>? _$isSearchPendingComputed;
+  Computed<ObservableSet<TicketType>>? _$selectedTicketTypeComputed;
 
   @override
-  bool get isSearchPending =>
-      (_$isSearchPendingComputed ??= Computed<bool>(() => super.isSearchPending,
-              name: '_TicketsFilterStore.isSearchPending'))
+  ObservableSet<TicketType> get ticketTypesComputed =>
+      (_$selectedTicketTypeComputed ??= Computed<ObservableSet<TicketType>>(
+              () => super.ticketTypesComputed,
+              name: '_TicketsFilterStore.selectedTicketType'))
           .value;
-  Computed<ObservableSet<TicketTypeDash>>? _$selectedTicketTypeDashComputed;
+  Computed<ObservableSet<PaiementType>>? _$selectedPaiementTypeComputed;
 
   @override
-  ObservableSet<TicketTypeDash> get selectedTicketTypeDash =>
-      (_$selectedTicketTypeDashComputed ??=
-              Computed<ObservableSet<TicketTypeDash>>(
-                  () => super.selectedTicketTypeDash,
-                  name: '_TicketsFilterStore.selectedTicketTypeDash'))
+  ObservableSet<PaiementType> get paiementTypesComputed =>
+      (_$selectedPaiementTypeComputed ??= Computed<ObservableSet<PaiementType>>(
+              () => super.paiementTypesComputed,
+              name: '_TicketsFilterStore.selectedPaiementType'))
           .value;
-  Computed<ObservableSet<PaiementTypeDash>>? _$selectedPaiementTypeDashComputed;
 
-  @override
-  ObservableSet<PaiementTypeDash> get selectedPaiementTypeDash =>
-      (_$selectedPaiementTypeDashComputed ??=
-              Computed<ObservableSet<PaiementTypeDash>>(
-                  () => super.selectedPaiementTypeDash,
-                  name: '_TicketsFilterStore.selectedPaiementTypeDash'))
-          .value;
   Computed<ObservableSet<int>>? _$filteredIdsComputed;
 
   @override
@@ -50,19 +42,6 @@ mixin _$TicketsFilterStore on _TicketsFilterStore, Store {
               name: '_TicketsFilterStore.filteredTickets'))
           .value;
   Computed<bool?>? _$areTicketTypesSelectedComputed;
-
-  @override
-  bool? get areTicketTypesSelected => (_$areTicketTypesSelectedComputed ??=
-          Computed<bool?>(() => super.areTicketTypesSelected,
-              name: '_TicketsFilterStore.areTicketTypesSelected'))
-      .value;
-  Computed<bool?>? _$arePaiementTypesSelectedComputed;
-
-  @override
-  bool? get arePaiementTypesSelected => (_$arePaiementTypesSelectedComputed ??=
-          Computed<bool?>(() => super.arePaiementTypesSelected,
-              name: '_TicketsFilterStore.arePaiementTypesSelected'))
-      .value;
 
   late final _$dateRangeAtom =
       Atom(name: '_TicketsFilterStore.dateRange', context: context);
@@ -84,15 +63,15 @@ mixin _$TicketsFilterStore on _TicketsFilterStore, Store {
       Atom(name: '_TicketsFilterStore.paiementTypesDash', context: context);
 
   @override
-  ObservableSet<PaiementTypeDash> get paiementTypesDash {
+  ObservableSet<PaiementType> get paiementTypes {
     _$paiementTypesDashAtom.reportRead();
-    return super.paiementTypesDash;
+    return super.paiementTypes;
   }
 
   @override
-  set paiementTypesDash(ObservableSet<PaiementTypeDash> value) {
-    _$paiementTypesDashAtom.reportWrite(value, super.paiementTypesDash, () {
-      super.paiementTypesDash = value;
+  set paiementTypes(ObservableSet<PaiementType> value) {
+    _$paiementTypesDashAtom.reportWrite(value, super.paiementTypes, () {
+      super.paiementTypes = value;
     });
   }
 
@@ -100,15 +79,15 @@ mixin _$TicketsFilterStore on _TicketsFilterStore, Store {
       Atom(name: '_TicketsFilterStore.ticketTypesDash', context: context);
 
   @override
-  ObservableSet<TicketTypeDash> get ticketTypesDash {
+  ObservableSet<TicketType> get ticketTypes {
     _$ticketTypesDashAtom.reportRead();
-    return super.ticketTypesDash;
+    return super.ticketTypes;
   }
 
   @override
-  set ticketTypesDash(ObservableSet<TicketTypeDash> value) {
-    _$ticketTypesDashAtom.reportWrite(value, super.ticketTypesDash, () {
-      super.ticketTypesDash = value;
+  set ticketTypes(ObservableSet<TicketType> value) {
+    _$ticketTypesDashAtom.reportWrite(value, super.ticketTypes, () {
+      super.ticketTypes = value;
     });
   }
 
@@ -174,23 +153,6 @@ mixin _$TicketsFilterStore on _TicketsFilterStore, Store {
   set articleName(String value) {
     _$articleNameAtom.reportWrite(value, super.articleName, () {
       super.articleName = value;
-    });
-  }
-
-  late final _$isfilteringCompletedAtom =
-      Atom(name: '_TicketsFilterStore.isfilteringCompleted', context: context);
-
-  @override
-  ObservableFuture<bool> get isfilteringCompleted {
-    _$isfilteringCompletedAtom.reportRead();
-    return super.isfilteringCompleted;
-  }
-
-  @override
-  set isfilteringCompleted(ObservableFuture<bool> value) {
-    _$isfilteringCompletedAtom.reportWrite(value, super.isfilteringCompleted,
-        () {
-      super.isfilteringCompleted = value;
     });
   }
 
@@ -365,7 +327,7 @@ mixin _$TicketsFilterStore on _TicketsFilterStore, Store {
   }
 
   @override
-  void filterByTicketTypes(ObservableSet<TicketTypeDash> ticketTypesDash) {
+  void filterByTicketTypes(ObservableSet<TicketType> ticketTypesDash) {
     final _$actionInfo = _$_TicketsFilterStoreActionController.startAction(
         name: '_TicketsFilterStore.filterByTicketTypes');
     try {
@@ -376,8 +338,7 @@ mixin _$TicketsFilterStore on _TicketsFilterStore, Store {
   }
 
   @override
-  void filterByPaiementTypes(
-      ObservableSet<PaiementTypeDash> paiementTypesDash) {
+  void filterByPaiementTypes(ObservableSet<PaiementType> paiementTypesDash) {
     final _$actionInfo = _$_TicketsFilterStoreActionController.startAction(
         name: '_TicketsFilterStore.filterByPaiementTypes');
     try {
@@ -465,7 +426,7 @@ mixin _$TicketsFilterStore on _TicketsFilterStore, Store {
   }
 
   @override
-  TicketTypeDash switchTicketType(TicketTypeDash data, bool _status) {
+  TicketType switchTicketType(TicketType data, bool _status) {
     final _$actionInfo = _$_TicketsFilterStoreActionController.startAction(
         name: '_TicketsFilterStore.switchTicketType');
     try {
@@ -476,7 +437,7 @@ mixin _$TicketsFilterStore on _TicketsFilterStore, Store {
   }
 
   @override
-  ObservableSet<TicketTypeDash> switchAllTicketTypes(bool _status) {
+  ObservableSet<TicketType> switchAllTicketTypes(bool _status) {
     final _$actionInfo = _$_TicketsFilterStoreActionController.startAction(
         name: '_TicketsFilterStore.switchAllTicketTypes');
     try {
@@ -487,7 +448,7 @@ mixin _$TicketsFilterStore on _TicketsFilterStore, Store {
   }
 
   @override
-  PaiementTypeDash switchPaiementTypes(PaiementTypeDash data, bool _status) {
+  PaiementType switchPaiementTypes(PaiementType data, bool _status) {
     final _$actionInfo = _$_TicketsFilterStoreActionController.startAction(
         name: '_TicketsFilterStore.switchPaiementTypes');
     try {
@@ -498,7 +459,7 @@ mixin _$TicketsFilterStore on _TicketsFilterStore, Store {
   }
 
   @override
-  ObservableSet<PaiementTypeDash> switchAllPaiementTypes(bool _status) {
+  ObservableSet<PaiementType> switchAllPaiementTypes(bool _status) {
     final _$actionInfo = _$_TicketsFilterStoreActionController.startAction(
         name: '_TicketsFilterStore.switchAllPaiementTypes');
     try {
@@ -512,12 +473,11 @@ mixin _$TicketsFilterStore on _TicketsFilterStore, Store {
   String toString() {
     return '''
 dateRange: ${dateRange},
-paiementTypesDash: ${paiementTypesDash},
-ticketTypesDash: ${ticketTypesDash},
+paiementTypesDash: ${paiementTypes},
+ticketTypesDash: ${ticketTypes},
 ticketsStatus: ${ticketsStatus},
 ticketsIdFromTextField: ${ticketsIdFromTextField},
 contactNameOrTel: ${contactNameOrTel},
-isfilteringCompleted: ${isfilteringCompleted},
 idsDateRange: ${idsDateRange},
 idsContact: ${idsContact},
 idsFromTicketIdTextField: ${idsFromTicketIdTextField},
@@ -527,13 +487,8 @@ idsStatus: ${idsStatus},
 timespan: ${timespan},
 startTime: ${startTime},
 endTime: ${endTime},
-isSearchPending: ${isSearchPending},
-selectedTicketTypeDash: ${selectedTicketTypeDash},
-selectedPaiementTypeDash: ${selectedPaiementTypeDash},
 filteredIds: ${filteredIds},
 filteredTickets: ${filteredTickets},
-areTicketTypesSelected: ${areTicketTypesSelected},
-arePaiementTypesSelected: ${arePaiementTypesSelected}
     ''';
   }
 }

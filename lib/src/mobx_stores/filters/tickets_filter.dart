@@ -2,15 +2,26 @@ import 'package:collection/collection.dart';
 import 'package:flutter/src/material/time.dart';
 
 import 'package:mixins_weebi/mobx_store_ticket.dart';
-import 'package:mixins_weebi/src/mobx_stores/filters/paiement_type_dash.dart';
-import 'package:mixins_weebi/src/mobx_stores/filters/ticket_type_dash.dart';
 import 'package:mixins_weebi/src/mobx_stores/filters/timespan.dart';
 import 'package:mobx/mobx.dart';
+import 'package:models_weebi/common.dart';
 import 'package:models_weebi/extensions.dart';
 import 'package:models_weebi/utils.dart';
 import 'package:models_weebi/weebi_models.dart';
 
 part 'tickets_filter.g.dart';
+
+// ! using below would trigger mobx error :
+// MobXCaughtException: MobXCaughtException: Computed values are not
+// allowed to cause side effects by changing observables that are already being observed
+// extension IntSetHelper on Set<int> {
+//   void removeIdIfUnfound(int id) {
+//     if (isNotEmpty && contains(id) == false) {
+//       remove(id);
+//     }
+//     return;
+//   }
+// }
 
 // note that iterating over and over tickets will lead eventually to performance issue
 // but only when tickets reach more than 100 000
@@ -25,19 +36,19 @@ class TicketsFilterStore = _TicketsFilterStore with _$TicketsFilterStore;
 abstract class _TicketsFilterStore with Store {
   final TicketsStore _ticketsStore;
   final Set<Herder> herders;
-  _TicketsFilterStore(this._ticketsStore, this.herders) {
-    ticketTypesDash = ObservableSet.of(TicketTypeDash.setTicketTypesDash);
-    paiementTypesDash = ObservableSet.of(PaiementTypeDash.setPaiementTypesDash);
-  }
+
+  _TicketsFilterStore(this._ticketsStore, this.herders) {}
 
   @observable
   DateRangeW dateRange = DateRangeW.defaultDateRange;
 
   @observable
-  ObservableSet<PaiementTypeDash> paiementTypesDash = ObservableSet();
+  ObservableSet<PaiementType> paiementTypes =
+      ObservableSet.of(PaiementType.allPaiementTypes);
 
   @observable
-  ObservableSet<TicketTypeDash> ticketTypesDash = ObservableSet();
+  ObservableSet<TicketType> ticketTypes =
+      ObservableSet.of(TicketType.allTicketTypes);
 
   // using a tristate is a slight hack to avoid filtering tickets when user want to see both
   // Tristate.unknown means no status filtered
@@ -56,34 +67,28 @@ abstract class _TicketsFilterStore with Store {
   @observable
   String articleName = '';
 
-  @observable
-  ObservableFuture<bool> isfilteringCompleted = ObservableFuture.value(true);
-
-  @computed
-  bool get isSearchPending =>
-      isfilteringCompleted.status == FutureStatus.pending;
-
   List<ReactionDisposer> _disposers = [];
 
   void setupFilters() {
     _disposers = [
       reaction((_) => ticketsIdFromTextField, filterById),
       reaction((_) => contactNameOrTel, filterByContact),
-      reaction((_) => articleName, filterByContact),
+      reaction((_) => articleName, filterByArticleName),
       reaction((_) => dateRange, filterByDateRange),
-      reaction((_) => selectedTicketTypeDash, filterByTicketTypes),
-      reaction((_) => selectedPaiementTypeDash, filterByPaiementTypes),
+      reaction((_) => ticketTypesComputed, filterByTicketTypes),
+      reaction((_) => paiementTypesComputed, filterByPaiementTypes),
       reaction((_) => ticketsStatus, filterByTicketStatus),
     ];
   }
 
+  // the 2 computed below look useless but they are needed to spark the reaction above
+  // * do not remove
   @computed
-  ObservableSet<TicketTypeDash> get selectedTicketTypeDash =>
-      ObservableSet.of(ticketTypesDash.where((e) => e.status).toList());
-
+  ObservableSet<TicketType> get ticketTypesComputed =>
+      ObservableSet.of(ticketTypes);
   @computed
-  ObservableSet<PaiementTypeDash> get selectedPaiementTypeDash =>
-      ObservableSet.of(paiementTypesDash.where((e) => e.status).toList());
+  ObservableSet<PaiementType> get paiementTypesComputed =>
+      ObservableSet.of(paiementTypes);
 
   @computed
   ObservableSet<int> get filteredIds {
@@ -93,27 +98,31 @@ abstract class _TicketsFilterStore with Store {
     final paiementTypesEquals = const DeepCollectionEquality().equals;
     if (ticketsIdFromTextField.isEmpty &&
         contactNameOrTel.isEmpty &&
+        articleName.isEmpty &&
         dateRange == DateRangeW.defaultDateRange &&
         ticketsStatus == Tristate.unknown &&
-        ticketTypesEquals(selectedTicketTypeDash,
-            ObservableSet.of(TicketTypeDash.setTicketTypesDash)) &&
-        paiementTypesEquals(selectedPaiementTypeDash,
-            ObservableSet.of(PaiementTypeDash.setPaiementTypesDash))) {
-      // nothing done yet
+        ticketTypesEquals(
+            ticketTypesComputed, ObservableSet.of(TicketType.allTicketTypes)) &&
+        paiementTypesEquals(paiementTypesComputed,
+            ObservableSet.of(PaiementType.allPaiementTypes))) {
+      // no filters setup yet so all tickets are displayed
       for (final ticket in _ticketsStore.tickets) {
         filteredIds.add(ticket.id);
       }
-      return filteredIds;
     } else {
       if (idsFromTicketIdTextField.isEmpty &&
           idsContact.isEmpty &&
+          idsArticle.isEmpty &&
           idsDateRange.isEmpty &&
           idsTicketTypes.isEmpty &&
           idsPaiementTypes.isEmpty &&
           idsStatus.isEmpty) {
-        return filteredIds;
+        // at least 1 filter, but not match, display empty list
       } else {
-        isfilteringCompleted = ObservableFuture.value(false);
+        // at least 1 filter and 1 match, check filters accordingly to add a ticket
+        // since filters overlap we check if ticketId is also included in the filters setup
+        // else we remove it
+        // DO NOT refactorize this sherlock as this would trigger mobx error, cf line 15
         if (idsFromTicketIdTextField.isNotEmpty) {
           for (final id in idsFromTicketIdTextField) {
             filteredIds.add(id);
@@ -123,12 +132,45 @@ abstract class _TicketsFilterStore with Store {
             if (idsDateRange.isNotEmpty && idsDateRange.contains(id) == false) {
               filteredIds.remove(id);
             }
-            if (idsTicketTypes.isNotEmpty &&
-                idsTicketTypes.contains(id) == false) {
+            if (ticketTypesComputed.isEmpty ||
+                (idsTicketTypes.isNotEmpty &&
+                    idsTicketTypes.contains(id) == false)) {
               filteredIds.remove(id);
             }
-            if (idsPaiementTypes.isNotEmpty &&
-                idsPaiementTypes.contains(id) == false) {
+            if (paiementTypes.isEmpty ||
+                (idsPaiementTypes.isNotEmpty &&
+                    idsPaiementTypes.contains(id) == false)) {
+              filteredIds.remove(id);
+            }
+            if (idsStatus.isNotEmpty && idsStatus.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsArticle.isNotEmpty && idsArticle.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+          }
+        }
+        if (idsArticle.isNotEmpty) {
+          for (final id in idsArticle) {
+            filteredIds.add(id);
+            if (idsFromTicketIdTextField.isNotEmpty &&
+                idsFromTicketIdTextField.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsContact.isNotEmpty && idsContact.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsDateRange.isNotEmpty && idsDateRange.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (ticketTypesComputed.isEmpty ||
+                (idsTicketTypes.isNotEmpty &&
+                    idsTicketTypes.contains(id) == false)) {
+              filteredIds.remove(id);
+            }
+            if (paiementTypes.isEmpty ||
+                (idsPaiementTypes.isNotEmpty &&
+                    idsPaiementTypes.contains(id) == false)) {
               filteredIds.remove(id);
             }
             if (idsStatus.isNotEmpty && idsStatus.contains(id) == false) {
@@ -146,15 +188,20 @@ abstract class _TicketsFilterStore with Store {
             if (idsDateRange.isNotEmpty && idsDateRange.contains(id) == false) {
               filteredIds.remove(id);
             }
-            if (idsTicketTypes.isNotEmpty &&
-                idsTicketTypes.contains(id) == false) {
+            if (ticketTypesComputed.isEmpty ||
+                (idsTicketTypes.isNotEmpty &&
+                    idsTicketTypes.contains(id) == false)) {
               filteredIds.remove(id);
             }
-            if (idsPaiementTypes.isNotEmpty &&
-                idsPaiementTypes.contains(id) == false) {
+            if (paiementTypes.isEmpty ||
+                (idsPaiementTypes.isNotEmpty &&
+                    idsPaiementTypes.contains(id) == false)) {
               filteredIds.remove(id);
             }
             if (idsStatus.isNotEmpty && idsStatus.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsArticle.isNotEmpty && idsArticle.contains(id) == false) {
               filteredIds.remove(id);
             }
           }
@@ -169,15 +216,20 @@ abstract class _TicketsFilterStore with Store {
             if (idsContact.isNotEmpty && idsContact.contains(id) == false) {
               filteredIds.remove(id);
             }
-            if (idsTicketTypes.isNotEmpty &&
-                idsTicketTypes.contains(id) == false) {
+            if (ticketTypesComputed.isEmpty ||
+                (idsTicketTypes.isNotEmpty &&
+                    idsTicketTypes.contains(id) == false)) {
               filteredIds.remove(id);
             }
-            if (idsPaiementTypes.isNotEmpty &&
-                idsPaiementTypes.contains(id) == false) {
+            if (paiementTypes.isEmpty ||
+                (idsPaiementTypes.isNotEmpty &&
+                    idsPaiementTypes.contains(id) == false)) {
               filteredIds.remove(id);
             }
             if (idsStatus.isNotEmpty && idsStatus.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsArticle.isNotEmpty && idsArticle.contains(id) == false) {
               filteredIds.remove(id);
             }
           }
@@ -195,11 +247,15 @@ abstract class _TicketsFilterStore with Store {
             if (idsDateRange.isNotEmpty && idsDateRange.contains(id) == false) {
               filteredIds.remove(id);
             }
-            if (idsPaiementTypes.isNotEmpty &&
-                idsPaiementTypes.contains(id) == false) {
+            if (paiementTypes.isEmpty ||
+                (idsPaiementTypes.isNotEmpty &&
+                    idsPaiementTypes.contains(id) == false)) {
               filteredIds.remove(id);
             }
             if (idsStatus.isNotEmpty && idsStatus.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsArticle.isNotEmpty && idsArticle.contains(id) == false) {
               filteredIds.remove(id);
             }
           }
@@ -217,11 +273,15 @@ abstract class _TicketsFilterStore with Store {
             if (idsDateRange.isNotEmpty && idsDateRange.contains(id) == false) {
               filteredIds.remove(id);
             }
-            if (idsTicketTypes.isNotEmpty &&
-                idsTicketTypes.contains(id) == false) {
+            if (ticketTypesComputed.isEmpty ||
+                (idsTicketTypes.isNotEmpty &&
+                    idsTicketTypes.contains(id) == false)) {
               filteredIds.remove(id);
             }
             if (idsStatus.isNotEmpty && idsStatus.contains(id) == false) {
+              filteredIds.remove(id);
+            }
+            if (idsArticle.isNotEmpty && idsArticle.contains(id) == false) {
               filteredIds.remove(id);
             }
           }
@@ -239,21 +299,24 @@ abstract class _TicketsFilterStore with Store {
             if (idsDateRange.isNotEmpty && idsDateRange.contains(id) == false) {
               filteredIds.remove(id);
             }
-            if (idsTicketTypes.isNotEmpty &&
-                idsTicketTypes.contains(id) == false) {
+            if (ticketTypesComputed.isEmpty ||
+                (idsTicketTypes.isNotEmpty &&
+                    idsTicketTypes.contains(id) == false)) {
               filteredIds.remove(id);
             }
-            if (idsPaiementTypes.isNotEmpty &&
-                idsPaiementTypes.contains(id) == false) {
+            if (paiementTypes.isEmpty ||
+                (idsPaiementTypes.isNotEmpty &&
+                    idsPaiementTypes.contains(id) == false)) {
+              filteredIds.remove(id);
+            }
+            if (idsArticle.isNotEmpty && idsArticle.contains(id) == false) {
               filteredIds.remove(id);
             }
           }
         }
-
-        isfilteringCompleted = ObservableFuture.value(true);
-        return filteredIds;
       }
     }
+    return filteredIds;
   }
 
   @computed
@@ -285,34 +348,29 @@ abstract class _TicketsFilterStore with Store {
 
   @action
   void filterByTicketTypes(
-      ObservableSet<TicketTypeDash> ticketTypesDashFromReaction) {
+      ObservableSet<TicketType> ticketTypesDashFromReaction) {
     idsTicketTypes.clear();
     for (final ticket in _ticketsStore.tickets) {
-      for (final ticketTypeDash
-          in ticketTypesDashFromReaction.where((ttd) => ttd.status == true)) {
-        if (ticket.ticketType == ticketTypeDash.ticketType) {
+      for (final ticketType in ticketTypesDashFromReaction) {
+        if (ticket.ticketType == ticketType) {
           idsTicketTypes.add(ticket.id);
         }
       }
     }
-
     return;
   }
 
   @action
   void filterByPaiementTypes(
-      ObservableSet<PaiementTypeDash> paiementTypesDashFromReaction) {
+      ObservableSet<PaiementType> paiementTypesDashFromReaction) {
     idsPaiementTypes.clear();
     for (final ticket in _ticketsStore.tickets) {
-      for (final paiementTypeDash
-          in paiementTypesDashFromReaction.where((ptd) => ptd.status == true)) {
-        if (ticket.paiementType == paiementTypeDash.paiementType) {
+      for (final paiementType in paiementTypesDashFromReaction) {
+        if (ticket.paiementType == paiementType) {
           idsPaiementTypes.add(ticket.id);
         }
       }
     }
-    print('idsPaiementTypes');
-    print(idsPaiementTypes.length);
     return;
   }
 
@@ -345,8 +403,8 @@ abstract class _TicketsFilterStore with Store {
   @action
   void filterByArticleName(String queryString) {
     idsArticle.clear();
-    final tempIds = _ticketsStore.tickets
-        .findTicketsWithHerderNameOrTel(queryString, herders);
+    final tempIds =
+        _ticketsStore.tickets.findTicketsWithArticleName(queryString);
     for (final id in tempIds) {
       idsArticle.add(id);
     }
@@ -462,63 +520,51 @@ abstract class _TicketsFilterStore with Store {
   ///----------------------------------------
   /// TicketTypes
   ///----------------------------------------
-  @computed
-  bool? get areTicketTypesSelected {
-    final isAnyTrue = ticketTypesDash.any((e) => e.status);
-    final isAnyFalse = ticketTypesDash.any((e) => !e.status);
-    return (isAnyTrue && !isAnyFalse)
-        ? true
-        : (!isAnyTrue && isAnyFalse)
-            ? false
-            : null;
-  }
 
   @action
-  TicketTypeDash switchTicketType(TicketTypeDash data, bool _status) {
-    ticketTypesDash.removeWhere((e) => e.ticketType == data.ticketType);
-    data.status = _status;
-    ticketTypesDash.add(data);
+  TicketType switchTicketType(TicketType data, bool _status) {
+    if (_status) {
+      ticketTypes.add(data);
+    } else {
+      ticketTypes.removeWhere((e) => e == data);
+    }
     return data;
   }
 
   @action
-  ObservableSet<TicketTypeDash> switchAllTicketTypes(bool _status) {
-    ticketTypesDash.clear();
-    ticketTypesDash.addAll(_status
-        ? TicketTypeDash.setTicketTypesDash.toSet().asObservable()
-        : TicketTypeDash.setTicketTypesDashFalse.toSet().asObservable());
-    return ticketTypesDash;
+  ObservableSet<TicketType> switchAllTicketTypes(bool _status) {
+    if (_status) {
+      ticketTypes.clear();
+      ticketTypes.addAll(TicketType.allTicketTypes);
+    } else {
+      ticketTypes.clear();
+    }
+    return ticketTypes;
   }
 
   ///----------------------------------------
   /// PaiementTypes
   ///----------------------------------------
-  @computed
-  bool? get arePaiementTypesSelected {
-    final isAnyTrue = paiementTypesDash.any((e) => e.status);
-    final isAnyFalse = paiementTypesDash.any((e) => !e.status);
-    return (isAnyTrue && !isAnyFalse)
-        ? true
-        : (!isAnyTrue && isAnyFalse)
-            ? false
-            : null;
-  }
 
   @action
-  PaiementTypeDash switchPaiementTypes(PaiementTypeDash data, bool _status) {
-    paiementTypesDash.removeWhere((e) => e.paiementType == data.paiementType);
-    data.status = _status;
-    paiementTypesDash.add(data);
+  PaiementType switchPaiementTypes(PaiementType data, bool _status) {
+    if (_status) {
+      paiementTypes.add(data);
+    } else {
+      paiementTypes.removeWhere((e) => e == data);
+    }
     return data;
   }
 
   @action
-  ObservableSet<PaiementTypeDash> switchAllPaiementTypes(bool _status) {
-    paiementTypesDash.clear();
-    paiementTypesDash.addAll(_status
-        ? PaiementTypeDash.setPaiementTypesDash.toSet().asObservable()
-        : PaiementTypeDash.setPaiementTypesDashFalse.toSet().asObservable());
-    return paiementTypesDash;
+  ObservableSet<PaiementType> switchAllPaiementTypes(bool _status) {
+    if (_status) {
+      paiementTypes.clear();
+      paiementTypes.addAll(PaiementType.allPaiementTypes);
+    } else {
+      paiementTypes.clear();
+    }
+    return paiementTypes;
   }
 
   void dispose() {

@@ -1,7 +1,4 @@
 import 'package:mixins_weebi/src/instantiate_stores/tickets.dart';
-import 'package:models_weebi/utils.dart';
-import 'package:models_weebi/common.dart';
-import 'package:models_weebi/weebi_models.dart';
 import 'package:test/test.dart';
 
 import '../../models/lib/src/data/tickets_data.dart';

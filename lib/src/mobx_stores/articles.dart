@@ -3,10 +3,10 @@ import 'dart:convert' as convert;
 
 // Package imports:
 import 'package:collection/collection.dart';
-import 'package:mixins_weebi/src/extensions/articles.dart';
+import 'package:mixins_weebi/src/extensions/articles_mobx.dart';
 import 'package:mobx/mobx.dart';
 import 'package:models_weebi/base.dart';
-import 'package:models_weebi/extensions.dart';
+import 'package:models_weebi/extensions.dart' hide ArticlesFilter;
 import 'package:services_weebi/services_weebi.dart';
 
 //import 'package:models_weebi/extensions.dart' show NextLineArticleId;
@@ -28,21 +28,6 @@ extension CoolExtension on ObservableList<ArticleCalibre> {
 
   ObservableList<ArticleCalibre> get notQuickSpend =>
       ObservableList<ArticleCalibre>.of(where((p) => p.isNotQuickSpend));
-
-  Map<String, ArticleAbstract> get articleFullNamesEpured {
-    final articleFullNamesEpuredMap = <String, ArticleAbstract>{};
-    for (final calibre in this) {
-      for (final article in calibre.articles) {
-        final epured = article.fullName
-            .replaceAll(RegExp(r' '), '')
-            .toLowerCase()
-            .trim()
-            .withoutAccents;
-        articleFullNamesEpuredMap[epured] = article;
-      }
-    }
-    return articleFullNamesEpuredMap;
-  }
 }
 
 class ResponseLight {
@@ -259,15 +244,8 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @computed
-  ObservableList<String> get getArticlesFullNames {
-    final strings = List<String>.of([]);
-    for (final line in calibres) {
-      for (final article in line.articles) {
-        strings.add(article.fullName.trim().withoutAccents.toLowerCase());
-      }
-    }
-    return ObservableList<String>.of(strings);
-  }
+  ObservableList<String> get getArticlesFullNames =>
+      ObservableList<String>.of(calibres.articlesNamesRaw);
 
   ///
 
@@ -301,7 +279,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
       if (searchedBy == SearchedBy.titleOrId) {
         if (queryString.isNotEmpty) {
           _calibresFiltered =
-              calibres.searchByTitleOrId(queryString).notQuickSpend;
+              calibres.searchByTitleOrIdObs(queryString).notQuickSpend;
         } else {
           _calibresFiltered = calibres.notQuickSpend;
         }
@@ -314,7 +292,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
       ? ObservableList<ArticleCalibre>.of([])
       : searchedBy == SearchedBy.titleOrId && queryString.isNotEmpty
           ? ObservableList<ArticleCalibre>.of(calibres
-              .searchByTitleOrId(queryString)
+              .searchByTitleOrIdObs(queryString)
               .where((p) => p.status)
               .toList())
           : searchedBy == SearchedBy.barcode && queryString.isNotEmpty
@@ -337,7 +315,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
       {List<ArticleCalibre>? data, List<ArticlePhoto>? photosData}) async {
     if (data != null && data.isNotEmpty) {
       calibres = ObservableList.of(data);
-      _calibresFiltered = data.palpables;
+      _calibresFiltered = data.palpablesObs;
       if (photosData != null && photosData.isNotEmpty) {
         photos = ObservableList.of(photosData);
       }
@@ -346,7 +324,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
           await _articlesService.getArticlesCalibresRpc.request(null);
       if (calibresFromRpc.isNotEmpty) {
         calibres = ObservableList.of(calibresFromRpc);
-        _calibresFiltered = calibresFromRpc.palpables;
+        _calibresFiltered = calibresFromRpc.palpablesObs;
         final photosFromRpc =
             await _articlesService.getPhotosAbstractRpc.request(null);
         if (photosFromRpc.isNotEmpty) {
@@ -371,7 +349,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
             status: e.status,
             creationDate: e.creationDate,
             updateDate: e.updateDate))
-        .palpables;
+        .palpablesObs;
   }
 
   @action
