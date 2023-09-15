@@ -11,8 +11,7 @@ import 'package:models_weebi/weebi_models.dart';
 
 part 'tickets_filter.g.dart';
 
-// ! using below would trigger mobx error :
-// MobXCaughtException: MobXCaughtException: Computed values are not
+// ! using below would trigger mobx error MobXCaughtException: MobXCaughtException: Computed values are not
 // allowed to cause side effects by changing observables that are already being observed
 // extension IntSetHelper on Set<int> {
 //   void removeIdIfUnfound(int id) {
