@@ -40,6 +40,9 @@ class ArticleBasketRealizablekNow<A extends ArticleAbstract>
               .floor(); // round to lowest int
       wrapRealizableBasketsTo.add(maxNumbersOfBasketsRealizable);
     }
+    if (wrapRealizableBasketsTo.isEmpty) {
+      return 0; // strange but prevent possible error
+    }
     wrapRealizableBasketsTo.sort();
     // the article with the least stock limits the numbers of possible baskets
     return wrapRealizableBasketsTo.first;

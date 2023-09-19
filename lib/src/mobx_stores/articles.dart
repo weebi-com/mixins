@@ -291,24 +291,21 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   ObservableList<ArticleCalibre> get calibresInSell => calibres.isEmpty
       ? ObservableList<ArticleCalibre>.of([])
       : searchedBy == SearchedBy.titleOrId && queryString.isNotEmpty
-          ? ObservableList<ArticleCalibre>.of(calibres
-              .searchByTitleOrIdObs(queryString)
-              .where((p) => p.status)
-              .toList())
+          ? ObservableList<ArticleCalibre>.of(
+              calibres.searchByTitleOrIdObs(queryString).where((p) => p.status))
           : searchedBy == SearchedBy.barcode && queryString.isNotEmpty
               ? ObservableList<ArticleCalibre>.of(calibres
-                  .where((p) => p.status)
-                  .where((p) => p.isPalpable ?? true)
-                  .where((p) => p.title != '*')
-                  .where((p) =>
-                      p.barcode.toString().trim() ==
-                      queryString) // same queryString ?
-                  .toList())
+                      .where((p) => p.status)
+                      .where((p) => p.isPalpable ?? true)
+                      .where((p) => p.title != '*')
+                      .where((p) =>
+                          (p.barcode ?? 0).toString().trim() ==
+                          queryString) // same queryString ?
+                  )
               : ObservableList<ArticleCalibre>.of(calibres
                   .where((p) => p.status)
                   .where((p) => p.isPalpable ?? true)
-                  .where((p) => p.title != '*')
-                  .toList());
+                  .where((p) => p.title != '*'));
 
   @action
   Future<bool> init(
