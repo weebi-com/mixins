@@ -245,7 +245,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
 
   @computed
   ObservableList<String> get getArticlesFullNames =>
-      ObservableList<String>.of(calibres.articlesNamesRaw);
+      ObservableList<String>.of(calibres.articlesNamesClean);
 
   ///
 
@@ -288,24 +288,34 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @computed
-  ObservableList<ArticleCalibre> get calibresInSell => calibres.isEmpty
-      ? ObservableList<ArticleCalibre>.of([])
-      : searchedBy == SearchedBy.titleOrId && queryString.isNotEmpty
-          ? ObservableList<ArticleCalibre>.of(
-              calibres.searchByTitleOrIdObs(queryString).where((p) => p.status))
-          : searchedBy == SearchedBy.barcode && queryString.isNotEmpty
-              ? ObservableList<ArticleCalibre>.of(calibres
-                      .where((p) => p.status)
-                      .where((p) => p.isPalpable ?? true)
-                      .where((p) => p.title != '*')
-                      .where((p) =>
-                          (p.barcode ?? 0).toString().trim() ==
-                          queryString) // same queryString ?
-                  )
-              : ObservableList<ArticleCalibre>.of(calibres
-                  .where((p) => p.status)
-                  .where((p) => p.isPalpable ?? true)
-                  .where((p) => p.title != '*'));
+  ObservableList<ArticleCalibre> get calibresInSell {
+    if (calibres.isEmpty) {
+      return ObservableList<ArticleCalibre>.of([]);
+    }
+    if (queryString.isEmpty) {
+      return ObservableList<ArticleCalibre>.of(calibres
+          .where((p) => p.status)
+          .where((p) => p.isPalpable ?? true)
+          .where((p) => p.title != '*'));
+    } else {
+      if (searchedBy == SearchedBy.titleOrId)
+        return ObservableList<ArticleCalibre>.of(
+            calibres.where((p) => p.status).searchByTitleOrIdObs(queryString));
+      else if (searchedBy == SearchedBy.barcode) {
+        return ObservableList<ArticleCalibre>.of(calibres
+            .where((p) => p.status)
+            .where((p) => p.isPalpable ?? true)
+            .where((p) => p.title != '*')
+            .where((p) => (p.barcode ?? 0).toString().trim() == queryString));
+      } else {
+        // SearchedBy.none
+        return ObservableList<ArticleCalibre>.of(calibres
+            .where((p) => p.status)
+            .where((p) => p.isPalpable ?? true)
+            .where((p) => p.title != '*'));
+      }
+    }
+  }
 
   @action
   Future<bool> init(

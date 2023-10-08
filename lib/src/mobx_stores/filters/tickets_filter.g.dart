@@ -41,7 +41,6 @@ mixin _$TicketsFilterStore on _TicketsFilterStore, Store {
               () => super.filteredTickets,
               name: '_TicketsFilterStore.filteredTickets'))
           .value;
-  Computed<bool?>? _$areTicketTypesSelectedComputed;
 
   late final _$dateRangeAtom =
       Atom(name: '_TicketsFilterStore.dateRange', context: context);
