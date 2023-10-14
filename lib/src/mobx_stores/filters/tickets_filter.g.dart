@@ -272,13 +272,13 @@ mixin _$TicketsFilterStore on _TicketsFilterStore, Store {
       Atom(name: '_TicketsFilterStore.startTime', context: context);
 
   @override
-  TimeOfDay get startTime {
+  TimeOfDayDart get startTime {
     _$startTimeAtom.reportRead();
     return super.startTime;
   }
 
   @override
-  set startTime(TimeOfDay value) {
+  set startTime(TimeOfDayDart value) {
     _$startTimeAtom.reportWrite(value, super.startTime, () {
       super.startTime = value;
     });
@@ -288,13 +288,13 @@ mixin _$TicketsFilterStore on _TicketsFilterStore, Store {
       Atom(name: '_TicketsFilterStore.endTime', context: context);
 
   @override
-  TimeOfDay get endTime {
+  TimeOfDayDart get endTime {
     _$endTimeAtom.reportRead();
     return super.endTime;
   }
 
   @override
-  set endTime(TimeOfDay value) {
+  set endTime(TimeOfDayDart value) {
     _$endTimeAtom.reportWrite(value, super.endTime, () {
       super.endTime = value;
     });
@@ -403,7 +403,7 @@ mixin _$TicketsFilterStore on _TicketsFilterStore, Store {
   }
 
   @override
-  dynamic setStartTime(TimeOfDay _time) {
+  dynamic setStartTime(TimeOfDayDart _time) {
     final _$actionInfo = _$_TicketsFilterStoreActionController.startAction(
         name: '_TicketsFilterStore.setStartTime');
     try {
@@ -414,7 +414,7 @@ mixin _$TicketsFilterStore on _TicketsFilterStore, Store {
   }
 
   @override
-  dynamic setEndTime(TimeOfDay _time) {
+  dynamic setEndTime(TimeOfDayDart _time) {
     final _$actionInfo = _$_TicketsFilterStoreActionController.startAction(
         name: '_TicketsFilterStore.setEndTime');
     try {

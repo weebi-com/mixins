@@ -5,3 +5,4 @@ export 'src/mobx_stores/filters/ticket_type_dash.dart';
 export 'src/mobx_stores/filters/paiement_type_dash.dart';
 
 export 'src/mobx_stores/filters/timespan.dart';
+export 'src/mobx_stores/filters/time_of_day_dartish.dart';

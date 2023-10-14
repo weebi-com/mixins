@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
-import 'package:flutter/src/material/time.dart';
 
 import 'package:mixins_weebi/mobx_store_ticket.dart';
 import 'package:mixins_weebi/src/mobx_stores/filters/timespan.dart';
+import 'package:mixins_weebi/src/mobx_stores/filters/time_of_day_dartish.dart';
 import 'package:mobx/mobx.dart';
 import 'package:models_weebi/common.dart';
 import 'package:models_weebi/extensions.dart';
@@ -446,8 +446,8 @@ abstract class _TicketsFilterStore with Store {
   Timespan timespan = Timespan.day;
 
   @observable
-  TimeOfDay startTime = TimeOfDay(hour: 0, minute: 0),
-      endTime = TimeOfDay(hour: 23, minute: 59);
+  TimeOfDayDart startTime = TimeOfDayDart(hour: 0, minute: 0),
+      endTime = TimeOfDayDart(hour: 23, minute: 59);
 
   // @observable
   // DateTime startDate = WeebiDates.defaultFirstDate;
@@ -501,7 +501,7 @@ abstract class _TicketsFilterStore with Store {
   }
 
   @action
-  setStartTime(TimeOfDay _time) {
+  setStartTime(TimeOfDayDart _time) {
     startTime = _time;
     final newStart = DateTime(dateRange.start.year, dateRange.start.month,
         dateRange.start.day, startTime.hour, startTime.minute);
@@ -509,7 +509,7 @@ abstract class _TicketsFilterStore with Store {
   }
 
   @action
-  setEndTime(TimeOfDay _time) {
+  setEndTime(TimeOfDayDart _time) {
     endTime = _time;
     final newEnd = DateTime(dateRange.end.year, dateRange.end.month,
         dateRange.end.day, endTime.hour, endTime.minute);

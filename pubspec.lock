@@ -335,19 +335,21 @@ packages:
     source: hosted
     version: "2.3.0"
   models_base:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "../models_base"
-      relative: true
-    source: path
-    version: "1.4.6"
+      name: models_base
+      sha256: "5273c077db1176aa1d0bdb0a67f1ca6c3a65f752ba44102f09b8e75e39e257a9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.6+1"
   models_weebi:
     dependency: "direct main"
     description:
-      path: "../models"
-      relative: true
-    source: path
-    version: "1.0.18"
+      name: models_weebi
+      sha256: "5663f72ae7b52e49fd2a89568320895f1c8073ab5ef13453dc7c05bb35a7624b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.19"
   nested:
     dependency: transitive
     description:
@@ -423,10 +425,11 @@ packages:
   services_weebi:
     dependency: "direct main"
     description:
-      path: "../services"
-      relative: true
-    source: path
-    version: "1.0.8"
+      name: services_weebi
+      sha256: "17247e0a57e8f8c1b5dc7d9166d8a638e59c48f01bb414323b01c81a97da5487"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.8+1"
   shelf:
     dependency: transitive
     description:
