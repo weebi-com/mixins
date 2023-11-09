@@ -1,7 +1,5 @@
-# melos_managed_dependency_overrides: models_base,models_weebi,services_weebi
+# melos_managed_dependency_overrides: models_weebi,services_weebi
 dependency_overrides:
-  models_base:
-    path: ../models_base
   models_weebi:
     path: ../models
   services_weebi:
