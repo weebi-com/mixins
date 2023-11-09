@@ -152,7 +152,6 @@ class TestorabletimeOfDayDart {
 
   final TimeOfDayDart _defaultValue;
 
-  @override
   TimeOfDayDart createDefaultValue() => _defaultValue;
 
   // @override
@@ -162,7 +161,6 @@ class TestorabletimeOfDayDart {
   //   notifyListeners();
   // }
 
-  @override
   TimeOfDayDart fromPrimitives(Object? data) {
     final List<Object?> timeData = data! as List<Object?>;
     return TimeOfDayDart(

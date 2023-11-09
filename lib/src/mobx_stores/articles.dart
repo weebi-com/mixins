@@ -68,7 +68,7 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
   }
 
   @observable
-  bool initialLoading = false;
+  bool initialLoading = true;
 
   @observable
   SearchedBy _searchedByPrivate = SearchedBy.none;
@@ -525,11 +525,12 @@ abstract class ArticlesStoreBase<S extends ArticlesServiceAbstract> with Store {
       }
     }
     if (photos.any((p) => p.calibreId == calibreData.id)) {
-      final temp = [];
-      temp.addAll(photos
+      final temp = []..addAll(photos
           .where((p) => p.calibreId == calibreData.id)
           .map((e) => ArticlePhoto.fromMap(e.toMap())));
-      for (final photo in temp) await deletePhoto(photo);
+      for (final photo in temp) {
+        await deletePhoto(photo);
+      }
     }
     await _articlesService.deleteForeverCalibreRpc.request(calibreData);
     final index =

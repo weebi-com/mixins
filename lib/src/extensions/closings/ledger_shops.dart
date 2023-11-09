@@ -1,6 +1,6 @@
 // import 'package:closing/extensions/filter_by_range.dart';
 // import 'package:closing/src/models/closing_ledger_shop.dart';
-// import 'package:models_base/common.dart';
+// import 'package:models_weebi/common.dart';
 
 // * NOT USED AT THE MOMENT
 // * logic is splitted in store

@@ -109,10 +109,10 @@ packages:
     dependency: transitive
     description:
       name: characters
-      sha256: e6a326c8af69605aec75ed6c187d06b349707a27fbff8222ca9cc2cff167975c
+      sha256: "04a925763edad70e8443c99234dc3328f442e811f1d8fd1a72f1c8ad0f69a605"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.1"
+    version: "1.3.0"
   checked_yaml:
     dependency: transitive
     description:
@@ -141,10 +141,10 @@ packages:
     dependency: "direct main"
     description:
       name: collection
-      sha256: cfc915e6923fe5ce6e153b0723c753045de46de1b4d63771530504004a45fae0
+      sha256: f092b211a4319e98e5ff58223576de6c2803db36221657b46c82574721240687
       url: "https://pub.dev"
     source: hosted
-    version: "1.17.0"
+    version: "1.17.2"
   convert:
     dependency: transitive
     description:
@@ -298,18 +298,18 @@ packages:
     dependency: transitive
     description:
       name: material_color_utilities
-      sha256: d92141dc6fe1dad30722f9aa826c7fbc896d021d792f80678280601aff8cf724
+      sha256: "9528f2f296073ff54cb9fee677df673ace1218163c3bc7628093e7eed5203d41"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.0"
+    version: "0.5.0"
   meta:
     dependency: transitive
     description:
       name: meta
-      sha256: "6c268b42ed578a53088d834796959e4a1814b5e9e164f147f580a386e5decf42"
+      sha256: "3c74dbf8763d36539f114c799d8a2d87343b5067e9d796ca22b5eb8437090ee3"
       url: "https://pub.dev"
     source: hosted
-    version: "1.8.0"
+    version: "1.9.1"
   mime:
     dependency: transitive
     description:
@@ -335,20 +335,18 @@ packages:
     source: hosted
     version: "2.3.0"
   models_base:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: models_base
-      sha256: "5273c077db1176aa1d0bdb0a67f1ca6c3a65f752ba44102f09b8e75e39e257a9"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../models_base"
+      relative: true
+    source: path
     version: "1.4.6+1"
   models_weebi:
     dependency: "direct main"
     description:
-      name: models_weebi
-      sha256: "5663f72ae7b52e49fd2a89568320895f1c8073ab5ef13453dc7c05bb35a7624b"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../models"
+      relative: true
+    source: path
     version: "1.0.19"
   nested:
     dependency: transitive
@@ -425,10 +423,9 @@ packages:
   services_weebi:
     dependency: "direct main"
     description:
-      name: services_weebi
-      sha256: "17247e0a57e8f8c1b5dc7d9166d8a638e59c48f01bb414323b01c81a97da5487"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../services"
+      relative: true
+    source: path
     version: "1.0.8+1"
   shelf:
     dependency: transitive
@@ -611,6 +608,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
+  web:
+    dependency: transitive
+    description:
+      name: web
+      sha256: dc8ccd225a2005c1be616fe02951e2e342092edf968cf0844220383757ef8f10
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.4-beta"
   web_socket_channel:
     dependency: transitive
     description:
@@ -636,5 +641,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=2.19.6 <3.0.0"
+  dart: ">=3.1.0-185.0.dev <4.0.0"
   flutter: ">=1.16.0"
